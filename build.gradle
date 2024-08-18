@@ -41,9 +41,6 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-	// Security
-	testImplementation 'org.springframework.security:spring-security-test'
-
 	// Validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
@@ -52,7 +49,7 @@ dependencies {
 	annotationProcessor "org.mapstruct:mapstruct-processor:1.4.2.Final"
 	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.1.0'
 
-	// swagger
+	// Swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
 
 	// JAVA Casting Warn Solution
