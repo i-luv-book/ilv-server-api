@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +27,15 @@ public class Parent extends BaseTimeEntity {
     private String password;
     @Column(name = "is_notified")
     private boolean isNotified;
+    @Column(name = "membership_type")
+    private MembershipType membershipType;
 
-    // 리스트
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Child> diaries = new ArrayList<>();
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum MembershipType {
+        PAID, FREE
+    }
 }

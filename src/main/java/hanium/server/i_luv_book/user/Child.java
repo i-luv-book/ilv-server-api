@@ -29,6 +29,8 @@ public class Child extends BaseTimeEntity {
     private Gender gender;
     @Column(name = "img_url")
     private String imgUrl;
+    @Embedded
+    private LoginStatus loginStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
