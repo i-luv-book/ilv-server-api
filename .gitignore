@@ -38,3 +38,7 @@ out/
 
 ### resources ###
 /src/main/resources/
+
+### DS Store ###
+.DS_store
+*.DS_store
