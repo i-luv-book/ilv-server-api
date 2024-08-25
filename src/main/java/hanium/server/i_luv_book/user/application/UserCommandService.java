@@ -5,6 +5,7 @@ import hanium.server.i_luv_book.exception.NotFoundException;
 import hanium.server.i_luv_book.exception.code.ErrorCode;
 import hanium.server.i_luv_book.user.application.dto.UserCommandMapper;
 import hanium.server.i_luv_book.user.application.dto.request.ChildCreateCommand;
+import hanium.server.i_luv_book.user.application.dto.request.ParentCreateCommand;
 import hanium.server.i_luv_book.user.domain.Child;
 import hanium.server.i_luv_book.user.domain.Parent;
 import hanium.server.i_luv_book.user.domain.UserRepository;
@@ -22,6 +23,14 @@ public class UserCommandService {
     private final UserCommandMapper userCommandMapper;
     private final UserRepository userRepository;
 
+    // 부모 회원가입
+    @Transactional
+    public void register(ParentCreateCommand command) {
+        Parent parent = createParent(command);
+        saveParent(parent);
+    }
+
+    // 자식 추가
     @Transactional
     public void addChild(ChildCreateCommand command) {
         Parent parent = findParent(command.parentId());
@@ -31,6 +40,14 @@ public class UserCommandService {
 
         Child child = createChild(command, parent);
         saveChild(parent, child);
+    }
+
+    private void saveParent(Parent parent) {
+        userRepository.save(parent);
+    }
+
+    private Parent createParent(ParentCreateCommand command) {
+        return userCommandMapper.toParent(command);
     }
 
     private void validateChildAddition(Parent parent, int currentNumberOfChildren) {
