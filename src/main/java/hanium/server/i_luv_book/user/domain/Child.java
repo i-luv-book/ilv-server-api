@@ -1,12 +1,11 @@
-package hanium.server.i_luv_book.user;
+package hanium.server.i_luv_book.user.domain;
 
 import hanium.server.i_luv_book.common.basetime.BaseTimeEntity;
+import hanium.server.i_luv_book.user.application.dto.request.ChildCreateCommand;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,10 +20,10 @@ public class Child extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "child_id")
     private long id;
-    @Column(unique = true, name = "nickname")
+    @Column(name = "nickname")
     private String nickname;
     @Column(name = "age")
-    private int age;
+    private LocalDate birthDate;
     @Column(name = "gender")
     private Gender gender;
     @Column(name = "img_url")
@@ -42,5 +41,15 @@ public class Child extends BaseTimeEntity {
     @RequiredArgsConstructor
     public enum Gender {
         MALE, FEMALE
+    }
+
+    @Builder
+    public Child(ChildCreateCommand childCreateCommand, Parent parent) {
+        this.nickname = childCreateCommand.nickname();
+        this.birthDate = childCreateCommand.birthDate();
+        this.gender = childCreateCommand.gender();
+        this.imgUrl = childCreateCommand.imgUrl() == null ? null : childCreateCommand.imgUrl();
+        this.loginStatus = new LoginStatus();
+        this.parent = parent;
     }
 }

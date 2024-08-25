@@ -1,4 +1,4 @@
-package hanium.server.i_luv_book.user;
+package hanium.server.i_luv_book.user.domain;
 
 import hanium.server.i_luv_book.common.basetime.BaseTimeEntity;
 import jakarta.persistence.*;
