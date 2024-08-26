@@ -2,15 +2,13 @@ package hanium.server.i_luv_book.user;
 
 import hanium.server.i_luv_book.common.basetime.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author ijin
+ * @author Young9
  */
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,6 +24,9 @@ public class Parent extends BaseTimeEntity {
     private String password;
     @Column(name = "is_notified")
     private boolean isNotified;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     // 리스트
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
