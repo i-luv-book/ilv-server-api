@@ -22,7 +22,7 @@ public class Child extends BaseTimeEntity {
     private long id;
     @Column(name = "nickname")
     private String nickname;
-    @Column(name = "age")
+    @Column(name = "birth_date")
     private LocalDate birthDate;
     @Column(name = "gender")
     private Gender gender;
