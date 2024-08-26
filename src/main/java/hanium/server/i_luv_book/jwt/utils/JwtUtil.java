@@ -2,8 +2,11 @@ package hanium.server.i_luv_book.jwt.utils;
 
 import hanium.server.i_luv_book.jwt.domain.RefreshToken;
 import hanium.server.i_luv_book.jwt.repository.RefreshTokenRepository;
+import hanium.server.i_luv_book.security.exception.exception.CustomExpiredJwtException;
+import hanium.server.i_luv_book.security.exception.exception.InvalidJwtException;
 import hanium.server.i_luv_book.user.Role;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -13,7 +16,9 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
-
+/**
+ * @author Young9
+ */
 @Component
 @RequiredArgsConstructor
 public class JwtUtil {
@@ -83,11 +88,18 @@ public class JwtUtil {
     }
 
     private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+        } catch (ExpiredJwtException e) {
+            throw new CustomExpiredJwtException("만료된 토큰입니다.");
+        } catch (Exception e) {
+            throw new InvalidJwtException("유효하지 않은 토큰입니다.");
+        }
     }
 
 

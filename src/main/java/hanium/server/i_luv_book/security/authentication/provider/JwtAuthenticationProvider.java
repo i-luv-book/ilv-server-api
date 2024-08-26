@@ -12,7 +12,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-
+/**
+ * @author Young9
+ */
 @Component
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 

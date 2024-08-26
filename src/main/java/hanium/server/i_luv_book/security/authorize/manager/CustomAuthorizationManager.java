@@ -5,6 +5,7 @@ import hanium.server.i_luv_book.security.authorize.service.AuthorizationService;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.log.LogMessage;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.authorization.AuthorityAuthorizationManager;
 import org.springframework.security.authorization.AuthorizationDecision;
@@ -18,10 +19,13 @@ import org.springframework.security.web.util.matcher.RequestMatcherEntry;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-
+/**
+ * @author Young9
+ */
 @Component
 @RequiredArgsConstructor
 public class CustomAuthorizationManager implements AuthorizationManager<RequestAuthorizationContext> {
@@ -45,24 +49,27 @@ public class CustomAuthorizationManager implements AuthorizationManager<RequestA
     @Override
     public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext object) {
 
-        HttpServletRequest request = object.getRequest();
+        Iterator var3 = this.mappings.iterator();
 
-        for (RequestMatcherEntry<AuthorizationManager<RequestAuthorizationContext>> mapping : this.mappings) {
+        HttpServletRequest request=object.getRequest();
 
-            RequestMatcher matcher = mapping.getRequestMatcher();
-            RequestMatcher.MatchResult matchResult = matcher.matcher(request);
-
-            if (matchResult.isMatch()) {
-                AuthorizationManager<RequestAuthorizationContext> manager = mapping.getEntry();
-                return manager.check(authentication,
-                        new RequestAuthorizationContext(request, matchResult.getVariables()));
+        RequestMatcherEntry mapping;
+        RequestMatcher.MatchResult matchResult;
+        do {
+            if (!var3.hasNext()) {
+                return DENY;
             }
-        }
 
-        //URL과 match 되는게 없다면 인가를 거부한다.
-        return DENY;
+            mapping = (RequestMatcherEntry)var3.next();
+            RequestMatcher matcher = mapping.getRequestMatcher();
+            matchResult = matcher.matcher(request);
+        } while(!matchResult.isMatch());
+
+        AuthorizationManager<RequestAuthorizationContext> manager = (AuthorizationManager)mapping.getEntry();
+
+
+        return manager.check(authentication, new RequestAuthorizationContext(request, matchResult.getVariables()));
     }
-
     @Override
     public void verify(Supplier<Authentication> authentication, RequestAuthorizationContext object) {
         AuthorizationManager.super.verify(authentication, object);

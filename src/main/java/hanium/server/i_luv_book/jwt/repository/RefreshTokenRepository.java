@@ -6,7 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Ref;
 import java.util.Optional;
-
+/**
+ * @author Young9
+ */
 @Repository
 public interface RefreshTokenRepository extends CrudRepository<RefreshToken, Long> {
 
