@@ -1,4 +1,4 @@
-package hanium.server.i_luv_book.jwt.repository;
+package hanium.server.i_luv_book.jwt.dao;
 
 import hanium.server.i_luv_book.jwt.domain.RefreshToken;
 import org.springframework.data.repository.CrudRepository;
