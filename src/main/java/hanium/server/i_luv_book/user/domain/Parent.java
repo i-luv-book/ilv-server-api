@@ -42,12 +42,18 @@ public class Parent extends BaseTimeEntity {
     public Parent(ParentCreateCommand parentCreateCommand) {
         this.email = parentCreateCommand.name();
         this.password = parentCreateCommand.password();
+        this.membershipType = MembershipType.FREE;
+    }
+
+    public void updateMembershipType(MembershipType membershipType) {
+        this.membershipType = membershipType;
     }
 
     public void addChild(Child child) {
         children.add(child);
     }
 
+    // 자식을 추가할 수 있는지 검증
     public boolean canAddChild(int currentNumberOfChildren) {
         return switch (membershipType) {
             case FREE -> {

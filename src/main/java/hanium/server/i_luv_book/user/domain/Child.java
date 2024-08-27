@@ -52,4 +52,8 @@ public class Child extends BaseTimeEntity {
         this.loginStatus = new LoginStatus();
         this.parent = parent;
     }
+
+    public void registerParent(Parent parent) {
+        this.parent = parent;
+    }
 }
