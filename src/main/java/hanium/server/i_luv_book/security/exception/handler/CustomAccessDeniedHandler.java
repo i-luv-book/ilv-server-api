@@ -2,7 +2,6 @@ package hanium.server.i_luv_book.security.exception.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hanium.server.i_luv_book.security.exception.code.SecurityErrorResponse;
-import hanium.server.i_luv_book.security.exception.code.SecurityExceptionCode;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -10,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.web.ErrorResponse;
 
 import java.io.IOException;
 

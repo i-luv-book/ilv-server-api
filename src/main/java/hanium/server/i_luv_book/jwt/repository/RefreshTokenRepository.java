@@ -4,7 +4,6 @@ import hanium.server.i_luv_book.jwt.domain.RefreshToken;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Ref;
 import java.util.Optional;
 /**
  * @author Young9
