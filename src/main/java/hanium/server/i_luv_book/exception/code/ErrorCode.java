@@ -14,15 +14,15 @@ public enum ErrorCode {
     // Common
     INVALID_REQUEST_PARAMETER(CommonCode.INVALID_REQUEST_PARAMETER.getCode(), HttpStatus.BAD_REQUEST, "Invalid request parameter."),
     METHOD_NOT_ALLOWED(CommonCode.METHOD_NOT_ALLOWED.getCode(), HttpStatus.METHOD_NOT_ALLOWED, "Method not allowed."),
-    SERVICE_UNAVAILABLE(CommonCode.SERVICE_UNAVAILABLE.getCode(), HttpStatus.SERVICE_UNAVAILABLE, "Service is currently unavailable."),
+    INVALID_REQUEST_URI(CommonCode.INVALID_REQUEST_URI.getCode(), HttpStatus.NOT_FOUND, "Invalid request URI."),
     VIOLATED_DATA_INTEGRITY(CommonCode.VIOLATED_DATA_INTEGRITY.getCode(), HttpStatus.CONFLICT, "Data integrity violation."),
     FAILED_DATA_IO(CommonCode.FAILED_DATA_IO.getCode(), HttpStatus.INTERNAL_SERVER_ERROR, "Data I/O error."),
-    INVALID_REQUEST_URI(CommonCode.INVALID_REQUEST_URI.getCode(), HttpStatus.NOT_FOUND, "Invalid request URI."),
+    SERVICE_UNAVAILABLE(CommonCode.SERVICE_UNAVAILABLE.getCode(), HttpStatus.SERVICE_UNAVAILABLE, "Service is currently unavailable."),
 
     // User
     USER_NOT_FOUND(UserCode.NOT_FOUND.getCode(), HttpStatus.NOT_FOUND, "User not found."),
     USER_ALREADY_EXISTED(UserCode.ALREADY_EXISTED.getCode(), HttpStatus.CONFLICT, "User already exists."),
-    LIMITED_ACCESS(UserCode.LIMITED_ACCESS.getCode(), HttpStatus.FORBIDDEN, "Access is limited for free members."),
+    LIMITED_ACCESS(UserCode.LIMITED_ACCESS.getCode(), HttpStatus.FORBIDDEN, "Access is restricted because of membership."),
 
     // File
     EMPTY_FILE(FileCode.EMPTY.getCode(), HttpStatus.BAD_REQUEST, "The file is empty."),

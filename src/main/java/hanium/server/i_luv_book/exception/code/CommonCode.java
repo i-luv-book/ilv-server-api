@@ -11,10 +11,10 @@ import lombok.RequiredArgsConstructor;
 public enum CommonCode {
     INVALID_REQUEST_PARAMETER("C-01"),
     METHOD_NOT_ALLOWED("C-02"),
-    SERVICE_UNAVAILABLE("C-03"),
+    INVALID_REQUEST_URI("C-03"),
     VIOLATED_DATA_INTEGRITY("C-04"),
     FAILED_DATA_IO("C-05"),
-    INVALID_REQUEST_URI("C-06"),
+    SERVICE_UNAVAILABLE("C-06"),
     ;
 
     private final String code;
