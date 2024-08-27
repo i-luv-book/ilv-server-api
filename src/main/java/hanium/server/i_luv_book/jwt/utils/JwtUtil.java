@@ -2,8 +2,8 @@ package hanium.server.i_luv_book.jwt.utils;
 
 import hanium.server.i_luv_book.jwt.domain.RefreshToken;
 import hanium.server.i_luv_book.jwt.repository.RefreshTokenRepository;
-import hanium.server.i_luv_book.security.exception.exception.CustomExpiredJwtException;
-import hanium.server.i_luv_book.security.exception.exception.InvalidJwtException;
+import hanium.server.i_luv_book.security.exception.jwt.exception.CustomExpiredJwtException;
+import hanium.server.i_luv_book.security.exception.jwt.exception.InvalidJwtException;
 import hanium.server.i_luv_book.user.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

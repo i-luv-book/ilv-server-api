@@ -1,4 +1,4 @@
-package hanium.server.i_luv_book.security.exception.exception;
+package hanium.server.i_luv_book.security.exception.jwt.exception;
 
 import io.jsonwebtoken.JwtException;
 /**
