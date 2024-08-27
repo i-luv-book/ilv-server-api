@@ -32,12 +32,14 @@ public class UserJpaRepository implements UserRepository {
     }
 
     @Override
-    public void save(Child child) {
+    public Long save(Child child) {
         em.persist(child);
+        return child.getId();
     }
 
     @Override
-    public void save(Parent parent) {
+    public Long save(Parent parent) {
         em.persist(parent);
+        return parent.getId();
     }
 }

@@ -19,8 +19,13 @@ public class UserController {
     private final UserDtoMapper mapper;
     private final UserCommandService userCommandService;
 
+    @PostMapping("/api/v1/user/child/can-add")
+    public void canAddChildAccount(@RequestParam(value = "parentId") long parentId) {
+        userCommandService.canAddChildAccount(parentId);
+    }
+
     @PostMapping("/api/v1/user/child")
-    public void addChild(@RequestBody ChildCreateDto childCreateDto, @RequestParam(value = "parentId") long parentId) {
-        userCommandService.addChild(mapper.toCommand(childCreateDto, parentId));
+    public void canAddChildAccount(@RequestBody ChildCreateDto childCreateDto, @RequestParam(value = "parentId") long parentId) {
+        userCommandService.registerChild(mapper.toCommand(childCreateDto, parentId));
     }
 }

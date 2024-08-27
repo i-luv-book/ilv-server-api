@@ -11,7 +11,7 @@ public interface UserRepository {
 
     int countChildrenByParentId(long parentId);
 
-    void save(Child child);
+    Long save(Child child);
 
-    void save(Parent parent);
+    Long save(Parent parent);
 }

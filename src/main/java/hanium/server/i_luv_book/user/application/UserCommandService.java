@@ -9,9 +9,9 @@ import hanium.server.i_luv_book.user.application.dto.request.ParentCreateCommand
 import hanium.server.i_luv_book.user.domain.Child;
 import hanium.server.i_luv_book.user.domain.Parent;
 import hanium.server.i_luv_book.user.domain.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author ijin
@@ -23,27 +23,31 @@ public class UserCommandService {
     private final UserCommandMapper userCommandMapper;
     private final UserRepository userRepository;
 
-    // 부모 회원가입
+    // 부모 계정 회원가입
     @Transactional
-    public void register(ParentCreateCommand command) {
+    public Long registerParent(ParentCreateCommand command) {
         Parent parent = createParent(command);
-        saveParent(parent);
+        return saveParent(parent);
     }
 
-    // 자식 추가
+    // 자식 계정 가입
     @Transactional
-    public void addChild(ChildCreateCommand command) {
+    public Long registerChild(ChildCreateCommand command) {
         Parent parent = findParent(command.parentId());
-        int currentNumberOfChildren = getCurrentNumberOfChildren(command);
-
-        validateChildAddition(parent, currentNumberOfChildren);
-
         Child child = createChild(command, parent);
-        saveChild(parent, child);
+        return saveChild(parent, child);
     }
 
-    private void saveParent(Parent parent) {
-        userRepository.save(parent);
+    // 자식 추가 여부 체크
+    @Transactional(readOnly = true)
+    public void canAddChildAccount(Long parentId) {
+        Parent parent = findParent(parentId);
+        int currentNumberOfChildren = getCurrentNumberOfChildren(parentId);
+        validateChildAddition(parent, currentNumberOfChildren);
+    }
+
+    private Long saveParent(Parent parent) {
+        return userRepository.save(parent);
     }
 
     private Parent createParent(ParentCreateCommand command) {
@@ -56,17 +60,17 @@ public class UserCommandService {
         }
     }
 
-    private void saveChild(Parent parent, Child child) {
+    private Long saveChild(Parent parent, Child child) {
         parent.addChild(child);
-        userRepository.save(child);
+        return userRepository.save(child);
     }
 
     private Child createChild(ChildCreateCommand command, Parent parent) {
         return userCommandMapper.toChild(command, parent);
     }
 
-    private int getCurrentNumberOfChildren(ChildCreateCommand command) {
-        return userRepository.countChildrenByParentId(command.parentId());
+    private int getCurrentNumberOfChildren(Long parentId) {
+        return userRepository.countChildrenByParentId(parentId);
     }
 
     private Parent findParent(long parentId) {
