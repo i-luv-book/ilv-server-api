@@ -9,17 +9,13 @@ import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ComponentScan(basePackages = {"hanium.server.i_luv_book.user.infra"})
+@SpringBootTest
 class UserJpaRepositoryTest {
 
     @Autowired
@@ -50,9 +46,9 @@ class UserJpaRepositoryTest {
         Parent parent = Parent.builder().parentCreateCommand(parentCreateCommand).build();
         Long savedParentId = userJpaRepository.save(parent);
 
-        ChildCreateCommand childCreateCommand1 = new ChildCreateCommand("자식1", LocalDate.now(), Child.Gender.MALE, null, savedParentId);
+        ChildCreateCommand childCreateCommand1 = new ChildCreateCommand("자식1", LocalDate.now(), Child.Gender.MALE,  savedParentId);
         Child child1 = Child.builder().childCreateCommand(childCreateCommand1).build();
-        ChildCreateCommand childCreateCommand2 = new ChildCreateCommand("자식2", LocalDate.now(), Child.Gender.MALE, null, savedParentId);
+        ChildCreateCommand childCreateCommand2 = new ChildCreateCommand("자식2", LocalDate.now(), Child.Gender.MALE, savedParentId);
         Child child2 = Child.builder().childCreateCommand(childCreateCommand2).build();
 
         // when

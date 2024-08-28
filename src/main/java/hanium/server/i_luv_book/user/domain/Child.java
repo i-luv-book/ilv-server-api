@@ -26,8 +26,8 @@ public class Child extends BaseTimeEntity {
     private LocalDate birthDate;
     @Column(name = "gender")
     private Gender gender;
-    @Column(name = "img_url")
-    private String imgUrl;
+    @Embedded
+    private ProfileImage profileImage;
     @Embedded
     private LoginStatus loginStatus;
 
@@ -48,12 +48,22 @@ public class Child extends BaseTimeEntity {
         this.nickname = childCreateCommand.nickname();
         this.birthDate = childCreateCommand.birthDate();
         this.gender = childCreateCommand.gender();
-        this.imgUrl = childCreateCommand.imgUrl() == null ? null : childCreateCommand.imgUrl();
+        this.profileImage = new ProfileImage();
         this.loginStatus = new LoginStatus();
         this.parent = parent;
     }
 
     public void registerParent(Parent parent) {
         this.parent = parent;
+    }
+
+    public void putProfileImage(String imageUrl) {
+        this.profileImage = ProfileImage.builder()
+                .imageUrl(imageUrl)
+                .build();
+    }
+
+    public String getProfileImageUrl() {
+        return profileImage.getImageUrl();
     }
 }

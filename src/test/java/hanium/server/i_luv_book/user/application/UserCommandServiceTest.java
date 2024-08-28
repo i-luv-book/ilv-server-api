@@ -6,6 +6,7 @@ import hanium.server.i_luv_book.user.application.dto.UserCommandMapper;
 import hanium.server.i_luv_book.user.application.dto.request.ChildCreateCommand;
 import hanium.server.i_luv_book.user.application.dto.request.ParentCreateCommand;
 import hanium.server.i_luv_book.user.domain.Child;
+import hanium.server.i_luv_book.user.domain.FileStore;
 import hanium.server.i_luv_book.user.domain.Parent;
 import hanium.server.i_luv_book.user.domain.UserRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +15,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -29,6 +32,8 @@ class UserCommandServiceTest {
     private UserCommandMapper userCommandMapper;
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private FileStore fileStore;
     @InjectMocks
     private UserCommandService userCommandService;
 
@@ -71,8 +76,9 @@ class UserCommandServiceTest {
     void registerChild_Success() {
         // Given
         Parent parent = Parent.builder().parentCreateCommand(new ParentCreateCommand("부모1", "비밀번호1")).build();
-        ChildCreateCommand command = new ChildCreateCommand("자식1", LocalDate.now(), Child.Gender.MALE, null, parent.getId());
+        ChildCreateCommand command = new ChildCreateCommand("자식1", LocalDate.now(), Child.Gender.MALE, parent.getId());
         Child child = Child.builder().childCreateCommand(command).parent(parent).build();
+        MultipartFile emptyFile = new MockMultipartFile("file", "", null, new byte[0]);
 
         // Mocking
         when(userRepository.findParentById(command.parentId())).thenReturn(Optional.of(parent));
@@ -80,7 +86,7 @@ class UserCommandServiceTest {
         when(userRepository.save(any(Child.class))).thenReturn(1L);
 
         // When
-        Long result = userCommandService.registerChild(command);
+        Long result = userCommandService.registerChild(command, emptyFile);
 
         // Then
         assertEquals(1L, result);

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-08-28T13:05:38+0900",
+    date = "2024-08-28T16:02:57+0900",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.11 (Amazon.com Inc.)"
 )
 @Component
@@ -26,17 +26,15 @@ public class UserDtoMapperImpl implements UserDtoMapper {
         String nickname = null;
         LocalDate birthDate = null;
         Gender gender = null;
-        String imgUrl = null;
         if ( dto != null ) {
             nickname = dto.getNickname();
             birthDate = dto.getBirthDate();
             gender = dto.getGender();
-            imgUrl = dto.getImgUrl();
         }
         long parentId1 = 0L;
         parentId1 = parentId;
 
-        ChildCreateCommand childCreateCommand = new ChildCreateCommand( nickname, birthDate, gender, imgUrl, parentId1 );
+        ChildCreateCommand childCreateCommand = new ChildCreateCommand( nickname, birthDate, gender, parentId1 );
 
         return childCreateCommand;
     }
@@ -49,6 +47,9 @@ public class UserDtoMapperImpl implements UserDtoMapper {
 
         String email = null;
         String password = null;
+
+        email = dto.getEmail();
+        password = dto.getPassword();
 
         ParentCreateCommand parentCreateCommand = new ParentCreateCommand( email, password );
 

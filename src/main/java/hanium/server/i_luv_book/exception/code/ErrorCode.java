@@ -25,8 +25,8 @@ public enum ErrorCode {
     LIMITED_ACCESS(UserCode.LIMITED_ACCESS.getCode(), HttpStatus.FORBIDDEN, "Access is restricted because of membership."),
 
     // File
-    EMPTY_FILE(FileCode.EMPTY.getCode(), HttpStatus.BAD_REQUEST, "The file is empty."),
-    NON_EXISTENT_EXTENSION(FileCode.NON_EXISTENT_EXTENSION.getCode(), HttpStatus.BAD_REQUEST, "The file has no extension."),
+    EMPTY_FILE(FileCode.EMPTY_FILE.getCode(), HttpStatus.BAD_REQUEST, "The file is empty."),
+    EMPTY_EXTENSION(FileCode.EMPTY_EXTENSION.getCode(), HttpStatus.BAD_REQUEST, "The file has no extension."),
     INVALID_EXTENSION(FileCode.INVALID_EXTENSION.getCode(), HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Invalid file extension."),
     LIMITED_SIZE(FileCode.LIMITED_SIZE.getCode(), HttpStatus.PAYLOAD_TOO_LARGE, "The file size exceeds the limit."),
     FAILED_IO(FileCode.FAILED_IO.getCode(), HttpStatus.INTERNAL_SERVER_ERROR, "Failed to perform I/O operation."),

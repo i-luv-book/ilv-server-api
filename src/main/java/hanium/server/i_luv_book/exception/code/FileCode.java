@@ -9,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum FileCode {
-    EMPTY("F-01"),
-    NON_EXISTENT_EXTENSION("F-02"),
+    EMPTY_FILE("F-01"),
+    EMPTY_EXTENSION("F-02"),
     INVALID_EXTENSION("F-03"),
     LIMITED_SIZE("F-04"),
     FAILED_IO("F-05"),

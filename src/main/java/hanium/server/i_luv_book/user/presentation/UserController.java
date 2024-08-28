@@ -4,11 +4,10 @@ import hanium.server.i_luv_book.user.application.UserCommandService;
 import hanium.server.i_luv_book.user.presentation.dto.UserDtoMapper;
 import hanium.server.i_luv_book.user.presentation.dto.request.ChildCreateDto;
 import hanium.server.i_luv_book.user.presentation.dto.request.ParentCreateDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author ijin
@@ -26,12 +25,13 @@ public class UserController {
     }
 
     @PostMapping("/api/v1/user/child")
-    public void registerChild(@RequestBody ChildCreateDto childCreateDto, @RequestParam(value = "parentId") long parentId) {
-        userCommandService.registerChild(mapper.toCommand(childCreateDto, parentId));
+    public void registerChild(@RequestParam(value = "parentId") long parentId, @RequestPart(value = "childCreateDto") @Valid ChildCreateDto childCreateDto,
+                              @RequestPart(value = "image", required = false) MultipartFile image) {
+        userCommandService.registerChild(mapper.toCommand(childCreateDto, parentId), image);
     }
 
     @PostMapping("/api/v1/user/parent")
-    public void registerParent(@RequestBody ParentCreateDto parentCreateDto) {
+    public void registerParent(@RequestBody @Valid ParentCreateDto parentCreateDto) {
         userCommandService.registerParent(mapper.toCommand(parentCreateDto));
     }
 }

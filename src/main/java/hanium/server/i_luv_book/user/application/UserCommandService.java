@@ -7,11 +7,13 @@ import hanium.server.i_luv_book.user.application.dto.UserCommandMapper;
 import hanium.server.i_luv_book.user.application.dto.request.ChildCreateCommand;
 import hanium.server.i_luv_book.user.application.dto.request.ParentCreateCommand;
 import hanium.server.i_luv_book.user.domain.Child;
+import hanium.server.i_luv_book.user.domain.FileStore;
 import hanium.server.i_luv_book.user.domain.Parent;
 import hanium.server.i_luv_book.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author ijin
@@ -22,6 +24,7 @@ public class UserCommandService {
 
     private final UserCommandMapper userCommandMapper;
     private final UserRepository userRepository;
+    private final FileStore fileStore;
 
     // 부모 계정 가입
     @Transactional
@@ -32,9 +35,10 @@ public class UserCommandService {
 
     // 자식 계정 가입
     @Transactional
-    public Long registerChild(ChildCreateCommand command) {
+    public Long registerChild(ChildCreateCommand command, MultipartFile image) {
         Parent parent = findParent(command.parentId());
         Child child = createChild(command, parent);
+        uploadProfileImage(image, child);
         return saveChild(parent, child);
     }
 
@@ -44,6 +48,13 @@ public class UserCommandService {
         Parent parent = findParent(parentId);
         int currentNumberOfChildren = getCurrentNumberOfChildren(parentId);
         checkChildAdditionPossible(parent, currentNumberOfChildren);
+    }
+
+    private void uploadProfileImage(MultipartFile image, Child child) {
+        if (!image.isEmpty()) {
+            String imageUrl = fileStore.upload(image);
+            child.putProfileImage(imageUrl);
+        }
     }
 
     private Long saveParent(Parent parent) {
