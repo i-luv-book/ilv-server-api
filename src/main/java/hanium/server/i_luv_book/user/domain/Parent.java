@@ -40,7 +40,7 @@ public class Parent extends BaseTimeEntity {
 
     @Builder
     public Parent(ParentCreateCommand parentCreateCommand) {
-        this.email = parentCreateCommand.name();
+        this.email = parentCreateCommand.email();
         this.password = parentCreateCommand.password();
         this.membershipType = MembershipType.FREE;
     }

@@ -1,15 +1,17 @@
 package hanium.server.i_luv_book.user.presentation.dto;
 
 import hanium.server.i_luv_book.user.application.dto.request.ChildCreateCommand;
+import hanium.server.i_luv_book.user.application.dto.request.ParentCreateCommand;
 import hanium.server.i_luv_book.user.domain.Child.Gender;
 import hanium.server.i_luv_book.user.presentation.dto.request.ChildCreateDto;
+import hanium.server.i_luv_book.user.presentation.dto.request.ParentCreateDto;
 import java.time.LocalDate;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-08-27T06:18:42+0900",
+    date = "2024-08-28T13:05:38+0900",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.11 (Amazon.com Inc.)"
 )
 @Component
@@ -37,5 +39,19 @@ public class UserDtoMapperImpl implements UserDtoMapper {
         ChildCreateCommand childCreateCommand = new ChildCreateCommand( nickname, birthDate, gender, imgUrl, parentId1 );
 
         return childCreateCommand;
+    }
+
+    @Override
+    public ParentCreateCommand toCommand(ParentCreateDto dto) {
+        if ( dto == null ) {
+            return null;
+        }
+
+        String email = null;
+        String password = null;
+
+        ParentCreateCommand parentCreateCommand = new ParentCreateCommand( email, password );
+
+        return parentCreateCommand;
     }
 }

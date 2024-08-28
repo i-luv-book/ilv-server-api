@@ -34,9 +34,9 @@ class UserCommandServiceTest {
 
     @Test
     @DisplayName("부모 계정 회원가입 테스트")
-    void register() {
+    void registerParent_Success() {
         // Given
-        ParentCreateCommand command = new ParentCreateCommand("name1", "password1");
+        ParentCreateCommand command = new ParentCreateCommand("email1", "password1");
         Parent parent = Parent.builder().parentCreateCommand(command).build();
 
         when(userCommandMapper.toParent(command)).thenReturn(parent);
@@ -59,7 +59,7 @@ class UserCommandServiceTest {
         when(userRepository.findParentById(nonExistentParentId)).thenReturn(Optional.empty());
 
         // When & Then
-        assertThrows(NotFoundException.class, () -> userCommandService.canAddChildAccount(nonExistentParentId));
+        assertThrows(NotFoundException.class, () -> userCommandService.checkChildAdditionPossible(nonExistentParentId));
 
         verify(userRepository, times(1)).findParentById(nonExistentParentId);
         verify(userRepository, never()).countChildrenByParentId(anyLong());
@@ -68,7 +68,7 @@ class UserCommandServiceTest {
 
     @Test
     @DisplayName("자식 계정 회원가입 테스트")
-    void addChild_Success() {
+    void registerChild_Success() {
         // Given
         Parent parent = Parent.builder().parentCreateCommand(new ParentCreateCommand("부모1", "비밀번호1")).build();
         ChildCreateCommand command = new ChildCreateCommand("자식1", LocalDate.now(), Child.Gender.MALE, null, parent.getId());
@@ -88,7 +88,7 @@ class UserCommandServiceTest {
 
     @Test
     @DisplayName("자식계정 추가 전 멤버쉽 제한 테스트")
-    void addChild_LimitedMembership() {
+    void registerChild_LimitedMembership() {
         // Given
         Parent parent = Parent.builder()
                 .parentCreateCommand(new ParentCreateCommand("부모1", "비밀번호1"))
@@ -99,6 +99,6 @@ class UserCommandServiceTest {
         when(userRepository.countChildrenByParentId(parent.getId())).thenReturn(1); // 자식 제한 초과
 
         // When & Then
-        assertThrows(BusinessException.class, () -> userCommandService.canAddChildAccount(parent.getId()));
+        assertThrows(BusinessException.class, () -> userCommandService.checkChildAdditionPossible(parent.getId()));
     }
 }

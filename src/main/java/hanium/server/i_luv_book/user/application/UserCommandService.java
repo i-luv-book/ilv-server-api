@@ -23,7 +23,7 @@ public class UserCommandService {
     private final UserCommandMapper userCommandMapper;
     private final UserRepository userRepository;
 
-    // 부모 계정 회원가입
+    // 부모 계정 가입
     @Transactional
     public Long registerParent(ParentCreateCommand command) {
         Parent parent = createParent(command);
@@ -40,10 +40,10 @@ public class UserCommandService {
 
     // 자식 추가 여부 체크
     @Transactional(readOnly = true)
-    public void canAddChildAccount(Long parentId) {
+    public void checkChildAdditionPossible(Long parentId) {
         Parent parent = findParent(parentId);
         int currentNumberOfChildren = getCurrentNumberOfChildren(parentId);
-        validateChildAddition(parent, currentNumberOfChildren);
+        checkChildAdditionPossible(parent, currentNumberOfChildren);
     }
 
     private Long saveParent(Parent parent) {
@@ -54,7 +54,7 @@ public class UserCommandService {
         return userCommandMapper.toParent(command);
     }
 
-    private void validateChildAddition(Parent parent, int currentNumberOfChildren) {
+    private void checkChildAdditionPossible(Parent parent, int currentNumberOfChildren) {
         if (!parent.canAddChild(currentNumberOfChildren)) {
             throw new BusinessException(ErrorCode.LIMITED_ACCESS);
         }
