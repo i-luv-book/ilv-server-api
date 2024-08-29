@@ -25,6 +25,7 @@ repositories {
 dependencies {
 	// 기본
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
 	//JWT
@@ -34,7 +35,6 @@ dependencies {
 
 	//redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-
 
 	// DB
 	runtimeOnly 'com.mysql:mysql-connector-j'

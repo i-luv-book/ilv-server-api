@@ -1,14 +1,15 @@
 package hanium.server.i_luv_book.user.application;
 
-import hanium.server.i_luv_book.exception.BusinessException;
-import hanium.server.i_luv_book.exception.NotFoundException;
-import hanium.server.i_luv_book.user.application.dto.UserCommandMapper;
-import hanium.server.i_luv_book.user.application.dto.request.ChildCreateCommand;
-import hanium.server.i_luv_book.user.application.dto.request.ParentCreateCommand;
-import hanium.server.i_luv_book.user.domain.Child;
-import hanium.server.i_luv_book.user.domain.FileStore;
-import hanium.server.i_luv_book.user.domain.Parent;
-import hanium.server.i_luv_book.user.domain.UserRepository;
+import hanium.server.i_luv_book.domain.user.application.UserCommandService;
+import hanium.server.i_luv_book.global.exception.BusinessException;
+import hanium.server.i_luv_book.global.exception.NotFoundException;
+import hanium.server.i_luv_book.domain.user.application.dto.UserCommandMapper;
+import hanium.server.i_luv_book.domain.user.application.dto.request.ChildCreateCommand;
+import hanium.server.i_luv_book.domain.user.application.dto.request.ParentCreateCommand;
+import hanium.server.i_luv_book.domain.user.domain.Child;
+import hanium.server.i_luv_book.domain.user.domain.FileStore;
+import hanium.server.i_luv_book.domain.user.domain.Parent;
+import hanium.server.i_luv_book.domain.user.domain.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

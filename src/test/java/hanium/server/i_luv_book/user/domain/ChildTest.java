@@ -1,11 +1,11 @@
 package hanium.server.i_luv_book.user.domain;
 
-import hanium.server.i_luv_book.user.application.dto.request.ChildCreateCommand;
-import hanium.server.i_luv_book.user.application.dto.request.ParentCreateCommand;
+import hanium.server.i_luv_book.domain.user.application.dto.request.ChildCreateCommand;
+import hanium.server.i_luv_book.domain.user.application.dto.request.ParentCreateCommand;
+import hanium.server.i_luv_book.domain.user.domain.Child;
+import hanium.server.i_luv_book.domain.user.domain.Parent;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 

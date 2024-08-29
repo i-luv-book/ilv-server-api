@@ -1,10 +1,10 @@
 package hanium.server.i_luv_book.user.infra;
 
-import hanium.server.i_luv_book.user.application.dto.request.ChildCreateCommand;
-import hanium.server.i_luv_book.user.application.dto.request.ParentCreateCommand;
-import hanium.server.i_luv_book.user.domain.Child;
-import hanium.server.i_luv_book.user.domain.Parent;
-import hanium.server.i_luv_book.user.domain.UserRepository;
+import hanium.server.i_luv_book.domain.user.application.dto.request.ChildCreateCommand;
+import hanium.server.i_luv_book.domain.user.application.dto.request.ParentCreateCommand;
+import hanium.server.i_luv_book.domain.user.domain.Child;
+import hanium.server.i_luv_book.domain.user.domain.Parent;
+import hanium.server.i_luv_book.domain.user.domain.UserRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

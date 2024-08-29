@@ -1,6 +1,7 @@
 package hanium.server.i_luv_book.user.domain;
 
-import hanium.server.i_luv_book.user.application.dto.request.ParentCreateCommand;
+import hanium.server.i_luv_book.domain.user.application.dto.request.ParentCreateCommand;
+import hanium.server.i_luv_book.domain.user.domain.Parent;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
