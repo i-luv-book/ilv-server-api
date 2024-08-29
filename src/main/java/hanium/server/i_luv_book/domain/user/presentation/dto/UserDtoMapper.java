@@ -14,7 +14,7 @@ import org.mapstruct.factory.Mappers;
 public interface UserDtoMapper {
     UserDtoMapper INSTANCE = Mappers.getMapper(UserDtoMapper.class);
 
-    ChildCreateCommand toCommand(ChildCreateDto dto, long parentId);
-
     ParentCreateCommand toCommand(ParentCreateDto dto);
+
+    ChildCreateCommand toCommand(ChildCreateDto dto, long parentId);
 }

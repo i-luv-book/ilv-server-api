@@ -1,4 +1,4 @@
-package hanium.server.i_luv_book.global.config;
+package hanium.server.i_luv_book.global.config.redis;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
