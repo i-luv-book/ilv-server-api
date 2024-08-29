@@ -4,6 +4,7 @@ import hanium.server.i_luv_book.domain.user.application.UserCommandService;
 import hanium.server.i_luv_book.domain.user.presentation.dto.UserDtoMapper;
 import hanium.server.i_luv_book.domain.user.presentation.dto.request.ChildCreateDto;
 import hanium.server.i_luv_book.domain.user.presentation.dto.request.ParentCreateDto;
+import hanium.server.i_luv_book.domain.user.presentation.dto.response.TokenDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class UserController {
     }
 
     @PostMapping("/api/v1/user/parent")
-    public void registerParent(@RequestBody @Valid ParentCreateDto parentCreateDto) {
-        userCommandService.registerParent(mapper.toCommand(parentCreateDto));
+    public TokenDto registerParent(@RequestBody @Valid ParentCreateDto parentCreateDto) {
+        return userCommandService.registerParent(mapper.toCommand(parentCreateDto));
     }
 }
