@@ -21,17 +21,15 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
 
         SecurityExceptionCode exceptionCode = (SecurityExceptionCode) request.getAttribute("exceptionCode");
-        if (exceptionCode == null) {
-            exceptionCode = SecurityExceptionCode.UNKNOWN_ERROR;
+
+        if (exceptionCode != null){
+            SecurityErrorResponse errorResponse = new SecurityErrorResponse(exceptionCode.getStatus().value(),
+                    exceptionCode.getStatus().name(), exceptionCode.getCode(), exceptionCode.getMessage());
+
+            response.setStatus(exceptionCode.getStatus().value());
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(mapper.writeValueAsString(errorResponse));
         }
-
-        SecurityErrorResponse errorResponse = new SecurityErrorResponse(exceptionCode.getStatus().value(),
-                exceptionCode.getStatus().name(), exceptionCode.getCode(), exceptionCode.getMessage());
-
-        response.setStatus(exceptionCode.getStatus().value());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(mapper.writeValueAsString(errorResponse));
-
     }
 }

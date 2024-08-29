@@ -26,7 +26,7 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthorizationManager<RequestAuthorizationContext> authorizationManager;
-    public static final String[] WHITE_LIST = {"/api/login", "/api/logout", "/","/auth","/refreshToken","/sign"};
+    public static final String[] WHITE_LIST = {"/api/login/oauth", "/api/signup/oauth/kakao", "/","/auth","/refreshToken"};
     public static final String[] PAID_LIST = {"/api/badge"};
     public static final String[] FREE_LIST = {"/api/fairytale/**"};
     public static final String[] ADMIN_LIST = {"/api/admin/**"};
