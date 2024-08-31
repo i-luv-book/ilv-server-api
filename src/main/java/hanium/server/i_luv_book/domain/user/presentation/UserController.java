@@ -14,25 +14,31 @@ import org.springframework.web.multipart.MultipartFile;
  * @author ijin
  */
 @RestController
+@RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserDtoMapper mapper;
     private final UserCommandService userCommandService;
 
-    @PostMapping("/api/v1/user/child/can-add")
+    @PostMapping("/parent")
+    public TokenDto registerParent(@RequestBody @Valid ParentCreateDto parentCreateDto) {
+        return userCommandService.registerParent(mapper.toCommand(parentCreateDto));
+    }
+
+    @PostMapping("/child/can-add")
     public void canAddChildAccount(@RequestParam(value = "parentId") long parentId) {
         userCommandService.checkChildAdditionPossible(parentId);
     }
 
-    @PostMapping("/api/v1/user/child")
+    @PostMapping("/child")
     public void registerChild(@RequestParam(value = "parentId") long parentId, @RequestPart(value = "childCreateDto") @Valid ChildCreateDto childCreateDto,
                               @RequestPart(value = "image", required = false) MultipartFile image) {
         userCommandService.registerChild(mapper.toCommand(childCreateDto, parentId), image);
     }
 
-    @PostMapping("/api/v1/user/parent")
-    public TokenDto registerParent(@RequestBody @Valid ParentCreateDto parentCreateDto) {
-        return userCommandService.registerParent(mapper.toCommand(parentCreateDto));
+    @DeleteMapping("/child")
+    public void deleteChild(@RequestParam(value = "parentId") long parentId, @RequestParam(value = "nickname") String nickname) {
+        userCommandService.deleteChild(parentId, nickname);
     }
 }

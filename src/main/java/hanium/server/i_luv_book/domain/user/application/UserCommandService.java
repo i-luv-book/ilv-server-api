@@ -52,6 +52,12 @@ public class UserCommandService {
         checkChildAdditionPossible(parent, currentNumberOfChildren);
     }
 
+    // 자식 삭제
+    @Transactional
+    public void deleteChild(Long parentId, String nickname) {
+        userRepository.deleteChild(parentId, nickname);
+    }
+
     private void checkIfChildNameAlreadyExists(ChildCreateCommand command, Parent parent) {
         if (parent.hasChildWithName(command.nickname())) {
             throw new BusinessException(ErrorCode.USER_ALREADY_EXISTED);
