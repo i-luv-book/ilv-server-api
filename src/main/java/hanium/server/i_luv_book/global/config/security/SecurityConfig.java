@@ -1,4 +1,4 @@
-package hanium.server.i_luv_book.global.config;
+package hanium.server.i_luv_book.global.config.security;
 
 import hanium.server.i_luv_book.global.security.authentication.filter.JwtAuthenticationFilter;
 import hanium.server.i_luv_book.global.security.exception.entrypoint.CustomAuthenticationEntryPoint;

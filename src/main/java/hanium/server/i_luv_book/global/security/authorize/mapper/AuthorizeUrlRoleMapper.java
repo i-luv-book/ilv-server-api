@@ -1,6 +1,6 @@
 package hanium.server.i_luv_book.global.security.authorize.mapper;
 
-import hanium.server.i_luv_book.global.config.SecurityConfig;
+import hanium.server.i_luv_book.global.config.security.SecurityConfig;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;

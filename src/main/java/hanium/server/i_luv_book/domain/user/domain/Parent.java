@@ -48,10 +48,12 @@ public class Parent extends BaseTimeEntity {
         this.role = Role.ROLE_FREE;
     }
 
+    // 멤버쉽 업데이트
     public void updateMembershipType(MembershipType membershipType) {
         this.membershipType = membershipType;
     }
 
+    // 자식 추가
     public void addChild(Child child) {
         children.add(child);
     }
@@ -72,5 +74,10 @@ public class Parent extends BaseTimeEntity {
                 yield true;
             }
         };
+    }
+
+    // 동일한 자식 검사
+    public boolean hasChildWithName(String name) {
+        return children.stream().anyMatch(child -> child.getNickname().equals(name));
     }
 }
