@@ -28,7 +28,7 @@ public class Parent extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Child> children = new ArrayList<>();
 
     @Getter
@@ -48,12 +48,19 @@ public class Parent extends BaseTimeEntity {
         this.role = Role.ROLE_FREE;
     }
 
+    // 멤버쉽 업데이트
     public void updateMembershipType(MembershipType membershipType) {
         this.membershipType = membershipType;
     }
 
+    // 자식 추가
     public void addChild(Child child) {
         children.add(child);
+    }
+
+    // 자식 삭제
+    public void removeChild(Child child) {
+        children.remove(child);
     }
 
     // 자식을 추가할 수 있는지 검증
@@ -72,5 +79,10 @@ public class Parent extends BaseTimeEntity {
                 yield true;
             }
         };
+    }
+
+    // 동일한 자식 검사
+    public boolean hasChildWithName(String name) {
+        return children.stream().anyMatch(child -> child.getNickname().equals(name));
     }
 }

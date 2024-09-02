@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -34,8 +35,6 @@ class UserCommandServiceTest {
     private UserCommandMapper userCommandMapper;
     @Mock
     private UserRepository userRepository;
-    @Mock
-    private FileStore fileStore;
     @InjectMocks
     private UserCommandService userCommandService;
 
@@ -111,5 +110,22 @@ class UserCommandServiceTest {
 
         // When & Then
         assertThrows(BusinessException.class, () -> userCommandService.checkChildAdditionPossible(parent.getId()));
+    }
+
+    @Test
+    @DisplayName("자식계정 추가 전 동일한 자녀 이름이 있는지 테스트")
+    void registerChild_hasSameChildName() {
+        // Given
+        ParentCreateCommand parentCreateCommand = new ParentCreateCommand("부모1", "비밀번호1");
+        Parent parent = Parent.builder().parentCreateCommand(parentCreateCommand).build();
+        ChildCreateCommand childCreateCommand = new ChildCreateCommand("이복둥", LocalDate.now(), Child.Gender.MALE, 1L);
+        Child existentChild = Child.builder().childCreateCommand(childCreateCommand).build();
+
+        // When
+        parent.addChild(existentChild);
+        when(userRepository.findParentById(1L)).thenReturn(Optional.of(parent));
+
+        // Then
+        assertThrows(BusinessException.class, () -> userCommandService.registerChild(childCreateCommand, null));
     }
 }

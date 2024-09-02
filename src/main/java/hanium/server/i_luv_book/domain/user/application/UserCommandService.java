@@ -38,8 +38,9 @@ public class UserCommandService {
     @Transactional
     public Long registerChild(ChildCreateCommand command, MultipartFile image) {
         Parent parent = findParent(command.parentId());
-        Child child = createChild(command, parent);
-        uploadProfileImage(image, child);
+        checkIfChildNameAlreadyExists(command, parent);
+
+        Child child = createChild(command, parent, image);
         return saveChild(parent, child);
     }
 
@@ -51,10 +52,28 @@ public class UserCommandService {
         checkChildAdditionPossible(parent, currentNumberOfChildren);
     }
 
+    // 자식 삭제
+    @Transactional
+    public void deleteChild(Long parentId, String nickname) {
+        userRepository.deleteChild(parentId, nickname);
+    }
+
+    private void checkIfChildNameAlreadyExists(ChildCreateCommand command, Parent parent) {
+        if (parent.hasChildWithName(command.nickname())) {
+            throw new BusinessException(ErrorCode.USER_ALREADY_EXISTED);
+        }
+    }
+
     private TokenDto generateTokens(Long parentId) {
         String accessToken = jwtUtil.generateAccessToken(parentId, Role.ROLE_FREE);
         String refreshToken = jwtUtil.generateRefreshToken(parentId);
         return new TokenDto(accessToken, refreshToken);
+    }
+
+    private Child createChild(ChildCreateCommand command, Parent parent, MultipartFile image) {
+        Child child = userCommandMapper.toChild(command, parent);
+        uploadProfileImage(image, child);
+        return child;
     }
 
     private void uploadProfileImage(MultipartFile image, Child child) {
@@ -81,10 +100,6 @@ public class UserCommandService {
     private Long saveChild(Parent parent, Child child) {
         parent.addChild(child);
         return userRepository.save(child);
-    }
-
-    private Child createChild(ChildCreateCommand command, Parent parent) {
-        return userCommandMapper.toChild(command, parent);
     }
 
     private int getCurrentNumberOfChildren(Long parentId) {
