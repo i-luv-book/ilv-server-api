@@ -128,4 +128,30 @@ class UserCommandServiceTest {
         // Then
         assertThrows(BusinessException.class, () -> userCommandService.registerChild(childCreateCommand, null));
     }
+
+    @Test
+    @DisplayName("배지 부여 성공 테스트")
+    void grantBadge_Success() {
+        // Given
+        Long childId = 1L;
+        Long badgeId = 1L;
+        Child child = mock(Child.class);
+        Badge badge = mock(Badge.class);
+        ChildBadge childBadge = mock(ChildBadge.class);
+
+        when(userRepository.findChildById(childId)).thenReturn(Optional.of(child));
+        when(userRepository.findBadgeById(badgeId)).thenReturn(Optional.of(badge));
+        when(userCommandMapper.toChildBadge(child, badge)).thenReturn(childBadge);
+        when(userRepository.save(childBadge)).thenReturn(1L);
+
+        // When
+        Long result = userCommandService.grantBadge(childId, badgeId);
+
+        // Then
+        assertEquals(1L, result);
+        verify(userRepository, times(1)).findChildById(childId);
+        verify(userRepository, times(1)).findBadgeById(badgeId);
+        verify(userCommandMapper, times(1)).toChildBadge(child, badge);
+        verify(userRepository, times(1)).save(childBadge);
+    }
 }

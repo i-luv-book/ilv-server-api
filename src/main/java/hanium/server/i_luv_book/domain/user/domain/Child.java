@@ -67,4 +67,8 @@ public class Child extends BaseTimeEntity {
     public String getProfileImageUrl() {
         return profileImage.getImageUrl();
     }
+
+    public void addChildBadge(ChildBadge childBadge) {
+        childBadges.add(childBadge);
+    }
 }

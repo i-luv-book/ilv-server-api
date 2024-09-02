@@ -23,6 +23,7 @@ public enum ErrorCode {
     USER_NOT_FOUND(UserCode.NOT_FOUND.getCode(), HttpStatus.NOT_FOUND, "User not found."),
     USER_ALREADY_EXISTED(UserCode.ALREADY_EXISTED.getCode(), HttpStatus.CONFLICT, "User already exists."),
     LIMITED_ACCESS(UserCode.LIMITED_ACCESS.getCode(), HttpStatus.FORBIDDEN, "Access is restricted because of membership."),
+    BADGE_NOT_FOUND(UserCode.BADGE_NOT_FOUND.getCode(), HttpStatus.NOT_FOUND, "Badge not found."),
 
     // File
     EMPTY_FILE(FileCode.EMPTY_FILE.getCode(), HttpStatus.BAD_REQUEST, "The file is empty."),

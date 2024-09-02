@@ -41,4 +41,9 @@ public class UserController {
     public void deleteChild(@RequestParam(value = "parentId") long parentId, @RequestParam(value = "nickname") String nickname) {
         userCommandService.deleteChild(parentId, nickname);
     }
+
+    @PostMapping("/child/badge")
+    public void registerBadge(@RequestParam(value = "childId") long childId, @RequestParam(value = "badgeId") long badgeId) {
+        userCommandService.grantBadge(childId, badgeId);
+    }
 }

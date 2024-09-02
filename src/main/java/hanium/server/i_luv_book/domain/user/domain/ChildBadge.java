@@ -3,6 +3,7 @@ package hanium.server.i_luv_book.domain.user.domain;
 import hanium.server.i_luv_book.global.common.basetime.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,4 +24,10 @@ public class ChildBadge extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "badge_id")
     private Badge badge;
+
+    @Builder
+    public ChildBadge(Child child, Badge badge) {
+        this.child = child;
+        this.badge = badge;
+    }
 }
