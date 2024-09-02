@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-08-30T20:01:35+0900",
+    date = "2024-09-03T02:41:17+0900",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.10 (Oracle Corporation)"
 )
 @Component
@@ -43,7 +43,8 @@ public class UserCommandMapperImpl implements UserCommandMapper {
 
         ParentBuilder parent = Parent.builder();
 
-        parent.parentCreateCommand( parentCreateCommand );
+        parent.email( parentCreateCommand.email() );
+        parent.password( parentCreateCommand.password() );
 
         return parent.build();
     }

@@ -1,9 +1,11 @@
 package hanium.server.i_luv_book.domain.user.domain;
 
 import hanium.server.i_luv_book.domain.user.application.dto.request.ParentCreateCommand;
+import hanium.server.i_luv_book.domain.user.login.domain.LoginType;
 import hanium.server.i_luv_book.global.common.basetime.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.mapstruct.ap.internal.model.GeneratedType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +16,11 @@ import java.util.List;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+
+//이거 임시로 해놓은 거임 지워야함
+@Builder
+@AllArgsConstructor
+@ToString
 public class Parent extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +34,11 @@ public class Parent extends BaseTimeEntity {
     private MembershipType membershipType;
     @Enumerated(EnumType.STRING)
     private Role role;
+    @Enumerated(EnumType.STRING)
+    private LoginType loginType;
+    @Column(name = "social_id")
+    private String socialId;
+
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Child> children = new ArrayList<>();

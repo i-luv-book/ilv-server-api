@@ -3,6 +3,7 @@ package hanium.server.i_luv_book.domain.user.login.api;
 import hanium.server.i_luv_book.domain.user.domain.Role;
 import hanium.server.i_luv_book.domain.user.login.application.LoginService;
 import hanium.server.i_luv_book.domain.user.login.domain.LoginType;
+import hanium.server.i_luv_book.domain.user.login.dto.response.JwtTokenResponse;
 import hanium.server.i_luv_book.domain.user.login.dto.response.LoginFormResDTO;
 import hanium.server.i_luv_book.global.jwt.dao.RefreshTokenRepository;
 import hanium.server.i_luv_book.global.jwt.domain.RefreshToken;
@@ -54,19 +55,17 @@ public class LoginController {
         return loginService.getLoginFormUrl(type);
     }
     @GetMapping("/oauth/signup")
-    public String OAuthSignController(
+    public JwtTokenResponse OAuthSignController(
             @RequestParam("type") LoginType type,
             @RequestParam("code") String code) {
         switch (type) {
             case GOOGLE:
-                log.info("구글 컨트롤러");
                 loginService.google(code);
-                break;
-            case KAKAO:
-                break;
+                return new JwtTokenResponse("test","Test");
+            //KAKAO 일 때
+            default:
+                return loginService.generateJWTForKaKao(code);
         }
-
-        return code;
     }
 
     @GetMapping("/refreshToken")
