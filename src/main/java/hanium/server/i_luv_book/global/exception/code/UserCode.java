@@ -12,6 +12,7 @@ public enum UserCode {
     NOT_FOUND("U-01"),
     ALREADY_EXISTED("U-02"),
     LIMITED_ACCESS("U-03"),
+    BADGE_NOT_FOUND("U-04"),
     ;
 
     private final String code;

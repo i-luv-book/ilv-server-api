@@ -28,14 +28,15 @@ public class Child extends BaseTimeEntity {
     private Gender gender;
     @Embedded
     private ProfileImage profileImage;
-    @Embedded
-    private LoginStatus loginStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Parent parent;
     @OneToMany(mappedBy = "child", cascade = CascadeType.ALL)
     private List<ChildBadge> childBadges = new ArrayList<>();
+    @OneToOne
+    @JoinColumn(name = "activity_info_id")
+    private ActivityInfo activityInfo;
 
     @Getter
     @RequiredArgsConstructor
@@ -48,9 +49,9 @@ public class Child extends BaseTimeEntity {
         this.nickname = childCreateCommand.nickname();
         this.birthDate = childCreateCommand.birthDate();
         this.gender = childCreateCommand.gender();
-        this.profileImage = new ProfileImage();
-        this.loginStatus = new LoginStatus();
         this.parent = parent;
+        this.profileImage = new ProfileImage();
+        this.activityInfo = new ActivityInfo();
     }
 
     public void registerParent(Parent parent) {
@@ -65,5 +66,9 @@ public class Child extends BaseTimeEntity {
 
     public String getProfileImageUrl() {
         return profileImage.getImageUrl();
+    }
+
+    public void addChildBadge(ChildBadge childBadge) {
+        childBadges.add(childBadge);
     }
 }

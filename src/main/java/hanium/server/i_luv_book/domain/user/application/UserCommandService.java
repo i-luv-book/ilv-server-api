@@ -58,6 +58,35 @@ public class UserCommandService {
         userRepository.deleteChild(parentId, nickname);
     }
 
+    // 배지 획득
+    @Transactional
+    public Long grantBadge(Long childId, Long badgeId) {
+        Child child = findChild(childId);
+        Badge badge = findBadge(badgeId);
+        ChildBadge childBadge = createChildBadge(child, badge);
+        return saveChildBadge(child, childBadge, badge);
+    }
+
+    private Long saveChildBadge(Child child, ChildBadge childBadge, Badge badge) {
+        child.addChildBadge(childBadge);
+        badge.addChildBadge(childBadge);
+        return userRepository.save(childBadge);
+    }
+
+    private ChildBadge createChildBadge(Child child, Badge badge) {
+        return userCommandMapper.toChildBadge(child, badge);
+    }
+
+    private Child findChild(Long childId) {
+        return userRepository.findChildById(childId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
+    }
+
+    private Badge findBadge(Long badgeId) {
+        return userRepository.findBadgeById(badgeId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.BADGE_NOT_FOUND));
+    }
+
     private void checkIfChildNameAlreadyExists(ChildCreateCommand command, Parent parent) {
         if (parent.hasChildWithName(command.nickname())) {
             throw new BusinessException(ErrorCode.USER_ALREADY_EXISTED);
