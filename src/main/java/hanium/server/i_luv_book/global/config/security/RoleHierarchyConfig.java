@@ -1,4 +1,4 @@
-package hanium.server.i_luv_book.global.config;
+package hanium.server.i_luv_book.global.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

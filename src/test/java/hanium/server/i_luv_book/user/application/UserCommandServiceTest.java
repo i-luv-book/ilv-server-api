@@ -8,7 +8,7 @@ import hanium.server.i_luv_book.global.exception.NotFoundException;
 import hanium.server.i_luv_book.domain.user.application.dto.UserCommandMapper;
 import hanium.server.i_luv_book.domain.user.application.dto.request.ChildCreateCommand;
 import hanium.server.i_luv_book.domain.user.application.dto.request.ParentCreateCommand;
-import hanium.server.i_luv_book.global.jwt.utils.JwtUtil;
+import hanium.server.i_luv_book.global.jwt.util.JwtUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -112,4 +112,22 @@ class UserCommandServiceTest {
         // When & Then
         assertThrows(BusinessException.class, () -> userCommandService.checkChildAdditionPossible(parent.getId()));
     }
+
+    @Test
+    @DisplayName("자식계정 추가 전 동일한 자녀 이름이 있는지 테스트")
+    void registerChild_hasSameChildName() {
+        // Given
+        ParentCreateCommand parentCreateCommand = new ParentCreateCommand("부모1", "비밀번호1");
+        Parent parent = Parent.builder().parentCreateCommand(parentCreateCommand).build();
+        ChildCreateCommand childCreateCommand = new ChildCreateCommand("이복둥", LocalDate.now(), Child.Gender.MALE, 1L);
+        Child existentChild = Child.builder().childCreateCommand(childCreateCommand).build();
+
+        // When
+        parent.addChild(existentChild);
+        when(userRepository.findParentById(1L)).thenReturn(Optional.of(parent));
+
+        // Then
+        assertThrows(BusinessException.class, () -> userCommandService.registerChild(childCreateCommand, null));
+    }
+
 }

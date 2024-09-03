@@ -24,6 +24,12 @@ public class UserJpaRepository implements UserRepository {
     }
 
     @Override
+    public Optional<Child> findChildById(long childId) {
+        return Optional.ofNullable(em.find(Child.class, childId));
+    }
+
+
+    @Override
     public int countChildrenByParentId(long parentId) {
         return em.createQuery("select count(c) from Child c where c.parent.id = :parentId", Long.class)
                 .setParameter("parentId", parentId)
@@ -41,5 +47,15 @@ public class UserJpaRepository implements UserRepository {
     public Long save(Parent parent) {
         em.persist(parent);
         return parent.getId();
+    }
+
+    @Override
+    public void deleteChild(long parentId, String nickname) {
+        Child child = em.createQuery("select c from Child c "
+                        + "where c.parent.id = :parentId and c.nickname = :nickname", Child.class)
+                .setParameter("parentId", parentId)
+                .setParameter("nickname", nickname)
+                .getSingleResult();
+        em.remove(child);
     }
 }

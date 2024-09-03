@@ -1,4 +1,4 @@
-package hanium.server.i_luv_book.global.config;
+package hanium.server.i_luv_book.global.config.security;
 
 import hanium.server.i_luv_book.global.security.authentication.filter.JwtAuthenticationFilter;
 import hanium.server.i_luv_book.global.security.exception.entrypoint.CustomAuthenticationEntryPoint;
@@ -14,7 +14,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
 /**
  * @author Young9
  */
@@ -26,6 +25,7 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthorizationManager<RequestAuthorizationContext> authorizationManager;
+
     public static final String[] WHITE_LIST = {"api/oauth/**","/api/login/oauth", "/api/signup/oauth/**", "/","/auth","/refreshToken","/swagger-ui.html","/swagger-ui/**"};
     public static final String[] PAID_LIST = {"/api/badge"};
     public static final String[] FREE_LIST = {"/api/fairytale/**"};

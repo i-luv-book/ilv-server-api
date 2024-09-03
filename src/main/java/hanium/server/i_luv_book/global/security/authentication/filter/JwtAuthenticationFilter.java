@@ -1,7 +1,7 @@
 package hanium.server.i_luv_book.global.security.authentication.filter;
 
-import hanium.server.i_luv_book.global.config.SecurityConfig;
 
+import hanium.server.i_luv_book.global.config.security.SecurityConfig;
 import hanium.server.i_luv_book.global.jwt.util.JwtUtil;
 import hanium.server.i_luv_book.global.security.authentication.provider.JwtAuthenticationProvider;
 import hanium.server.i_luv_book.global.security.authentication.token.JwtAuthenticationToken;

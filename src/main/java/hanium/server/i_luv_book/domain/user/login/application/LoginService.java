@@ -39,14 +39,7 @@ public class LoginService {
             return generateJwtToken(parent);
         } else {
             //refator 필요
-            Parent parent = Parent.builder()
-                    .socialId(userInfo.getSocialId())
-                    .loginType(LoginType.KAKAO)
-                    .email(userInfo.getEmail())
-                    .role(Role.ROLE_FREE)
-                    .membershipType(Parent.MembershipType.FREE)
-                    .build();
-
+            Parent parent = new Parent(userInfo.getEmail(), Parent.MembershipType.FREE,Role.ROLE_FREE,type, userInfo.getSocialId());
             Parent savedParent = userDataJpaRepository.save(parent);
             return generateJwtToken(savedParent);
         }
