@@ -1,6 +1,7 @@
 package hanium.server.i_luv_book.domain.auth.util;
 
 import hanium.server.i_luv_book.domain.auth.dto.response.GoogleAccessTokenDTO;
+import hanium.server.i_luv_book.domain.auth.dto.response.GoogleUserInfoDTO;
 import hanium.server.i_luv_book.domain.auth.dto.response.KakaoAccessTokenDTO;
 import hanium.server.i_luv_book.domain.auth.dto.response.KakaoUserInfoDTO;
 import hanium.server.i_luv_book.domain.auth.exception.KakaoOauthException;
@@ -32,7 +33,7 @@ public class LoginWebClientUtil {
                 .build();
     }
 
-    public Mono<KakaoAccessTokenDTO> setMonoForKakao(MultiValueMap<String,String> map) {
+    public Mono<KakaoAccessTokenDTO> getAceessTokenFromKakao(MultiValueMap<String,String> map) {
         return kakaoWebClient.post()
                 .uri("/oauth/token")
                 .bodyValue(map)
@@ -41,6 +42,7 @@ public class LoginWebClientUtil {
                 .onStatus(HttpStatusCode::is5xxServerError, response -> Mono.error(new KakaoOauthException("인가 코드 받기 5xx 오류, 해당 서비스가 kakao와 연결중에 문제가 발생했습니다.")))
                 .bodyToMono(KakaoAccessTokenDTO.class);
     }
+
     public Mono<KakaoUserInfoDTO> getUserInfoFromKakao(String token) {
         return kakaoWebClient.mutate()
                 .baseUrl("https://kapi.kakao.com")
@@ -52,45 +54,29 @@ public class LoginWebClientUtil {
                 .onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new KakaoOauthException("사용자 정보 가져오기 4xx 오류, 해당 서비스가 kakao와 연결중에 문제가 발생했습니다.")))
                 .onStatus(HttpStatusCode::is5xxServerError, response -> Mono.error(new KakaoOauthException("사용자 정보 가져오기 5xx 오류, 해당 서비스가 kakao와 연결중에 문제가 발생했습니다.")))
                 .bodyToMono(KakaoUserInfoDTO.class);
-
     }
 
-    public void setMonoForGoogle(MultiValueMap<String,String> map) {
-               googleWebClient.post()
+    public Mono<GoogleAccessTokenDTO> getAceesTokenFromGoogle(MultiValueMap<String,String> map) {
+        return googleWebClient.post()
                 .uri("/token")
                 .bodyValue(map)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new GoogleOauthException("인가 코드 받기 4xx 오류, 해당 서비스가 google과 연결중에 문제가 발생했습니다.")))
                 .onStatus(HttpStatusCode::is5xxServerError, response -> Mono.error(new GoogleOauthException("인가 코드 받기 5xx 오류, 해당 서비스가 google과 연결중에 문제가 발생했습니다.")))
-                .bodyToMono(GoogleAccessTokenDTO.class)
-                       .subscribe(resonse -> googleTest(resonse));
-
+                .bodyToMono(GoogleAccessTokenDTO.class);
     }
-    public void googleTest(GoogleAccessTokenDTO googleAccessTokenDTO) {
-        log.info("요청 완료다요 {}",googleAccessTokenDTO);
-    }
-
-
-
-
-    public void getUserInfoFromGoogle(String token) {
-        kakaoWebClient.mutate()
-                .baseUrl("https://kapi.kakao.com")
+    public Mono<GoogleUserInfoDTO> getUserInfoFromGoogle(String token) {
+        return googleWebClient.mutate()
+                .baseUrl("https://www.googleapis.com")
                 .build()
                 .get()
-                .uri("/v1/oidc/userinfo")
+                .uri("/oauth2/v1/userinfo")
                 .header("Authorization","Bearer " + token)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new KakaoOauthException("사용자 정보 가져오기 4xx 오류, 해당 서비스가 kakao와 연결중에 문제가 발생했습니다.")))
                 .onStatus(HttpStatusCode::is5xxServerError, response -> Mono.error(new KakaoOauthException("사용자 정보 가져오기 5xx 오류, 해당 서비스가 kakao와 연결중에 문제가 발생했습니다.")))
-                .bodyToMono(KakaoUserInfoDTO.class)
-                .subscribe(response -> test(response));
+                .bodyToMono(GoogleUserInfoDTO.class);
     }
-    private KakaoUserInfoDTO test(KakaoUserInfoDTO kakaoUserInfoDTO) {
-        log.info(kakaoUserInfoDTO.toString());
-        return kakaoUserInfoDTO;
-    }
-
 }
 
 
