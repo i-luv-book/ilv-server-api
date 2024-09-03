@@ -23,7 +23,7 @@ public class Parent extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "parent_id")
     private long id;
-    @Column(unique = true, name = "email")
+    @Column(name = "email")
     private String email;
     @Column(name = "password")
     private String password;
