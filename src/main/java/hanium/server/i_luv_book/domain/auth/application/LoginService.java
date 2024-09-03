@@ -3,7 +3,7 @@ package hanium.server.i_luv_book.domain.auth.application;
 import hanium.server.i_luv_book.domain.auth.dto.response.*;
 import hanium.server.i_luv_book.domain.user.domain.Parent;
 import hanium.server.i_luv_book.domain.user.domain.Role;
-import hanium.server.i_luv_book.domain.user.infra.UserDataJpaRepository;
+import hanium.server.i_luv_book.domain.user.domain.UserRepository;
 import hanium.server.i_luv_book.domain.auth.config.LoginWebConfig;
 import hanium.server.i_luv_book.domain.auth.domain.LoginType;
 import hanium.server.i_luv_book.domain.auth.util.LoginWebClientUtil;
@@ -22,7 +22,7 @@ import java.util.Optional;
 public class LoginService {
 
     private final JwtUtil jwtUtil;
-    private final UserDataJpaRepository userDataJpaRepository;
+    private final UserRepository userRepository;
     private final LoginWebClientUtil webClientUtil;
     private final LoginWebConfig loginWebConfig;
     public LoginFormResDTO getLoginFormUrl(LoginType type) {
@@ -31,7 +31,7 @@ public class LoginService {
     public JwtTokenResponse generateJwtTokens(String code, LoginType type) {
         MultiValueMap<String, String> map = getMultiValueMap(code,type);
         UserInfoDTO userInfo = getUserInfo(map,type);
-        Optional<Parent> optionalParent = userDataJpaRepository.findBySocialIdAndLoginType(userInfo.getSocialId(), type);
+        Optional<Parent> optionalParent = userRepository.findParentBySocialIdAndLoginType(userInfo.getSocialId(), type);
 
         if(optionalParent.isPresent()) {
             Parent parent = optionalParent.get();
@@ -39,8 +39,8 @@ public class LoginService {
         } else {
             //refator 필요
             Parent parent = new Parent(userInfo.getEmail(), Parent.MembershipType.FREE,Role.ROLE_FREE,type, userInfo.getSocialId());
-            Parent savedParent = userDataJpaRepository.save(parent);
-            return generateJwtToken(savedParent);
+            userRepository.save(parent);
+            return generateJwtToken(parent);
         }
     }
 

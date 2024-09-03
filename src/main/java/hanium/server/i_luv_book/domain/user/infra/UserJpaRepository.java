@@ -1,5 +1,6 @@
 package hanium.server.i_luv_book.domain.user.infra;
 
+import hanium.server.i_luv_book.domain.auth.domain.LoginType;
 import hanium.server.i_luv_book.domain.user.domain.*;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,15 @@ public class UserJpaRepository implements UserRepository {
     @Override
     public Optional<Parent> findParentById(long parentId) {
         return Optional.ofNullable(em.find(Parent.class, parentId));
+    }
+
+    @Override
+    public Optional<Parent> findParentBySocialIdAndLoginType(String socialId, LoginType loginType) {
+        return Optional.ofNullable(em.createQuery(
+                "select p from Parent p where p.socialId = :socialId and p.loginType = :loginType", Parent.class)
+                .setParameter("socialId", socialId)
+                .setParameter("loginType", loginType)
+                .getSingleResult());
     }
 
     @Override

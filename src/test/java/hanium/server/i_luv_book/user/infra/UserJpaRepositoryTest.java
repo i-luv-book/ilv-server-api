@@ -1,9 +1,11 @@
 package hanium.server.i_luv_book.user.infra;
 
+import hanium.server.i_luv_book.domain.auth.domain.LoginType;
 import hanium.server.i_luv_book.domain.user.application.dto.request.ChildCreateCommand;
 import hanium.server.i_luv_book.domain.user.application.dto.request.ParentCreateCommand;
 import hanium.server.i_luv_book.domain.user.domain.Child;
 import hanium.server.i_luv_book.domain.user.domain.Parent;
+import hanium.server.i_luv_book.domain.user.domain.Role;
 import hanium.server.i_luv_book.domain.user.domain.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
@@ -95,4 +97,18 @@ class UserJpaRepositoryTest {
         });
     }
 
+    @Test
+    @DisplayName("소셜ID, 소셜 타입으로 부모계정 찾기 테스트")
+    @Transactional
+    void findParentBySocialInfo() {
+        // when
+        Parent parent = new Parent("이메일1", Parent.MembershipType.FREE, Role.ROLE_FREE, LoginType.GOOGLE, "SocialID");
+        Long savedParentId = userJpaRepository.save(parent);
+
+        // given
+        Parent foundParent = userJpaRepository.findParentBySocialIdAndLoginType("SocialID", LoginType.GOOGLE).get();
+
+        // then
+        assertEquals(savedParentId, foundParent.getId());
+    }
 }
