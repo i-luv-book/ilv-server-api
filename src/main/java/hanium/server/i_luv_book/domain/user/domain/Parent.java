@@ -1,6 +1,5 @@
 package hanium.server.i_luv_book.domain.user.domain;
 
-import hanium.server.i_luv_book.domain.user.application.dto.request.ParentCreateCommand;
 import hanium.server.i_luv_book.domain.auth.domain.LoginType;
 import hanium.server.i_luv_book.global.common.basetime.BaseTimeEntity;
 import jakarta.persistence.*;
@@ -49,21 +48,13 @@ public class Parent extends BaseTimeEntity {
         PAID_PREMIUM      // 유료 회원(3) - 자녀 무제한 추가 가능
     }
 
-    
+    @Builder
     public Parent(String email, MembershipType membershipType, Role role, LoginType loginType, String socialId) {
         this.email = email;
         this.membershipType = membershipType;
         this.role = role;
         this.loginType = loginType;
         this.socialId = socialId;
-    }
-
-    @Builder
-    public Parent(ParentCreateCommand parentCreateCommand) {
-        this.email = parentCreateCommand.email();
-        this.password = parentCreateCommand.password();
-        this.membershipType = MembershipType.FREE;
-        this.role = Role.ROLE_FREE;
     }
 
     // 멤버쉽 업데이트

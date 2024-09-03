@@ -2,7 +2,6 @@ package hanium.server.i_luv_book.user.infra;
 
 import hanium.server.i_luv_book.domain.auth.domain.LoginType;
 import hanium.server.i_luv_book.domain.user.application.dto.request.ChildCreateCommand;
-import hanium.server.i_luv_book.domain.user.application.dto.request.ParentCreateCommand;
 import hanium.server.i_luv_book.domain.user.domain.Child;
 import hanium.server.i_luv_book.domain.user.domain.Parent;
 import hanium.server.i_luv_book.domain.user.domain.Role;
@@ -33,8 +32,13 @@ class UserJpaRepositoryTest {
     @Transactional
     void saveParent() {
         // given
-        ParentCreateCommand parentCreateCommand = new ParentCreateCommand("부모1", "비밀번호1");
-        Parent parent = Parent.builder().parentCreateCommand(parentCreateCommand).build();
+        Parent parent = Parent.builder()
+                .socialId("소셜ID")
+                .email("EMAIL")
+                .loginType(LoginType.GOOGLE)
+                .membershipType(Parent.MembershipType.FREE)
+                .role(Role.ROLE_FREE)
+                .build();
 
         // when
         Long savedParentId = userJpaRepository.save(parent);
@@ -49,8 +53,13 @@ class UserJpaRepositoryTest {
     @Transactional
     void saveChildAndCount() {
         // given
-        ParentCreateCommand parentCreateCommand = new ParentCreateCommand("부모1", "비밀번호1");
-        Parent parent = Parent.builder().parentCreateCommand(parentCreateCommand).build();
+        Parent parent = Parent.builder()
+                .socialId("소셜ID")
+                .email("EMAIL")
+                .loginType(LoginType.GOOGLE)
+                .membershipType(Parent.MembershipType.FREE)
+                .role(Role.ROLE_FREE)
+                .build();
         Long savedParentId = userJpaRepository.save(parent);
 
         ChildCreateCommand childCreateCommand1 = new ChildCreateCommand("자식1", LocalDate.now(), Child.Gender.MALE,  savedParentId);
@@ -78,8 +87,13 @@ class UserJpaRepositoryTest {
     @Transactional
     void deleteChild_thenThrowExceptionWhenFetching() {
         // Given
-        ParentCreateCommand parentCreateCommand = new ParentCreateCommand("부모1", "비밀번호1");
-        Parent parent = Parent.builder().parentCreateCommand(parentCreateCommand).build();
+        Parent parent = Parent.builder()
+                .socialId("소셜ID")
+                .email("EMAIL")
+                .loginType(LoginType.GOOGLE)
+                .membershipType(Parent.MembershipType.FREE)
+                .role(Role.ROLE_FREE)
+                .build();
         Long savedParentId = userJpaRepository.save(parent);
 
         ChildCreateCommand childCreateCommand = new ChildCreateCommand("자식1", LocalDate.now(), Child.Gender.MALE, savedParentId);
@@ -102,7 +116,13 @@ class UserJpaRepositoryTest {
     @Transactional
     void findParentBySocialInfo() {
         // when
-        Parent parent = new Parent("이메일1", Parent.MembershipType.FREE, Role.ROLE_FREE, LoginType.GOOGLE, "SocialID");
+        Parent parent = Parent.builder()
+                .socialId("SocialID")
+                .email("EMAIL")
+                .loginType(LoginType.GOOGLE)
+                .membershipType(Parent.MembershipType.FREE)
+                .role(Role.ROLE_FREE)
+                .build();
         Long savedParentId = userJpaRepository.save(parent);
 
         // given

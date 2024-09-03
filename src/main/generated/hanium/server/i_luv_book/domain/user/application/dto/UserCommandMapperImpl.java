@@ -1,21 +1,19 @@
 package hanium.server.i_luv_book.domain.user.application.dto;
 
 import hanium.server.i_luv_book.domain.user.application.dto.request.ChildCreateCommand;
-import hanium.server.i_luv_book.domain.user.application.dto.request.ParentCreateCommand;
 import hanium.server.i_luv_book.domain.user.domain.Badge;
 import hanium.server.i_luv_book.domain.user.domain.Child;
 import hanium.server.i_luv_book.domain.user.domain.Child.ChildBuilder;
 import hanium.server.i_luv_book.domain.user.domain.ChildBadge;
 import hanium.server.i_luv_book.domain.user.domain.ChildBadge.ChildBadgeBuilder;
 import hanium.server.i_luv_book.domain.user.domain.Parent;
-import hanium.server.i_luv_book.domain.user.domain.Parent.ParentBuilder;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-09-03T15:48:14+0900",
-    comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.10 (Oracle Corporation)"
+    date = "2024-09-03T22:46:04+0900",
+    comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.11 (Amazon.com Inc.)"
 )
 @Component
 public class UserCommandMapperImpl implements UserCommandMapper {
@@ -36,19 +34,6 @@ public class UserCommandMapperImpl implements UserCommandMapper {
         }
 
         return child.build();
-    }
-
-    @Override
-    public Parent toParent(ParentCreateCommand parentCreateCommand) {
-        if ( parentCreateCommand == null ) {
-            return null;
-        }
-
-        ParentBuilder parent = Parent.builder();
-
-        parent.parentCreateCommand( parentCreateCommand );
-
-        return parent.build();
     }
 
     @Override

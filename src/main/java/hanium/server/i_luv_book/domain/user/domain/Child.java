@@ -34,7 +34,7 @@ public class Child extends BaseTimeEntity {
     private Parent parent;
     @OneToMany(mappedBy = "child", cascade = CascadeType.ALL)
     private List<ChildBadge> childBadges = new ArrayList<>();
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "activity_info_id")
     private ActivityInfo activityInfo;
 

@@ -1,14 +1,12 @@
 package hanium.server.i_luv_book.user.application;
 
+import hanium.server.i_luv_book.domain.auth.domain.LoginType;
 import hanium.server.i_luv_book.domain.user.application.UserCommandService;
 import hanium.server.i_luv_book.domain.user.domain.*;
-import hanium.server.i_luv_book.domain.user.presentation.dto.response.TokenDto;
 import hanium.server.i_luv_book.global.exception.BusinessException;
 import hanium.server.i_luv_book.global.exception.NotFoundException;
 import hanium.server.i_luv_book.domain.user.application.dto.UserCommandMapper;
 import hanium.server.i_luv_book.domain.user.application.dto.request.ChildCreateCommand;
-import hanium.server.i_luv_book.domain.user.application.dto.request.ParentCreateCommand;
-import hanium.server.i_luv_book.global.jwt.util.JwtUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,8 +27,6 @@ import static org.mockito.Mockito.*;
 class UserCommandServiceTest {
 
     @Mock
-    private JwtUtil jwtUtil;
-    @Mock
     private UserCommandMapper userCommandMapper;
     @Mock
     private UserRepository userRepository;
@@ -38,26 +34,6 @@ class UserCommandServiceTest {
     private FileStore fileStore;
     @InjectMocks
     private UserCommandService userCommandService;
-
-    @Test
-    @DisplayName("부모 계정 회원가입 테스트")
-    void registerParent_Success() {
-        // Given
-        ParentCreateCommand command = new ParentCreateCommand("email1", "password1");
-        Parent parent = Parent.builder().parentCreateCommand(command).build();
-
-        when(userCommandMapper.toParent(command)).thenReturn(parent);
-        when(userRepository.save(parent)).thenReturn(1L);
-        when(jwtUtil.generateAccessToken(1L, Role.ROLE_FREE)).thenReturn("AccessToken");
-        when(jwtUtil.generateRefreshToken(1L)).thenReturn("RefreshToken");
-
-        // When
-        TokenDto savedTokenDto = new TokenDto("AccessToken", "RefreshToken");
-        TokenDto testTokenDto = userCommandService.registerParent(command);
-
-        // Then
-        assertEquals(savedTokenDto, testTokenDto);
-    }
 
     @Test
     @DisplayName("부모 계정 찾지 못했을 때 발생하는 예외테스트")
@@ -80,7 +56,13 @@ class UserCommandServiceTest {
     @DisplayName("자식 계정 회원가입 테스트")
     void registerChild_Success() {
         // Given
-        Parent parent = Parent.builder().parentCreateCommand(new ParentCreateCommand("부모1", "비밀번호1")).build();
+        Parent parent = Parent.builder()
+                .socialId("소셜ID")
+                .email("EMAIL")
+                .loginType(LoginType.GOOGLE)
+                .membershipType(Parent.MembershipType.FREE)
+                .role(Role.ROLE_FREE)
+                .build();
         ChildCreateCommand command = new ChildCreateCommand("자식1", LocalDate.now(), Child.Gender.MALE, parent.getId());
         Child child = Child.builder().childCreateCommand(command).parent(parent).build();
         MultipartFile emptyFile = new MockMultipartFile("file", "", null, new byte[0]);
@@ -102,7 +84,11 @@ class UserCommandServiceTest {
     void registerChild_LimitedMembership() {
         // Given
         Parent parent = Parent.builder()
-                .parentCreateCommand(new ParentCreateCommand("부모1", "비밀번호1"))
+                .socialId("소셜ID")
+                .email("EMAIL")
+                .loginType(LoginType.GOOGLE)
+                .membershipType(Parent.MembershipType.FREE)
+                .role(Role.ROLE_FREE)
                 .build();
 
         // Mocking
@@ -117,8 +103,13 @@ class UserCommandServiceTest {
     @DisplayName("자식계정 추가 전 동일한 자녀 이름이 있는지 테스트")
     void registerChild_hasSameChildName() {
         // Given
-        ParentCreateCommand parentCreateCommand = new ParentCreateCommand("부모1", "비밀번호1");
-        Parent parent = Parent.builder().parentCreateCommand(parentCreateCommand).build();
+        Parent parent = Parent.builder()
+                .socialId("소셜ID")
+                .email("EMAIL")
+                .loginType(LoginType.GOOGLE)
+                .membershipType(Parent.MembershipType.FREE)
+                .role(Role.ROLE_FREE)
+                .build();
         ChildCreateCommand childCreateCommand = new ChildCreateCommand("이복둥", LocalDate.now(), Child.Gender.MALE, 1L);
         Child existentChild = Child.builder().childCreateCommand(childCreateCommand).build();
 

@@ -1,10 +1,11 @@
 package hanium.server.i_luv_book.user.domain;
 
 
+import hanium.server.i_luv_book.domain.auth.domain.LoginType;
 import hanium.server.i_luv_book.domain.user.application.dto.request.ChildCreateCommand;
-import hanium.server.i_luv_book.domain.user.application.dto.request.ParentCreateCommand;
 import hanium.server.i_luv_book.domain.user.domain.Child;
 import hanium.server.i_luv_book.domain.user.domain.Parent;
+import hanium.server.i_luv_book.domain.user.domain.Role;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -16,8 +17,13 @@ class ParentTest {
     @Test
     void updateMembershipType() {
         // given
-        ParentCreateCommand parentCreateCommand = new ParentCreateCommand("부모1", "비밀번호1");
-        Parent parent = Parent.builder().parentCreateCommand(parentCreateCommand).build();
+        Parent parent = Parent.builder()
+                .socialId("소셜ID")
+                .email("EMAIL")
+                .loginType(LoginType.GOOGLE)
+                .membershipType(Parent.MembershipType.FREE)
+                .role(Role.ROLE_FREE)
+                .build();
 
         // when&then
         parent.updateMembershipType(Parent.MembershipType.PAID_BASIC);
@@ -27,8 +33,13 @@ class ParentTest {
     @Test
     void canAddChild() {
         // given
-        ParentCreateCommand parentCreateCommand = new ParentCreateCommand("부모1", "비밀번호1");
-        Parent parent = Parent.builder().parentCreateCommand(parentCreateCommand).build();
+        Parent parent = Parent.builder()
+                .socialId("소셜ID")
+                .email("EMAIL")
+                .loginType(LoginType.GOOGLE)
+                .membershipType(Parent.MembershipType.FREE)
+                .role(Role.ROLE_FREE)
+                .build();
 
         // when
         boolean result = parent.canAddChild(1);
@@ -40,8 +51,13 @@ class ParentTest {
     @Test
     void hasChildWithName() {
         // given
-        ParentCreateCommand parentCreateCommand = new ParentCreateCommand("부모1", "비밀번호1");
-        Parent parent = Parent.builder().parentCreateCommand(parentCreateCommand).build();
+        Parent parent = Parent.builder()
+                .socialId("소셜ID")
+                .email("EMAIL")
+                .loginType(LoginType.GOOGLE)
+                .membershipType(Parent.MembershipType.FREE)
+                .role(Role.ROLE_FREE)
+                .build();
         ChildCreateCommand childCreateCommand = new ChildCreateCommand("이복둥", LocalDate.now(), Child.Gender.MALE, 1L);
         Child child = Child.builder().childCreateCommand(childCreateCommand).build();
 

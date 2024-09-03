@@ -1,9 +1,10 @@
 package hanium.server.i_luv_book.user.domain;
 
+import hanium.server.i_luv_book.domain.auth.domain.LoginType;
 import hanium.server.i_luv_book.domain.user.application.dto.request.ChildCreateCommand;
-import hanium.server.i_luv_book.domain.user.application.dto.request.ParentCreateCommand;
 import hanium.server.i_luv_book.domain.user.domain.Child;
 import hanium.server.i_luv_book.domain.user.domain.Parent;
+import hanium.server.i_luv_book.domain.user.domain.Role;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +17,13 @@ class ChildTest {
     @Test
     @DisplayName("자식계정 프로필 등록 및 조회 테스트")
     void putProfileImage() {
-        Parent parent = Parent.builder().parentCreateCommand(new ParentCreateCommand("부모1", "비밀번호1")).build();
+        Parent parent = Parent.builder()
+                .socialId("소셜ID")
+                .email("EMAIL")
+                .loginType(LoginType.GOOGLE)
+                .membershipType(Parent.MembershipType.FREE)
+                .role(Role.ROLE_FREE)
+                .build();
         ChildCreateCommand command = new ChildCreateCommand("자식1", LocalDate.now(), Child.Gender.MALE, parent.getId());
         Child child = Child.builder().childCreateCommand(command).parent(parent).build();
 
