@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class LoginController {
 
-    private final JwtUtil jwtUtil;
-    private final RefreshTokenRepository refreshTokenRepository;
     private final LoginService loginService;
 
     @GetMapping( "/oauth/login")
@@ -33,10 +31,8 @@ public class LoginController {
     public JwtTokenResponse OAuthSignController(
             @RequestParam("type") LoginType type,
             @RequestParam("code") String code) {
-        return loginService.generateJWTForKaKao(code,type);
+        return loginService.generateJwtTokens(code,type);
     }
-
-
 
     @GetMapping("/api/fairytale")
     public String getTale(@AuthenticationPrincipal JwtUserDetails jwtUserDetails){
@@ -48,7 +44,6 @@ public class LoginController {
     public String getBadge(){
         log.info("뱃지 컨트롤러 호출");
         return "0";
-        //return String.valueOf(userDetails.getUserId());
     }
 
 

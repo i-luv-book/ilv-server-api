@@ -28,8 +28,8 @@ public class LoginService {
     public LoginFormResDTO getLoginFormUrl(LoginType type) {
         return new LoginFormResDTO(type.getLoginFormUrl());
     }
-    public JwtTokenResponse generateJWTForKaKao(String code, LoginType type) {
-        MultiValueMap<String, String> map = getMultiValueMap(code,LoginType.KAKAO);
+    public JwtTokenResponse generateJwtTokens(String code, LoginType type) {
+        MultiValueMap<String, String> map = getMultiValueMap(code,type);
         UserInfoDTO userInfo = getUserInfo(map,type);
         Optional<Parent> optionalParent = userDataJpaRepository.findBySocialIdAndLoginType(userInfo.getSocialId(), type);
 
@@ -52,42 +52,36 @@ public class LoginService {
 
         switch (type) {
             case GOOGLE:
+                map.add("client_id", loginWebConfig.getGoogleClientId());
+                map.add("redirect_uri", loginWebConfig.getGoogleRedirectUrl());
+                map.add("client_secret", loginWebConfig.getGoogleClientSecret());
                 break;
             case KAKAO:
                 map.add("client_id", loginWebConfig.getKakaoRestKey());
                 map.add("redirect_uri", loginWebConfig.getKakaoRedirectUrl());
-                map.add("client_secret", loginWebConfig.getKakaoClentSecret());
+                map.add("client_secret", loginWebConfig.getKakaoClientSecret());
         }
         return map;
-    }
-
-    public void google(String code) {
-        log.info("구글 서비스");
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add("client_id", loginWebConfig.getGoogleClientId());
-        map.add("client_secret", loginWebConfig.getGoogleClientSecret());
-        map.add("code", code);
-        map.add("grant_type", "authorization_code");
-        map.add("redirect_uri", loginWebConfig.getGoogleRedirectUrl());
-        webClientUtil.setMonoForGoogle(map);
     }
     private JwtTokenResponse generateJwtToken(Parent parent) {
         String accessToken = jwtUtil.generateAccessToken(parent.getId(), parent.getRole());
         String refreshToken = jwtUtil.generateRefreshToken(parent.getId());
         return new JwtTokenResponse(accessToken,refreshToken);
     }
-
     private UserInfoDTO getUserInfo(MultiValueMap<String, String> map, LoginType type) {
 
         switch (type) {
             case GOOGLE:
-                return new UserInfoDTO("test","test");
+                GoogleAccessTokenDTO googleAccessToken = webClientUtil.getAceesTokenFromGoogle(map).block();
+                GoogleUserInfoDTO googleUserInfo = webClientUtil.getUserInfoFromGoogle(googleAccessToken.getAccess_token()).block();
+                log.info("{}",googleUserInfo);
+                return new UserInfoDTO(googleUserInfo.getId(), googleUserInfo.getEmail());
+
             //KAKAO
             default:
-                KakaoAccessTokenDTO kakaoAccessToken = webClientUtil.setMonoForKakao(map).block();
+                KakaoAccessTokenDTO kakaoAccessToken = webClientUtil.getAceessTokenFromKakao(map).block();
                 KakaoUserInfoDTO kakaoUserInfo = webClientUtil.getUserInfoFromKakao(kakaoAccessToken.getAccess_token()).block();
                 return new UserInfoDTO(kakaoUserInfo.getSub(), kakaoUserInfo.getEmail());
-
         }
 
     }

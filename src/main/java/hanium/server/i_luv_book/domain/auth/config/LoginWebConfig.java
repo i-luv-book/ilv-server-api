@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 public class LoginWebConfig {
 
     @Value("${spring.data.kakao.client-secret}")
-    private String kakaoClentSecret;
+    private String kakaoClientSecret;
 
     @Value("${spring.data.kakao.redirect-url}")
     private String kakaoRedirectUrl;
@@ -43,8 +43,7 @@ public class LoginWebConfig {
     private String getGoogleLoginFormUrl() {
         // 구글 인가코드 url 받기
         //https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/androidpublisher&response_type=code&access_type=offline&redirect_uri=...&client_id=...
-        String googleLoginTemplate = "https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/androidpublisher&response_type=code&access_type=offline&redirect_uri=%s&client_id=%s";
-
+        String googleLoginTemplate = "https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile&response_type=code&access_type=offline&redirect_uri=%s&client_id=%s";
         return String.format(googleLoginTemplate,this.googleRedirectUrl,this.googleClientId);
     }
 
