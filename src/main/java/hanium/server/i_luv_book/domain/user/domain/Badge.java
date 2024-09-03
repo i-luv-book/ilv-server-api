@@ -27,4 +27,8 @@ public class Badge extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "badge", cascade = CascadeType.ALL)
     private List<ChildBadge> childBadges = new ArrayList<>();
+
+    public void addChildBadge(ChildBadge childBadge) {
+        childBadges.add(childBadge);
+    }
 }

@@ -2,7 +2,9 @@ package hanium.server.i_luv_book.domain.user.application.dto;
 
 import hanium.server.i_luv_book.domain.user.application.dto.request.ChildCreateCommand;
 import hanium.server.i_luv_book.domain.user.application.dto.request.ParentCreateCommand;
+import hanium.server.i_luv_book.domain.user.domain.Badge;
 import hanium.server.i_luv_book.domain.user.domain.Child;
+import hanium.server.i_luv_book.domain.user.domain.ChildBadge;
 import hanium.server.i_luv_book.domain.user.domain.Parent;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -17,4 +19,6 @@ public interface UserCommandMapper {
     Child toChild(ChildCreateCommand childCreateCommand, Parent parent);
 
     Parent toParent(ParentCreateCommand parentCreateCommand);
+
+    ChildBadge toChildBadge(Child child, Badge badge);
 }

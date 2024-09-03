@@ -1,8 +1,6 @@
 package hanium.server.i_luv_book.domain.user.infra;
 
-import hanium.server.i_luv_book.domain.user.domain.Child;
-import hanium.server.i_luv_book.domain.user.domain.Parent;
-import hanium.server.i_luv_book.domain.user.domain.UserRepository;
+import hanium.server.i_luv_book.domain.user.domain.*;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -28,6 +26,10 @@ public class UserJpaRepository implements UserRepository {
         return Optional.ofNullable(em.find(Child.class, childId));
     }
 
+    @Override
+    public Optional<Badge> findBadgeById(long badgeId) {
+        return Optional.ofNullable(em.find(Badge.class, badgeId));
+    }
 
     @Override
     public int countChildrenByParentId(long parentId) {
@@ -47,6 +49,12 @@ public class UserJpaRepository implements UserRepository {
     public Long save(Parent parent) {
         em.persist(parent);
         return parent.getId();
+    }
+
+    @Override
+    public Long save(ChildBadge childBadge) {
+        em.persist(childBadge);
+        return childBadge.getId();
     }
 
     @Override
