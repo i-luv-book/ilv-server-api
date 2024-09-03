@@ -28,27 +28,9 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class LoginController {
 
-    @Data
-    @AllArgsConstructor
-    private class TokenDTO {
-        private String accessToken;
-        private String refreshToken;
-    }
-
-    @GetMapping("/auth")
-    public TokenDTO generateJWT() {
-        String accessToken = jwtUtil.generateAccessToken(1l,Role.ROLE_PAID);
-        String refreshToken = jwtUtil.generateRefreshToken(1l);
-        log.info("토큰이 정상적으로 발급되었습니다.");
-
-        return new TokenDTO(accessToken,refreshToken);
-    }
-
-
     private final JwtUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
     private final LoginService loginService;
-
 
     @GetMapping( "/oauth/login")
     public LoginFormResDTO OAuthFormContorller(@RequestParam("type") LoginType type) {
@@ -58,38 +40,13 @@ public class LoginController {
     public JwtTokenResponse OAuthSignController(
             @RequestParam("type") LoginType type,
             @RequestParam("code") String code) {
-        switch (type) {
-            case GOOGLE:
-                loginService.google(code);
-                return new JwtTokenResponse("test","Test");
-            //KAKAO 일 때
-            default:
-                return loginService.generateJWTForKaKao(code);
-        }
+        return loginService.generateJWTForKaKao(code,type);
     }
 
-    @GetMapping("/refreshToken")
-    public TokenDTO regenerateJWT(HttpServletRequest request) {
 
-        String jwtHeader = request.getHeader("Authorize");
-        String jwtToken = jwtHeader.replace("Bearer ","");
-        Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByRefreshToken(jwtToken);
-
-        Long userId = jwtUtil.getUserIdFromToken(jwtToken);
-        Role userRole = Role.ROLE_FREE;
-
-    if (optionalRefreshToken.isPresent()) {
-            String accessToken = jwtUtil.generateAccessToken(userId,userRole);
-            String refreshToken = jwtUtil.generateRefreshToken(userId);
-            return new TokenDTO(accessToken,refreshToken);
-        }
-
-        return new TokenDTO("123","123");
-    }
 
     @GetMapping("/api/fairytale")
     public String getTale(@AuthenticationPrincipal JwtUserDetails jwtUserDetails){
-
         log.info("userId {} ",jwtUserDetails.getUserId());
         return "0";
         }

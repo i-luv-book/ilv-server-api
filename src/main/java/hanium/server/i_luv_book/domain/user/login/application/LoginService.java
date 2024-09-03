@@ -5,10 +5,7 @@ import hanium.server.i_luv_book.domain.user.domain.Role;
 import hanium.server.i_luv_book.domain.user.infra.UserDataJpaRepository;
 import hanium.server.i_luv_book.domain.user.login.config.LoginWebConfig;
 import hanium.server.i_luv_book.domain.user.login.domain.LoginType;
-import hanium.server.i_luv_book.domain.user.login.dto.response.JwtTokenResponse;
-import hanium.server.i_luv_book.domain.user.login.dto.response.KakaoAccessTokenDTO;
-import hanium.server.i_luv_book.domain.user.login.dto.response.KakaoUserInfoDTO;
-import hanium.server.i_luv_book.domain.user.login.dto.response.LoginFormResDTO;
+import hanium.server.i_luv_book.domain.user.login.dto.response.*;
 import hanium.server.i_luv_book.domain.user.login.util.LoginWebClientUtil;
 import hanium.server.i_luv_book.global.jwt.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -32,41 +29,44 @@ public class LoginService {
     public LoginFormResDTO getLoginFormUrl(LoginType type) {
         return new LoginFormResDTO(type.getLoginFormUrl());
     }
-
-    @Transactional
-    public JwtTokenResponse generateJWTForKaKao(String code) {
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add("grant_type", "authorization_code");
-        map.add("client_id", loginWebConfig.getKakaoRestKey());
-        map.add("redirect_uri", loginWebConfig.getKakaoRedirectUrl());
-        map.add("code", code);
-        map.add("client_secret", loginWebConfig.getKakaoClentSecret());
-
-        KakaoAccessTokenDTO kakaoAccessToken = webClientUtil.setMonoForKakao(map)
-                .doOnError(error -> log.error("Error while fetching Kakao Access Token", error)).block();
-        KakaoUserInfoDTO kakaoUserInfo = webClientUtil.getUserInfoFromKakao(kakaoAccessToken.getAccess_token()).block();
-        Optional<Parent> optionalParent = userDataJpaRepository.findBySocialIdAndLoginType(kakaoUserInfo.getSub(),LoginType.KAKAO);
+    public JwtTokenResponse generateJWTForKaKao(String code,LoginType type) {
+        MultiValueMap<String, String> map = getMultiValueMap(code,LoginType.KAKAO);
+        UserInfoDTO userInfo = getUserInfo(map,type);
+        Optional<Parent> optionalParent = userDataJpaRepository.findBySocialIdAndLoginType(userInfo.getSocialId(), type);
 
         if(optionalParent.isPresent()) {
             Parent parent = optionalParent.get();
-            String accessToken = jwtUtil.generateAccessToken(parent.getId(), parent.getRole());
-            String refreshToken = jwtUtil.generateRefreshToken(parent.getId());
-            return new JwtTokenResponse(accessToken, refreshToken);
+            return generateJwtToken(parent);
         } else {
+            //refator 필요
             Parent parent = Parent.builder()
-                    .socialId(kakaoUserInfo.getSub())
+                    .socialId(userInfo.getSocialId())
                     .loginType(LoginType.KAKAO)
-                    .email(kakaoUserInfo.getEmail())
+                    .email(userInfo.getEmail())
                     .role(Role.ROLE_FREE)
                     .membershipType(Parent.MembershipType.FREE)
                     .build();
 
             Parent savedParent = userDataJpaRepository.save(parent);
-            String accessToken = jwtUtil.generateAccessToken(savedParent.getId(), parent.getRole());
-            String refreshToken = jwtUtil.generateRefreshToken(savedParent.getId());
-            return new JwtTokenResponse(accessToken, refreshToken);
+            return generateJwtToken(savedParent);
         }
+    }
 
+    private MultiValueMap<String, String> getMultiValueMap(String code,LoginType type) {
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        //구글과 카카오의 공통 body
+        map.add("grant_type", "authorization_code");
+        map.add("code", code);
+
+        switch (type) {
+            case GOOGLE:
+                break;
+            case KAKAO:
+                map.add("client_id", loginWebConfig.getKakaoRestKey());
+                map.add("redirect_uri", loginWebConfig.getKakaoRedirectUrl());
+                map.add("client_secret", loginWebConfig.getKakaoClentSecret());
+        }
+        return map;
     }
 
     public void google(String code) {
@@ -77,9 +77,26 @@ public class LoginService {
         map.add("code", code);
         map.add("grant_type", "authorization_code");
         map.add("redirect_uri", loginWebConfig.getGoogleRedirectUrl());
-
-
         webClientUtil.setMonoForGoogle(map);
+    }
+    private JwtTokenResponse generateJwtToken(Parent parent) {
+        String accessToken = jwtUtil.generateAccessToken(parent.getId(), parent.getRole());
+        String refreshToken = jwtUtil.generateRefreshToken(parent.getId());
+        return new JwtTokenResponse(accessToken,refreshToken);
+    }
+
+    private UserInfoDTO getUserInfo(MultiValueMap<String, String> map, LoginType type) {
+
+        switch (type) {
+            case GOOGLE:
+                return new UserInfoDTO("test","test");
+            //KAKAO
+            default:
+                KakaoAccessTokenDTO kakaoAccessToken = webClientUtil.setMonoForKakao(map).block();
+                KakaoUserInfoDTO kakaoUserInfo = webClientUtil.getUserInfoFromKakao(kakaoAccessToken.getAccess_token()).block();
+                return new UserInfoDTO(kakaoUserInfo.getSub(), kakaoUserInfo.getEmail());
+
+        }
 
     }
 }
