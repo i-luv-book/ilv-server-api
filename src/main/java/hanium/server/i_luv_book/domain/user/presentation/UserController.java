@@ -21,11 +21,6 @@ public class UserController {
     private final UserDtoMapper mapper;
     private final UserCommandService userCommandService;
 
-    @PostMapping("/parent")
-    public TokenDto registerParent(@RequestBody @Valid ParentCreateDto parentCreateDto) {
-        return userCommandService.registerParent(mapper.toCommand(parentCreateDto));
-    }
-
     @PostMapping("/child/can-add")
     public void canAddChildAccount(@RequestParam(value = "parentId") long parentId) {
         userCommandService.checkChildAdditionPossible(parentId);

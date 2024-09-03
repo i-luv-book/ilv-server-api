@@ -1,8 +1,6 @@
-package hanium.server.i_luv_book.domain.user.login.domain;
+package hanium.server.i_luv_book.domain.auth.domain;
 
-import jakarta.annotation.PostConstruct;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 

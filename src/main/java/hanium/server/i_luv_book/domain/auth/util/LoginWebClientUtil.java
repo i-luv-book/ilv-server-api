@@ -1,28 +1,18 @@
-package hanium.server.i_luv_book.domain.user.login.util;
+package hanium.server.i_luv_book.domain.auth.util;
 
-import hanium.server.i_luv_book.domain.user.application.dto.request.ParentCreateCommand;
-import hanium.server.i_luv_book.domain.user.domain.Parent;
-import hanium.server.i_luv_book.domain.user.domain.Role;
-import hanium.server.i_luv_book.domain.user.infra.UserDataJpaRepository;
-import hanium.server.i_luv_book.domain.user.login.domain.LoginType;
-import hanium.server.i_luv_book.domain.user.login.dto.response.GoogleAccessTokenDTO;
-import hanium.server.i_luv_book.domain.user.login.dto.response.JwtTokenResponse;
-import hanium.server.i_luv_book.domain.user.login.dto.response.KakaoAccessTokenDTO;
-import hanium.server.i_luv_book.domain.user.login.dto.response.KakaoUserInfoDTO;
-import hanium.server.i_luv_book.domain.user.login.exception.GoogleOauthException;
+import hanium.server.i_luv_book.domain.auth.dto.response.GoogleAccessTokenDTO;
+import hanium.server.i_luv_book.domain.auth.dto.response.KakaoAccessTokenDTO;
+import hanium.server.i_luv_book.domain.auth.dto.response.KakaoUserInfoDTO;
+import hanium.server.i_luv_book.domain.auth.exception.KakaoOauthException;
+import hanium.server.i_luv_book.domain.auth.exception.GoogleOauthException;
 
-import hanium.server.i_luv_book.domain.user.login.exception.KakaoOauthException;
-import hanium.server.i_luv_book.global.jwt.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
 @Component

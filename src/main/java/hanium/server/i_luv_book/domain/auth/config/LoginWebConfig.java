@@ -1,6 +1,6 @@
-package hanium.server.i_luv_book.domain.user.login.config;
+package hanium.server.i_luv_book.domain.auth.config;
 
-import hanium.server.i_luv_book.domain.user.login.domain.LoginType;
+import hanium.server.i_luv_book.domain.auth.domain.LoginType;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

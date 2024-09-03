@@ -1,17 +1,16 @@
-package hanium.server.i_luv_book.domain.user.login.application;
+package hanium.server.i_luv_book.domain.auth.application;
 
+import hanium.server.i_luv_book.domain.auth.dto.response.*;
 import hanium.server.i_luv_book.domain.user.domain.Parent;
 import hanium.server.i_luv_book.domain.user.domain.Role;
 import hanium.server.i_luv_book.domain.user.infra.UserDataJpaRepository;
-import hanium.server.i_luv_book.domain.user.login.config.LoginWebConfig;
-import hanium.server.i_luv_book.domain.user.login.domain.LoginType;
-import hanium.server.i_luv_book.domain.user.login.dto.response.*;
-import hanium.server.i_luv_book.domain.user.login.util.LoginWebClientUtil;
+import hanium.server.i_luv_book.domain.auth.config.LoginWebConfig;
+import hanium.server.i_luv_book.domain.auth.domain.LoginType;
+import hanium.server.i_luv_book.domain.auth.util.LoginWebClientUtil;
 import hanium.server.i_luv_book.global.jwt.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -29,7 +28,7 @@ public class LoginService {
     public LoginFormResDTO getLoginFormUrl(LoginType type) {
         return new LoginFormResDTO(type.getLoginFormUrl());
     }
-    public JwtTokenResponse generateJWTForKaKao(String code,LoginType type) {
+    public JwtTokenResponse generateJWTForKaKao(String code, LoginType type) {
         MultiValueMap<String, String> map = getMultiValueMap(code,LoginType.KAKAO);
         UserInfoDTO userInfo = getUserInfo(map,type);
         Optional<Parent> optionalParent = userDataJpaRepository.findBySocialIdAndLoginType(userInfo.getSocialId(), type);

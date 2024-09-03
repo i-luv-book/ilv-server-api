@@ -1,11 +1,10 @@
 package hanium.server.i_luv_book.domain.user.domain;
 
 import hanium.server.i_luv_book.domain.user.application.dto.request.ParentCreateCommand;
-import hanium.server.i_luv_book.domain.user.login.domain.LoginType;
+import hanium.server.i_luv_book.domain.auth.domain.LoginType;
 import hanium.server.i_luv_book.global.common.basetime.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.mapstruct.ap.internal.model.GeneratedType;
 
 
 import java.util.ArrayList;

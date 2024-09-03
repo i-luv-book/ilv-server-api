@@ -1,4 +1,4 @@
-package hanium.server.i_luv_book.domain.user.login.exception;
+package hanium.server.i_luv_book.domain.auth.exception;
 
 public class KakaoOauthException extends RuntimeException{
     public KakaoOauthException(String message) {

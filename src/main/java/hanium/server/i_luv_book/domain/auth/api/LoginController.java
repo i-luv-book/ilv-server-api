@@ -1,17 +1,12 @@
-package hanium.server.i_luv_book.domain.user.login.api;
+package hanium.server.i_luv_book.domain.auth.api;
 
-import hanium.server.i_luv_book.domain.user.domain.Role;
-import hanium.server.i_luv_book.domain.user.login.application.LoginService;
-import hanium.server.i_luv_book.domain.user.login.domain.LoginType;
-import hanium.server.i_luv_book.domain.user.login.dto.response.JwtTokenResponse;
-import hanium.server.i_luv_book.domain.user.login.dto.response.LoginFormResDTO;
+import hanium.server.i_luv_book.domain.auth.application.LoginService;
+import hanium.server.i_luv_book.domain.auth.domain.LoginType;
+import hanium.server.i_luv_book.domain.auth.dto.response.JwtTokenResponse;
+import hanium.server.i_luv_book.domain.auth.dto.response.LoginFormResDTO;
 import hanium.server.i_luv_book.global.jwt.dao.RefreshTokenRepository;
-import hanium.server.i_luv_book.global.jwt.domain.RefreshToken;
 import hanium.server.i_luv_book.global.jwt.util.JwtUtil;
 import hanium.server.i_luv_book.global.security.authentication.userdetails.JwtUserDetails;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,8 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
 
 @RestController
 @Slf4j
