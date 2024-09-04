@@ -11,6 +11,7 @@ import hanium.server.i_luv_book.global.jwt.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -28,6 +29,7 @@ public class LoginService {
     public LoginFormResDTO getLoginFormUrl(LoginType type) {
         return new LoginFormResDTO(type.getLoginFormUrl());
     }
+    @Transactional
     public JwtTokenResponse generateJwtTokens(String code, LoginType type) {
         MultiValueMap<String, String> map = getMultiValueMap(code,type);
         UserInfoDTO userInfo = getUserInfo(map,type);
@@ -74,7 +76,6 @@ public class LoginService {
             case GOOGLE:
                 GoogleAccessTokenDTO googleAccessToken = webClientUtil.getAceesTokenFromGoogle(map).block();
                 GoogleUserInfoDTO googleUserInfo = webClientUtil.getUserInfoFromGoogle(googleAccessToken.getAccess_token()).block();
-                log.info("{}",googleUserInfo);
                 return new UserInfoDTO(googleUserInfo.getId(), googleUserInfo.getEmail());
 
             //KAKAO

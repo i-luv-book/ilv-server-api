@@ -3,7 +3,9 @@ package hanium.server.i_luv_book.domain.user.infra;
 import hanium.server.i_luv_book.domain.auth.domain.LoginType;
 import hanium.server.i_luv_book.domain.user.domain.*;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -24,11 +26,17 @@ public class UserJpaRepository implements UserRepository {
 
     @Override
     public Optional<Parent> findParentBySocialIdAndLoginType(String socialId, LoginType loginType) {
-        return Optional.ofNullable(em.createQuery(
-                "select p from Parent p where p.socialId = :socialId and p.loginType = :loginType", Parent.class)
-                .setParameter("socialId", socialId)
-                .setParameter("loginType", loginType)
-                .getSingleResult());
+        try {
+            return Optional.of(
+                    em.createQuery(
+                                    "select p from Parent p where p.socialId = :socialId and p.loginType = :loginType", Parent.class)
+                            .setParameter("socialId", socialId)
+                            .setParameter("loginType", loginType)
+                            .getSingleResult()
+            );
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

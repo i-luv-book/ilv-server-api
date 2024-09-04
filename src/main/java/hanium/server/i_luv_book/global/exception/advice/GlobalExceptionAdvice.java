@@ -85,6 +85,7 @@ public class GlobalExceptionAdvice {
     // 나머지 에러 여기서 핸들링
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handleException(Exception e) {
+        System.out.println(e.getMessage()+ "  유형은 ? "+ e.getClass());
         return createErrorResponse(e, ErrorCode.SERVICE_UNAVAILABLE);
     }
 
