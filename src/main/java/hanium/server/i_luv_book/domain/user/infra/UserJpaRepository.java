@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -26,17 +27,13 @@ public class UserJpaRepository implements UserRepository {
 
     @Override
     public Optional<Parent> findParentBySocialIdAndLoginType(String socialId, LoginType loginType) {
-        try {
-            return Optional.of(
-                    em.createQuery(
-                                    "select p from Parent p where p.socialId = :socialId and p.loginType = :loginType", Parent.class)
-                            .setParameter("socialId", socialId)
-                            .setParameter("loginType", loginType)
-                            .getSingleResult()
-            );
-        } catch (NoResultException e) {
-            return Optional.empty();
-        }
+        List<Parent> parent = em.createQuery(
+                "select p from Parent p where p.socialId = :socialId and p.loginType = :loginType", Parent.class)
+                .setParameter("socialId", socialId)
+                .setParameter("loginType", loginType)
+                .getResultList();
+        return parent.stream().findAny();
+
     }
 
     @Override
