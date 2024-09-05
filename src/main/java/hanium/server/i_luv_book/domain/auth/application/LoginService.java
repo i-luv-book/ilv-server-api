@@ -1,20 +1,27 @@
 package hanium.server.i_luv_book.domain.auth.application;
 
+import hanium.server.i_luv_book.global.jwt.dao.RefreshTokenRepository;
+import hanium.server.i_luv_book.global.jwt.domain.RefreshToken;
 import hanium.server.i_luv_book.domain.auth.dto.response.*;
+import hanium.server.i_luv_book.domain.auth.exception.RefreshTokenNotFoundException;
 import hanium.server.i_luv_book.domain.user.domain.Parent;
 import hanium.server.i_luv_book.domain.user.domain.Role;
 import hanium.server.i_luv_book.domain.user.domain.UserRepository;
 import hanium.server.i_luv_book.domain.auth.config.LoginWebConfig;
 import hanium.server.i_luv_book.domain.auth.domain.LoginType;
 import hanium.server.i_luv_book.domain.auth.util.LoginWebClientUtil;
+import hanium.server.i_luv_book.global.exception.NotFoundException;
+import hanium.server.i_luv_book.global.exception.code.ErrorCode;
 import hanium.server.i_luv_book.global.jwt.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -25,9 +32,11 @@ public class LoginService {
     private final UserRepository userRepository;
     private final LoginWebClientUtil webClientUtil;
     private final LoginWebConfig loginWebConfig;
+    private final RefreshTokenRepository refreshTokenRepository;
     public LoginFormResDTO getLoginFormUrl(LoginType type) {
         return new LoginFormResDTO(type.getLoginFormUrl());
     }
+    @Transactional
     public JwtTokenResponse generateJwtTokens(String code, LoginType type) {
         MultiValueMap<String, String> map = getMultiValueMap(code,type);
         UserInfoDTO userInfo = getUserInfo(map,type);
@@ -35,11 +44,36 @@ public class LoginService {
 
         if(optionalParent.isPresent()) {
             Parent parent = optionalParent.get();
+            log.info("응거1");
             return generateJwtToken(parent);
         } else {
             //refator 필요
             Parent parent = new Parent(userInfo.getEmail(), Parent.MembershipType.FREE,Role.ROLE_FREE,type, userInfo.getSocialId());
             userRepository.save(parent);
+            log.info("응거2");
+            return generateJwtToken(parent);
+        }
+    }
+
+    @Transactional
+    public JwtTokenResponse reissueJwtTokens(String refreshToken) {
+        log.info("0");
+        Optional<RefreshToken> optionalToken = refreshTokenRepository.findByToken(refreshToken);
+        log.info("1");
+        if (optionalToken.isEmpty()) {
+            throw new RefreshTokenNotFoundException("존재하지않는 리프레쉬 토큰입니다.");
+        } else {
+            //Refresh가 DB에 존재하고 유효하다면 토큰들을 재발급해준다.
+            String token = optionalToken.get().getToken();
+            log.info("2");
+            jwtUtil.validateToken(token);
+            log.info("3");
+            Long userId= jwtUtil.getUserIdFromToken(token);
+            log.info("4");
+            Parent parent = getParentOrThrow(userId);
+            log.info("5");
+            refreshTokenRepository.deleteById(optionalToken.get().getId());
+            log.info("6");
             return generateJwtToken(parent);
         }
     }
@@ -63,9 +97,13 @@ public class LoginService {
         }
         return map;
     }
+
+
     private JwtTokenResponse generateJwtToken(Parent parent) {
-        String accessToken = jwtUtil.generateAccessToken(parent.getId(), parent.getRole());
-        String refreshToken = jwtUtil.generateRefreshToken(parent.getId());
+        UUID uuid = UUID.randomUUID();
+        String accessToken = jwtUtil.generateAccessToken(parent.getId(), parent.getRole(),uuid);
+        String refreshToken = jwtUtil.generateRefreshToken(parent.getId(),uuid);
+        refreshTokenRepository.save(new RefreshToken(String.valueOf(parent.getId()),refreshToken,uuid.toString()));
         return new JwtTokenResponse(accessToken,refreshToken);
     }
     private UserInfoDTO getUserInfo(MultiValueMap<String, String> map, LoginType type) {
@@ -74,7 +112,6 @@ public class LoginService {
             case GOOGLE:
                 GoogleAccessTokenDTO googleAccessToken = webClientUtil.getAceesTokenFromGoogle(map).block();
                 GoogleUserInfoDTO googleUserInfo = webClientUtil.getUserInfoFromGoogle(googleAccessToken.getAccess_token()).block();
-                log.info("{}",googleUserInfo);
                 return new UserInfoDTO(googleUserInfo.getId(), googleUserInfo.getEmail());
 
             //KAKAO
@@ -83,7 +120,18 @@ public class LoginService {
                 KakaoUserInfoDTO kakaoUserInfo = webClientUtil.getUserInfoFromKakao(kakaoAccessToken.getAccess_token()).block();
                 return new UserInfoDTO(kakaoUserInfo.getSub(), kakaoUserInfo.getEmail());
         }
+    }
 
+    private Parent getParentOrThrow(long parentId) {
+        return userRepository.findParentById(parentId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND,parentId));
+    }
+
+    public void destroyRefreshToekn(String accessToken) {
+        String uuid = jwtUtil.getUuidFromToken(accessToken);
+        RefreshToken refreshToken = refreshTokenRepository.findByUuid(uuid)
+                .orElseThrow(() -> new RefreshTokenNotFoundException("존재하지않는 리프레쉬 토큰입니다."));
+        refreshTokenRepository.deleteById(refreshToken.getId());
     }
 }
 

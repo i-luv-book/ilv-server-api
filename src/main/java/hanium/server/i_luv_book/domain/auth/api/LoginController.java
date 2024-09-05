@@ -4,16 +4,12 @@ import hanium.server.i_luv_book.domain.auth.application.LoginService;
 import hanium.server.i_luv_book.domain.auth.domain.LoginType;
 import hanium.server.i_luv_book.domain.auth.dto.response.JwtTokenResponse;
 import hanium.server.i_luv_book.domain.auth.dto.response.LoginFormResDTO;
-import hanium.server.i_luv_book.global.jwt.dao.RefreshTokenRepository;
-import hanium.server.i_luv_book.global.jwt.util.JwtUtil;
 import hanium.server.i_luv_book.global.security.authentication.userdetails.JwtUserDetails;
+import hanium.server.i_luv_book.global.security.exception.jwt.exception.WrongAuthTypeException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
@@ -33,6 +29,34 @@ public class LoginController {
             @RequestParam("code") String code) {
         return loginService.generateJwtTokens(code,type);
     }
+
+    @GetMapping("/auth/token/reissue")
+    public JwtTokenResponse tokenReissueController(@RequestHeader(value = "Authorization") String authHeader) {
+
+        if (!authHeader.startsWith("Bearer ")) {
+            throw new WrongAuthTypeException("Bearer is not provided");
+        }
+        String refreshToken = authHeader.replace("Bearer ","");
+        log.info(refreshToken);
+        return loginService.reissueJwtTokens(refreshToken);
+    }
+
+    @PostMapping("/auth/logout")
+    public void destroyTokenController(@RequestHeader(value = "Authorization") String authHeader) {
+
+        if (!authHeader.startsWith("Bearer ")) {
+            throw new WrongAuthTypeException("Bearer is not provided");
+        }
+        String accessToken = authHeader.replace("Bearer ","");
+        loginService.destroyRefreshToekn(accessToken);
+    }
+
+
+
+
+
+
+
 
     @GetMapping("/api/fairytale")
     public String getTale(@AuthenticationPrincipal JwtUserDetails jwtUserDetails){

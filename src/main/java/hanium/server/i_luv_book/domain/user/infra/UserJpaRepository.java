@@ -3,7 +3,9 @@ package hanium.server.i_luv_book.domain.user.infra;
 import hanium.server.i_luv_book.domain.auth.domain.LoginType;
 import hanium.server.i_luv_book.domain.user.domain.*;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -31,6 +33,7 @@ public class UserJpaRepository implements UserRepository {
                 .setParameter("loginType", loginType)
                 .getResultList();
         return parent.stream().findAny();
+
     }
 
     @Override

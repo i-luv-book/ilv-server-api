@@ -26,7 +26,7 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthorizationManager<RequestAuthorizationContext> authorizationManager;
 
-    public static final String[] WHITE_LIST = {"api/oauth/**","/api/login/oauth", "/api/signup/oauth/**", "/","/auth","/refreshToken",
+    public static final String[] WHITE_LIST = {"/api/auth/token/reissue","api/auth/**","api/oauth/**", "/",
             "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/swagger-config", "/v3/api-docs/swagger-config"};
     public static final String[] PAID_LIST = {"/api/badge"};
     public static final String[] FREE_LIST = {"/api/fairytale/**"};
