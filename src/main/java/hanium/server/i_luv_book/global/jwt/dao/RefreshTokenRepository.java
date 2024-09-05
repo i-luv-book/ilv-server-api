@@ -2,14 +2,16 @@ package hanium.server.i_luv_book.global.jwt.dao;
 
 import hanium.server.i_luv_book.global.jwt.domain.RefreshToken;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
-/**
- * @author Young9
- */
-@Repository
-public interface RefreshTokenRepository extends CrudRepository<RefreshToken, Long> {
 
-    Optional<RefreshToken> findByRefreshToken(String refreshToken);
+@Repository
+public interface RefreshTokenRepository extends CrudRepository<RefreshToken,String> {
+
+    Optional<RefreshToken> findByToken(String token);
+    Optional<RefreshToken> findByUuid(String uuid);
+    List<RefreshToken> findAllByUserId(String userId);
 }
