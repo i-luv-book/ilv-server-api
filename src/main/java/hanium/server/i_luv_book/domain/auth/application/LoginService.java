@@ -44,36 +44,28 @@ public class LoginService {
 
         if(optionalParent.isPresent()) {
             Parent parent = optionalParent.get();
-            log.info("응거1");
             return generateJwtToken(parent);
         } else {
             //refator 필요
             Parent parent = new Parent(userInfo.getEmail(), Parent.MembershipType.FREE,Role.ROLE_FREE,type, userInfo.getSocialId());
             userRepository.save(parent);
-            log.info("응거2");
             return generateJwtToken(parent);
         }
     }
 
     @Transactional
     public JwtTokenResponse reissueJwtTokens(String refreshToken) {
-        log.info("0");
         Optional<RefreshToken> optionalToken = refreshTokenRepository.findByToken(refreshToken);
-        log.info("1");
+
         if (optionalToken.isEmpty()) {
             throw new RefreshTokenNotFoundException("존재하지않는 리프레쉬 토큰입니다.");
         } else {
             //Refresh가 DB에 존재하고 유효하다면 토큰들을 재발급해준다.
             String token = optionalToken.get().getToken();
-            log.info("2");
             jwtUtil.validateToken(token);
-            log.info("3");
             Long userId= jwtUtil.getUserIdFromToken(token);
-            log.info("4");
             Parent parent = getParentOrThrow(userId);
-            log.info("5");
             refreshTokenRepository.deleteById(optionalToken.get().getId());
-            log.info("6");
             return generateJwtToken(parent);
         }
     }
