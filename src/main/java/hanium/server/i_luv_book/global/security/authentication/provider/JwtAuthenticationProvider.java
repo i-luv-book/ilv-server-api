@@ -23,8 +23,8 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         throw new AuthenticationServiceException("wrong authentication method");
     }
 
-    public Authentication authenticate(Long userId, Role role) throws AuthenticationException {
-        JwtUserDetails userDetails = new JwtUserDetails(userId, List.of(new SimpleGrantedAuthority(role.name())));
+    public Authentication authenticate(Long userId, Role role,String uuid) throws AuthenticationException {
+        JwtUserDetails userDetails = new JwtUserDetails(userId, List.of(new SimpleGrantedAuthority(role.name())),uuid);
         return new JwtAuthenticationToken(userDetails.getAuthorities(),userDetails,null);
     }
 

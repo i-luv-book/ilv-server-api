@@ -1,5 +1,6 @@
 package hanium.server.i_luv_book.global.exception.advice;
 
+import hanium.server.i_luv_book.domain.auth.exception.RefreshTokenNotFoundException;
 import hanium.server.i_luv_book.global.exception.BusinessException;
 import hanium.server.i_luv_book.global.exception.ErrorResponse;
 import hanium.server.i_luv_book.global.exception.code.ErrorCode;
@@ -80,6 +81,11 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(NoResourceFoundException.class)
     protected ResponseEntity<ErrorResponse> noResourceFoundException(NoResourceFoundException e) {
         return createErrorResponse(e, ErrorCode.INVALID_REQUEST_URI);
+    }
+
+    @ExceptionHandler(RefreshTokenNotFoundException.class)
+    protected ResponseEntity<ErrorResponse> refreshTokenNotFoundException(RefreshTokenNotFoundException e) {
+        return createErrorResponse(e,ErrorCode.REFRESH_TOKEN_NOT_FOUND);
     }
 
     // 나머지 에러 여기서 핸들링

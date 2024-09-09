@@ -34,6 +34,8 @@ public class Parent extends BaseTimeEntity {
     private LoginType loginType;
     @Column(name = "social_id")
     private String socialId;
+    @Column(name="is_first_login", nullable = false)
+    private boolean isFirstLogin = true;
 
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
