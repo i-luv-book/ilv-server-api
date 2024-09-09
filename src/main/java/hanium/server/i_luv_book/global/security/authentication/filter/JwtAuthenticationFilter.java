@@ -10,7 +10,7 @@ import hanium.server.i_luv_book.domain.user.domain.Role;
 import hanium.server.i_luv_book.global.security.exception.jwt.exception.CustomExpiredJwtException;
 import hanium.server.i_luv_book.global.security.exception.jwt.exception.EmptyJwtException;
 import hanium.server.i_luv_book.global.security.exception.jwt.exception.InvalidJwtException;
-import hanium.server.i_luv_book.global.security.exception.jwt.exception.WrongAuthTypeException;
+import hanium.server.i_luv_book.global.security.exception.jwt.exception.InvalidAuthTypeException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,6 +23,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 /**
  * @author Young9
  */
@@ -45,11 +48,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
             String token = getTokenAndValidateJwtRequest(request);
-            Role role = jwtUtil.getRoleFromToken(token);
+            Role role = jwtUtil.getRoleFromToken(token)
+                    .orElse(Role.ROLE_FREE);
             Long userId = jwtUtil.getUserIdFromToken(token);
+            String uuid = jwtUtil.getUuidFromToken(token);
 
-            log.info("userId = {}, role = {} ",String.valueOf(userId),role.name());
-            JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) jwtAuthenticationProvider.authenticate(userId, role);
+            log.info("userId = {}, role = {} ",userId.toString(),role.name());
+            JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) jwtAuthenticationProvider.authenticate(userId,role,uuid);
             SecurityContextHolder.getContextHolderStrategy().getContext().setAuthentication(authenticationToken);
 
         } catch (CustomExpiredJwtException ex) {
@@ -58,7 +63,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             request.setAttribute("exceptionCode", SecurityExceptionCode.TOKEN_CAN_NOT_BE_NULL);
         } catch (InvalidJwtException ex) {
             request.setAttribute("exceptionCode", SecurityExceptionCode.TOKEN_NOT_VALID);
-        } catch (WrongAuthTypeException ex) {
+        } catch (InvalidAuthTypeException ex) {
             request.setAttribute("exceptionCode", SecurityExceptionCode.AUTHTYPE_NOT_VALID);
         }
 
@@ -73,7 +78,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         if (!jwtHeader.startsWith("Bearer ")) {
-            throw new WrongAuthTypeException("Bearer is not provided");
+            throw new InvalidAuthTypeException("Bearer is not provided");
         }
 
         return jwtHeader.replace("Bearer ","");

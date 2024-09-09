@@ -1,5 +1,6 @@
 package hanium.server.i_luv_book.domain.auth.application;
 
+import hanium.server.i_luv_book.global.jwt.application.JwtService;
 import hanium.server.i_luv_book.global.jwt.dao.RefreshTokenRepository;
 import hanium.server.i_luv_book.global.jwt.domain.RefreshToken;
 import hanium.server.i_luv_book.domain.auth.dto.response.*;
@@ -21,7 +22,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -33,41 +33,39 @@ public class LoginService {
     private final LoginWebClientUtil webClientUtil;
     private final LoginWebConfig loginWebConfig;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final JwtService jwtService;
+
     public LoginFormResDTO getLoginFormUrl(LoginType type) {
         return new LoginFormResDTO(type.getLoginFormUrl());
     }
-    @Transactional
-    public JwtTokenResponse generateJwtTokens(String code, LoginType type) {
+
+    public JwtTokenResponse signupAndGetJwtTokens(String code, LoginType type) {
         MultiValueMap<String, String> map = getMultiValueMap(code,type);
         UserInfoDTO userInfo = getUserInfo(map,type);
         Optional<Parent> optionalParent = userRepository.findParentBySocialIdAndLoginType(userInfo.getSocialId(), type);
 
         if(optionalParent.isPresent()) {
             Parent parent = optionalParent.get();
-            return generateJwtToken(parent);
+            return jwtService.generateJwtToken(parent);
         } else {
             //refator 필요
             Parent parent = new Parent(userInfo.getEmail(), Parent.MembershipType.FREE,Role.ROLE_FREE,type, userInfo.getSocialId());
             userRepository.save(parent);
-            return generateJwtToken(parent);
+            return jwtService.generateJwtToken(parent);
         }
     }
 
-    @Transactional
-    public JwtTokenResponse reissueJwtTokens(String refreshToken) {
-        Optional<RefreshToken> optionalToken = refreshTokenRepository.findByToken(refreshToken);
+    public JwtTokenResponse reissueJwtTokens(String uuid) {
+        RefreshToken refreshToken = refreshTokenRepository.findByUuid(uuid)
+                .orElseThrow(() -> new RefreshTokenNotFoundException("존재하지않는 리프레쉬 토큰입니다."));
 
-        if (optionalToken.isEmpty()) {
-            throw new RefreshTokenNotFoundException("존재하지않는 리프레쉬 토큰입니다.");
-        } else {
-            //Refresh가 DB에 존재하고 유효하다면 토큰들을 재발급해준다.
-            String token = optionalToken.get().getToken();
-            jwtUtil.validateToken(token);
-            Long userId= jwtUtil.getUserIdFromToken(token);
-            Parent parent = getParentOrThrow(userId);
-            refreshTokenRepository.deleteById(optionalToken.get().getId());
-            return generateJwtToken(parent);
-        }
+        //Refresh가 DB에 존재하고 유효하다면 토큰들을 재발급해준다.
+        String token = refreshToken.getToken();
+        jwtUtil.validateToken(token);
+        Long userId= jwtUtil.getUserIdFromToken(token);
+        Parent parent = getParentOrThrow(userId);
+        jwtService.destroyRefreshToken(uuid);
+        return jwtService.generateJwtToken(parent);
     }
 
     private MultiValueMap<String, String> getMultiValueMap(String code,LoginType type) {
@@ -91,13 +89,7 @@ public class LoginService {
     }
 
 
-    private JwtTokenResponse generateJwtToken(Parent parent) {
-        UUID uuid = UUID.randomUUID();
-        String accessToken = jwtUtil.generateAccessToken(parent.getId(), parent.getRole(),uuid);
-        String refreshToken = jwtUtil.generateRefreshToken(parent.getId(),uuid);
-        refreshTokenRepository.save(new RefreshToken(String.valueOf(parent.getId()),refreshToken,uuid.toString()));
-        return new JwtTokenResponse(accessToken,refreshToken);
-    }
+
     private UserInfoDTO getUserInfo(MultiValueMap<String, String> map, LoginType type) {
 
         switch (type) {
@@ -119,11 +111,5 @@ public class LoginService {
                 .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND,parentId));
     }
 
-    public void destroyRefreshToekn(String accessToken) {
-        String uuid = jwtUtil.getUuidFromToken(accessToken);
-        RefreshToken refreshToken = refreshTokenRepository.findByUuid(uuid)
-                .orElseThrow(() -> new RefreshTokenNotFoundException("존재하지않는 리프레쉬 토큰입니다."));
-        refreshTokenRepository.deleteById(refreshToken.getId());
-    }
 }
 

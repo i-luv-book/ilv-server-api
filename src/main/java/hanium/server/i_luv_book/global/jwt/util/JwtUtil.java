@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -74,9 +75,12 @@ public class JwtUtil {
         return !isTokenExpired(token);
     }
 
-    public Role getRoleFromToken(String token) {
+    public Optional<Role> getRoleFromToken(String token) {
         Claims claims = getAllClaimsFromToken(token);
-        return Role.valueOf(claims.get("role",String.class));
+
+        if (claims.get("role",String.class) == null)
+            return Optional.empty();
+        return Optional.of(Role.valueOf(claims.get("role",String.class)));
     }
 
     public String getUuidFromToken(String token) {

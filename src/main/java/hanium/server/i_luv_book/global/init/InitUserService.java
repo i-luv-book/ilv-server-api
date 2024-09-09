@@ -30,11 +30,13 @@ public class InitUserService {
         userRepository.save(user1);
         JwtTokenResponse jwtTokenResponse = generateJwtToken(user1);
         log.info("Free User Access Token : {}", jwtTokenResponse.getAccessToken());
+        log.info("Free User Refresh Token : {}", jwtTokenResponse.getRefreshToken());
 
         Parent user2 = new Parent("User2@gmail.com", Parent.MembershipType.PAID_PREMIUM, Role.ROLE_PAID, LoginType.KAKAO, "2");
         userRepository.save(user2);
         JwtTokenResponse jwtTokenResponse2 = generateJwtToken(user2);
         log.info("PAID User Access Token : {}", jwtTokenResponse2.getAccessToken());
+        log.info("PAID User Refresh Token : {}", jwtTokenResponse2.getRefreshToken());
     }
 
     private JwtTokenResponse generateJwtToken(Parent parent) {

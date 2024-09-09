@@ -14,6 +14,7 @@ public class JwtUserDetails implements UserDetails {
 
     private final Long userId;
     private final List<GrantedAuthority> roles;
+    private final String uuid;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -23,6 +24,8 @@ public class JwtUserDetails implements UserDetails {
     public Long getUserId() {
         return this.userId;
     }
+
+    public String getUuid() { return this.uuid;}
 
     @Override
     public String getPassword() {

@@ -4,8 +4,8 @@ import io.jsonwebtoken.JwtException;
 /**
  * @author Young9
  */
-public class WrongAuthTypeException extends JwtException {
-    public WrongAuthTypeException(String message) {
+public class InvalidAuthTypeException extends JwtException {
+    public InvalidAuthTypeException(String message) {
         super(message);
     }
 }

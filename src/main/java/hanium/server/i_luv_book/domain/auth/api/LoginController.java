@@ -4,8 +4,8 @@ import hanium.server.i_luv_book.domain.auth.application.LoginService;
 import hanium.server.i_luv_book.domain.auth.domain.LoginType;
 import hanium.server.i_luv_book.domain.auth.dto.response.JwtTokenResponse;
 import hanium.server.i_luv_book.domain.auth.dto.response.LoginFormResDTO;
+import hanium.server.i_luv_book.global.jwt.application.JwtService;
 import hanium.server.i_luv_book.global.security.authentication.userdetails.JwtUserDetails;
-import hanium.server.i_luv_book.global.security.exception.jwt.exception.WrongAuthTypeException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,10 +14,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class LoginController {
 
     private final LoginService loginService;
+    private final JwtService jwtService;
 
     @GetMapping( "/oauth/login")
     public LoginFormResDTO OAuthFormContorller(@RequestParam("type") LoginType type) {
@@ -27,44 +28,27 @@ public class LoginController {
     public JwtTokenResponse OAuthSignController(
             @RequestParam("type") LoginType type,
             @RequestParam("code") String code) {
-        return loginService.generateJwtTokens(code,type);
+        return loginService.signupAndGetJwtTokens(code,type);
     }
 
     @GetMapping("/auth/token/reissue")
-    public JwtTokenResponse tokenReissueController(@RequestHeader(value = "Authorization") String authHeader) {
-
-        if (!authHeader.startsWith("Bearer ")) {
-            throw new WrongAuthTypeException("Bearer is not provided");
-        }
-        String refreshToken = authHeader.replace("Bearer ","");
-        log.info(refreshToken);
-        return loginService.reissueJwtTokens(refreshToken);
+    public JwtTokenResponse tokenReissueController(@AuthenticationPrincipal JwtUserDetails jwtUserDetails) {
+        return loginService.reissueJwtTokens(jwtUserDetails.getUuid());
     }
 
     @PostMapping("/auth/logout")
-    public void destroyTokenController(@RequestHeader(value = "Authorization") String authHeader) {
-
-        if (!authHeader.startsWith("Bearer ")) {
-            throw new WrongAuthTypeException("Bearer is not provided");
-        }
-        String accessToken = authHeader.replace("Bearer ","");
-        loginService.destroyRefreshToekn(accessToken);
+    public void destroyTokenController(@AuthenticationPrincipal JwtUserDetails jwtUserDetails) {
+        jwtService.destroyRefreshToken(jwtUserDetails.getUuid());
     }
 
 
-
-
-
-
-
-
-    @GetMapping("/api/fairytale")
+    @GetMapping("/fairytale")
     public String getTale(@AuthenticationPrincipal JwtUserDetails jwtUserDetails){
         log.info("userId {} ",jwtUserDetails.getUserId());
         return "0";
         }
 
-    @GetMapping("/api/badge")
+    @GetMapping("/badge")
     public String getBadge(){
         log.info("뱃지 컨트롤러 호출");
         return "0";
