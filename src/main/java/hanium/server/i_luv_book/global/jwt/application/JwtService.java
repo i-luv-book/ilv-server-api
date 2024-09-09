@@ -32,7 +32,7 @@ public class JwtService {
 
     @Transactional
     public void destroyRefreshToken(String uuid) {
-        refreshTokenRepository.deleteById(uuid);
+        refreshTokenRepository.deleteByUuid(uuid);
     }
 
 }

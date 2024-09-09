@@ -32,7 +32,10 @@ public enum ErrorCode {
     LIMITED_SIZE(FileCode.LIMITED_SIZE.getCode(), HttpStatus.PAYLOAD_TOO_LARGE, "The file size exceeds the limit."),
     FAILED_IO(FileCode.FAILED_IO.getCode(), HttpStatus.INTERNAL_SERVER_ERROR, "Failed to perform I/O operation."),
     FAILED_PUT_OBJECT(FileCode.FAILED_PUT_OBJECT.getCode(), HttpStatus.INTERNAL_SERVER_ERROR, "Failed to upload file to the storage."),
-    FAILED_DELETE_OBJECT(FileCode.FAILED_DELETE_OBJECT.getCode(), HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete file from the storage.");
+    FAILED_DELETE_OBJECT(FileCode.FAILED_DELETE_OBJECT.getCode(), HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete file from the storage."),
+
+    // Auth
+    REFRESH_TOKEN_NOT_FOUND(JwtTokenCode.REFRESH_TOKEN_NOT_FOUND.getCode(), HttpStatus.UNAUTHORIZED,"존재하지않는 리프레쉬 토큰입니다.");
 
     private final String code;
     private final HttpStatus status;
