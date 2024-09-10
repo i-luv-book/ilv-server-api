@@ -1,14 +1,19 @@
 package hanium.server.i_luv_book.domain.user.presentation;
 
 import hanium.server.i_luv_book.domain.user.application.UserCommandService;
+import hanium.server.i_luv_book.domain.user.application.UserQueryService;
+import hanium.server.i_luv_book.domain.user.application.dto.response.ChildInfo;
 import hanium.server.i_luv_book.domain.user.presentation.dto.UserDtoMapper;
 import hanium.server.i_luv_book.domain.user.presentation.dto.request.ChildCreateDto;
+import hanium.server.i_luv_book.domain.user.presentation.dto.request.ParentUpdatePasswordDto;
 import hanium.server.i_luv_book.global.security.authentication.userdetails.JwtUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * @author ijin
@@ -20,6 +25,8 @@ public class UserController {
 
     private final UserDtoMapper mapper;
     private final UserCommandService userCommandService;
+    private final UserQueryService userQueryService;
+    ;
 
     // 부모 APIs
     @PostMapping("/parent/child/can-add")
@@ -42,8 +49,20 @@ public class UserController {
     }
 
     @GetMapping("/parent/children")
-    public void getChildren(@AuthenticationPrincipal JwtUserDetails userDetails) {
+    public List<ChildInfo> getChildren(@AuthenticationPrincipal JwtUserDetails userDetails) {
         Long parentId = userDetails.getUserId();
+        return userQueryService.findChildren(parentId);
+    }
+
+    @PatchMapping("/parent/password")
+    public void changePassword(@AuthenticationPrincipal JwtUserDetails userDetails, @RequestBody ParentUpdatePasswordDto dto) {
+        Long parentId = userDetails.getUserId();
+        userCommandService.changePassword(parentId, dto.getPassword());
+    }
+
+    @GetMapping("/parent/child")
+    public ChildInfo getChild(@RequestParam(value = "nickname") String nickname) {
+        return userQueryService.findChildInfo(nickname);
     }
 
     // 자식 APIs

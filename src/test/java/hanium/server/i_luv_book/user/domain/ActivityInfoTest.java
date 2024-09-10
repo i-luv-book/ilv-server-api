@@ -1,9 +1,8 @@
-package hanium.server.i_luv_book.domain.user.domain;
+package hanium.server.i_luv_book.user.domain;
 
+import hanium.server.i_luv_book.domain.user.domain.ActivityInfo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
