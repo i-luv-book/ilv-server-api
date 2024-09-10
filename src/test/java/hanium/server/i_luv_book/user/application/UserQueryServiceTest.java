@@ -32,7 +32,7 @@ class UserQueryServiceTest {
     void findChildInfo_Success() {
         // Given
         String nickname = "닉넴1";
-        ChildInfo childInfo = new ChildInfo(1L, nickname, "imageUrl");
+        ChildInfo childInfo = new ChildInfo(nickname, "imageUrl");
 
         // Mocking
         when(userQueryDao.findChildInfosByChildNickname(nickname)).thenReturn(Optional.of(childInfo));
@@ -63,8 +63,8 @@ class UserQueryServiceTest {
         // Given
         Long parentId = 1L;
         List<ChildInfo> children = List.of(
-                new ChildInfo(1L, "아이1", "imageUrl1"),
-                new ChildInfo(2L, "아이2", "imageUrl2")
+                new ChildInfo("아이1", "imageUrl1"),
+                new ChildInfo("아이2", "imageUrl2")
         );
 
         // Mocking

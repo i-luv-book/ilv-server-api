@@ -19,7 +19,7 @@ public class UserQueryDao {
 
     public List<ChildInfo> findChildInfosByParentId(Long parentId) {
         return em.createQuery(
-                        "select new hanium.server.i_luv_book.domain.user.application.dto.response.ChildInfo(c.id, c.nickname, c.profileImage.imageUrl)" +
+                        "select new hanium.server.i_luv_book.domain.user.application.dto.response.ChildInfo(c.nickname, c.profileImage.imageUrl)" +
                                 " from Child c" +
                                 " left join c.parent p" +
                                 " where p.id = :parentId", ChildInfo.class)
@@ -29,7 +29,7 @@ public class UserQueryDao {
 
     public Optional<ChildInfo> findChildInfosByChildNickname(String nickname) {
         List<ChildInfo> childInfos = em.createQuery(
-                        "select new hanium.server.i_luv_book.domain.user.application.dto.response.ChildInfo(c.id, c.nickname, c.profileImage.imageUrl)" +
+                        "select new hanium.server.i_luv_book.domain.user.application.dto.response.ChildInfo(c.nickname, c.profileImage.imageUrl)" +
                                 " from Child c" +
                                 " where c.nickname = :nickname", ChildInfo.class)
                 .setParameter("nickname", nickname)
