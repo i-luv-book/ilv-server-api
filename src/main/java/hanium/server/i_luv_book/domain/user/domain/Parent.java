@@ -69,9 +69,9 @@ public class Parent extends BaseTimeEntity {
         children.add(child);
     }
 
-    // 자식 삭제
-    public void removeChild(Child child) {
-        children.remove(child);
+    // 비밀번호 변경
+    public void updatePassword(String password) {
+        this.password = password;
     }
 
     // 자식을 추가할 수 있는지 검증

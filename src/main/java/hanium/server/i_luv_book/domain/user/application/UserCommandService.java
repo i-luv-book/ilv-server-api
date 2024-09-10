@@ -55,6 +55,13 @@ public class UserCommandService {
         return saveChildBadge(child, childBadge, badge);
     }
 
+    // 비밀번호 변경
+    @Transactional
+    public void changePassword(Long parentId, String password) {
+        Parent parent = findParent(parentId);
+        parent.updatePassword(password);
+    }
+
     private Long saveChildBadge(Child child, ChildBadge childBadge, Badge badge) {
         child.addChildBadge(childBadge);
         badge.addChildBadge(childBadge);
