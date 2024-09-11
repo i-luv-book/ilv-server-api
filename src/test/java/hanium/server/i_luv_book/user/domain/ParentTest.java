@@ -31,6 +31,22 @@ class ParentTest {
     }
 
     @Test
+    void updatePasswordTest() {
+        // given
+        Parent parent = Parent.builder()
+                .socialId("소셜ID")
+                .email("EMAIL")
+                .loginType(LoginType.GOOGLE)
+                .membershipType(Parent.MembershipType.FREE)
+                .role(Role.ROLE_FREE)
+                .build();
+
+        // when&then
+        parent.updatePassword("비밀번호");
+        assertEquals("비밀번호", parent.getPassword());
+    }
+
+    @Test
     void canAddChild() {
         // given
         Parent parent = Parent.builder()
