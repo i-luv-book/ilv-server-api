@@ -1,5 +1,6 @@
 package hanium.server.i_luv_book.global.exception.advice;
 
+import hanium.server.i_luv_book.domain.auth.exception.GoogleOauthException;
 import hanium.server.i_luv_book.domain.auth.exception.KakaoOauthException;
 import hanium.server.i_luv_book.domain.auth.exception.RefreshTokenNotFoundException;
 import hanium.server.i_luv_book.global.exception.BusinessException;
@@ -90,11 +91,18 @@ public class GlobalExceptionAdvice {
         return createErrorResponse(e, ErrorCode.REFRESH_TOKEN_NOT_FOUND);
     }
 
-
+    //카카오와 소셜로그인중 연결이 실패하였을 때
     @ExceptionHandler(KakaoOauthException.class)
     protected  ResponseEntity<ErrorResponse> kakaoOauthException(KakaoOauthException e){
-        return createErrorResponse(e, ErrorCode.)
+        return createErrorResponse(e, ErrorCode.KAKAO_CANNOT_CONNECTION);
     }
+
+    //구글과 소셜로그인중 연결이 실패하였을 때
+    @ExceptionHandler(GoogleOauthException.class)
+    protected  ResponseEntity<ErrorResponse> googleOauthException(GoogleOauthException e){
+        return createErrorResponse(e, ErrorCode.GOOGLE_CANNOT_CONNECTION);
+    }
+
 
     // 나머지 에러 여기서 핸들링
     @ExceptionHandler(Exception.class)
