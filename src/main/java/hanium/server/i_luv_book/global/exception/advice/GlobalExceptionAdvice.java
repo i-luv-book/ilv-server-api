@@ -83,6 +83,7 @@ public class GlobalExceptionAdvice {
         return createErrorResponse(e, ErrorCode.INVALID_REQUEST_URI);
     }
 
+    // 리프레시 토큰이 DB에 없는 경우
     @ExceptionHandler(RefreshTokenNotFoundException.class)
     protected ResponseEntity<ErrorResponse> refreshTokenNotFoundException(RefreshTokenNotFoundException e) {
         return createErrorResponse(e,ErrorCode.REFRESH_TOKEN_NOT_FOUND);

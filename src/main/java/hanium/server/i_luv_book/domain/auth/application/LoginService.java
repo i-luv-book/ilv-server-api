@@ -1,5 +1,6 @@
 package hanium.server.i_luv_book.domain.auth.application;
 
+import hanium.server.i_luv_book.domain.user.application.UserCommandService;
 import hanium.server.i_luv_book.global.jwt.application.JwtService;
 import hanium.server.i_luv_book.global.jwt.dao.RefreshTokenRepository;
 import hanium.server.i_luv_book.global.jwt.domain.RefreshToken;
@@ -34,6 +35,7 @@ public class LoginService {
     private final LoginWebConfig loginWebConfig;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtService jwtService;
+    private final UserCommandService userCommandService;
 
     public LoginFormResDTO getLoginFormUrl(LoginType type) {
         return new LoginFormResDTO(type.getLoginFormUrl());
@@ -50,7 +52,7 @@ public class LoginService {
         } else {
             //refator 필요
             Parent parent = new Parent(userInfo.getEmail(), Parent.MembershipType.FREE,Role.ROLE_FREE,type, userInfo.getSocialId());
-            userRepository.save(parent);
+            userCommandService.saveParent(parent);
             return jwtService.generateJwtToken(parent);
         }
     }

@@ -61,6 +61,11 @@ public class UserCommandService {
         return userRepository.save(childBadge);
     }
 
+    @Transactional
+    public Long saveParent(Parent parent) {
+        return userRepository.save(parent);
+    }
+
     private ChildBadge createChildBadge(Child child, Badge badge) {
         return userCommandMapper.toChildBadge(child, badge);
     }

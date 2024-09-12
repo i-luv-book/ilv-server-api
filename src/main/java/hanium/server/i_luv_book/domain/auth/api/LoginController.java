@@ -36,6 +36,7 @@ public class LoginController {
         return loginService.reissueJwtTokens(jwtUserDetails.getUuid());
     }
 
+
     @PostMapping("/auth/logout")
     public void destroyTokenController(@AuthenticationPrincipal JwtUserDetails jwtUserDetails) {
         jwtService.destroyRefreshToken(jwtUserDetails.getUuid());
