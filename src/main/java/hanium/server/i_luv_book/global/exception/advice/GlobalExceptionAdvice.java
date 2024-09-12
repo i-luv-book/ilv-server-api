@@ -1,5 +1,6 @@
 package hanium.server.i_luv_book.global.exception.advice;
 
+import hanium.server.i_luv_book.domain.auth.exception.KakaoOauthException;
 import hanium.server.i_luv_book.domain.auth.exception.RefreshTokenNotFoundException;
 import hanium.server.i_luv_book.global.exception.BusinessException;
 import hanium.server.i_luv_book.global.exception.ErrorResponse;
@@ -86,7 +87,13 @@ public class GlobalExceptionAdvice {
     // 리프레시 토큰이 DB에 없는 경우
     @ExceptionHandler(RefreshTokenNotFoundException.class)
     protected ResponseEntity<ErrorResponse> refreshTokenNotFoundException(RefreshTokenNotFoundException e) {
-        return createErrorResponse(e,ErrorCode.REFRESH_TOKEN_NOT_FOUND);
+        return createErrorResponse(e, ErrorCode.REFRESH_TOKEN_NOT_FOUND);
+    }
+
+
+    @ExceptionHandler(KakaoOauthException.class)
+    protected  ResponseEntity<ErrorResponse> kakaoOauthException(KakaoOauthException e){
+        return createErrorResponse(e, ErrorCode.)
     }
 
     // 나머지 에러 여기서 핸들링

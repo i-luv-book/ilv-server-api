@@ -35,7 +35,10 @@ public enum ErrorCode {
     FAILED_DELETE_OBJECT(FileCode.FAILED_DELETE_OBJECT.getCode(), HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete file from the storage."),
 
     // Auth
-    REFRESH_TOKEN_NOT_FOUND(JwtTokenCode.REFRESH_TOKEN_NOT_FOUND.getCode(), HttpStatus.UNAUTHORIZED,"존재하지않는 리프레쉬 토큰입니다.");
+    REFRESH_TOKEN_NOT_FOUND(JwtTokenCode.REFRESH_TOKEN_NOT_FOUND.getCode(), HttpStatus.UNAUTHORIZED,"존재하지않는 리프레쉬 토큰입니다."),
+    KAKAO_CANNOT_CONNECTION(OauthCode.KAKAO_CANNOT_CONNECTION.getCode(), HttpStatus.SERVICE_UNAVAILABLE,"카카오 서버와 통신이 불안정합니다. 잠시후 시도해주세요"),
+    GOOGLE_CANNOT_CONNECTION(OauthCode.GOOGLE_CANNOT_CONNECTION.getCode(), HttpStatus.SERVICE_UNAVAILABLE,"구글 서버와 통신이 불안정합니다. 잠시후 시도해주세요");
+
 
     private final String code;
     private final HttpStatus status;
