@@ -3,7 +3,6 @@ package hanium.server.i_luv_book.domain.auth.domain;
 import lombok.Getter;
 
 @Getter
-
 public enum LoginType {
     GOOGLE,
     KAKAO;
