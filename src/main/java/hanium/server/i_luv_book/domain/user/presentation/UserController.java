@@ -27,6 +27,7 @@ public class UserController {
     @PostMapping("/child")
     public void registerChild(@RequestParam(value = "parentId") long parentId, @RequestPart(value = "childCreateDto") @Valid ChildCreateDto childCreateDto,
                               @RequestPart(value = "image", required = false) MultipartFile image) {
+
         userCommandService.registerChild(mapper.toCommand(childCreateDto, parentId), image);
     }
 

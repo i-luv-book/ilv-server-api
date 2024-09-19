@@ -1,6 +1,7 @@
 package hanium.server.i_luv_book.domain.fairytale.domain;
 
 import hanium.server.i_luv_book.domain.fairytale.domain.enums.FariyTaleDifficulty;
+import hanium.server.i_luv_book.domain.fairytale.dto.response.GeneralFairyTaleResponseDTO;
 import hanium.server.i_luv_book.domain.user.domain.Child;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ public class Fairytale {
     private Long id;
 
     private String title;
+    @Column(name= "summary",length = 1000)
     private String summary;
     private String thumbnail;
 
@@ -35,13 +37,28 @@ public class Fairytale {
     private Child child;
 
     @OneToMany(mappedBy = "fairytale", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<FairytalePage> fairytalePages = new ArrayList<>();
 
     @OneToMany(mappedBy = "fairytale", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<FairytaleKeyword> fairytaleKeywords = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private FariyTaleDifficulty difficulty;
 
+    public void addPage(GeneralFairyTaleResponseDTO.PagesDTO pagesDTO) {
+        FairytalePage fairytalePage = FairytalePage.builder()
+                .content(pagesDTO.getContent())
+                .fairytale(this)
+                .imgUrl(pagesDTO.getImgURL())
+                .build();
 
+        fairytalePages.add(fairytalePage);
+        fairytalePage.setFairytale(this);
+    }
+
+    public void setChild(Child child) {
+        this.child = child;
+    }
 }

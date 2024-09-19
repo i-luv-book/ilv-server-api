@@ -21,6 +21,7 @@ public class FairytalePage {
     @Column(name = "img_url")
     private String imgUrl;
 
+    @Column(name= "content",length = 10000)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -30,7 +31,8 @@ public class FairytalePage {
     @OneToOne(mappedBy = "fairytalePage", cascade = CascadeType.ALL)
     private PageOptionInfo pageOptionInfo;
 
-
-
+    public void setFairytale(Fairytale fairytale) {
+        this.fairytale = fairytale;
+    }
 
 }

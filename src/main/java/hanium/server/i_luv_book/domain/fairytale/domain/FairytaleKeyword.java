@@ -28,4 +28,6 @@ public class FairytaleKeyword {
     @JoinColumn(name = "keyword_id")
     private Keyword keyword;
 
+    @Column(name = "child_id")
+    private Long childId;
 }

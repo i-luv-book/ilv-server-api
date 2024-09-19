@@ -75,4 +75,9 @@ public class Child extends BaseTimeEntity {
     public void addChildBadge(ChildBadge childBadge) {
         childBadges.add(childBadge);
     }
+
+    public void addFairytale(Fairytale fairytale) {
+        fairytales.add(fairytale);
+        fairytale.setChild(this);
+    }
 }

@@ -20,7 +20,7 @@ public class PageOptionInfo {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="selected_option")
+    @Column(name="selection")
     private Selection selection;
 
     @Column(name = "title_a")

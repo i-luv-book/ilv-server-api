@@ -27,6 +27,7 @@ public class Keyword {
     private KeywordCategory keywordCategory;
 
     @OneToMany(mappedBy = "keyword", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<FairytaleKeyword> fairytaleKeywords = new ArrayList<>();
 
 }
