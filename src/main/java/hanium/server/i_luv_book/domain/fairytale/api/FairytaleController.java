@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/api/v1/fairytale")
+/**
+ * @author Young9
+ */
 public class FairytaleController {
 
     private final FairytaleService fairytaleService;

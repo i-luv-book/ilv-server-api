@@ -2,7 +2,9 @@ package hanium.server.i_luv_book.domain.fairytale.domain.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
+/**
+ * @author Young9
+ */
 @Getter
 @RequiredArgsConstructor
 public enum FariyTaleDifficulty {

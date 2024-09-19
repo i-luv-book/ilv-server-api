@@ -4,7 +4,9 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * @author Young9
+ */
 @Data
 public class GeneralFairyTaleResponseDTO {
     private String title;

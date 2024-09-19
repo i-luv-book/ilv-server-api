@@ -3,6 +3,7 @@ package hanium.server.i_luv_book.domain.fairytale.domain;
 import hanium.server.i_luv_book.domain.fairytale.domain.enums.FariyTaleDifficulty;
 import hanium.server.i_luv_book.domain.fairytale.dto.response.GeneralFairyTaleResponseDTO;
 import hanium.server.i_luv_book.domain.user.domain.Child;
+import hanium.server.i_luv_book.global.common.basetime.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,13 +12,15 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * @author Young9
+ */
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Fairytale {
+public class Fairytale extends BaseTimeEntity {
 
     @Id
     @Column(name = "fairytale_id")

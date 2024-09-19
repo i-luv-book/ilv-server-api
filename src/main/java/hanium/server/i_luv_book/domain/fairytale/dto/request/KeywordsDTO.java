@@ -5,7 +5,9 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.util.List;
-
+/**
+ * @author Young9
+ */
 @Data
 public class KeywordsDTO {
     @Size(min =1, max = 2,message = "인물 키워드는 1개부터 2개까지 허용합니다. ")

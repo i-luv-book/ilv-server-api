@@ -3,7 +3,9 @@ package hanium.server.i_luv_book.domain.fairytale.dto.response;
 import lombok.Data;
 
 import java.util.List;
-
+/**
+ * @author Young9
+ */
 @Data
 public class GameFairyTaleSelectionResponseDTO implements GameFairyTaleResponseDTO {
     private String title;

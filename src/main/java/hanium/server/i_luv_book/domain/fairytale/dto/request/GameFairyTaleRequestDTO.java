@@ -4,7 +4,9 @@ import hanium.server.i_luv_book.domain.fairytale.domain.enums.FariyTaleDifficult
 import lombok.Data;
 
 import java.util.List;
-
+/**
+ * @author Young9
+ */
 @Data
 public class GameFairyTaleRequestDTO {
     private KeywordsDTO keywords;

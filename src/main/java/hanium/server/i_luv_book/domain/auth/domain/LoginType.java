@@ -1,7 +1,9 @@
 package hanium.server.i_luv_book.domain.auth.domain;
 
 import lombok.Getter;
-
+/**
+ * @author Young9
+ */
 @Getter
 public enum LoginType {
     GOOGLE,

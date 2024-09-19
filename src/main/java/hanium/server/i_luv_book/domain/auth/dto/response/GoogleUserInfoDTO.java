@@ -2,7 +2,9 @@ package hanium.server.i_luv_book.domain.auth.dto.response;
 
 import lombok.Data;
 import lombok.ToString;
-
+/**
+ * @author Young9
+ */
 @Data
 @ToString
 public class GoogleUserInfoDTO {

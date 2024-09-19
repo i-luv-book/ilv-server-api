@@ -1,17 +1,20 @@
 package hanium.server.i_luv_book.domain.fairytale.domain;
 
+import hanium.server.i_luv_book.global.common.basetime.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
+/**
+ * @author Young9
+ */
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FairytalePage {
+public class FairytalePage extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
