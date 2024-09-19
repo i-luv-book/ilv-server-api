@@ -1,5 +1,6 @@
 package hanium.server.i_luv_book.domain.fairytale.api;
 
+import hanium.server.i_luv_book.domain.fairytale.application.FairytalePersistentService;
 import hanium.server.i_luv_book.domain.fairytale.application.FairytaleService;
 import hanium.server.i_luv_book.domain.fairytale.dto.request.GameFairyTaleRequestDTO;
 import hanium.server.i_luv_book.domain.fairytale.dto.request.GeneralFairyTaleRequestDTO;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class FairytaleController {
 
     private final FairytaleService fairytaleService;
+    private final FairytalePersistentService fairytalePersistentService;
 
     @PostMapping("/general/{childId}")
     public GeneralFairyTaleResponseDTO createGenrealFairyTale(@Valid @RequestBody GeneralFairyTaleRequestDTO taleRequestDTO, @PathVariable Long childId) {
@@ -32,7 +34,7 @@ public class FairytaleController {
 
     @DeleteMapping("/{fairytaleId}")
     public void deleteFairyTale(@PathVariable Long fairytaleId) {
-
+        fairytalePersistentService.deleteFairytale(fairytaleId);
     }
 
 

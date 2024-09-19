@@ -84,6 +84,11 @@ public class FairytalePersistentService {
 
     }
 
+    @Transactional
+    public void deleteFairytale(Long fairytaleId) {
+        fairytaleRepository.deleteById(fairytaleId);
+    }
+
 
     private Keyword saveKeyword(Keyword keyword) {
         return keywordRepository.save(keyword);
