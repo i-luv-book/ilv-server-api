@@ -43,3 +43,6 @@ out/
 ### DS Store ###
 .DS_store
 *.DS_store
+
+### Local ###
+/src/main/java/hanium/server/i_luv_book/global/config/redis/LocalRedisConfig.java

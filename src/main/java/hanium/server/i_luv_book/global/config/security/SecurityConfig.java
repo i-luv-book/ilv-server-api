@@ -31,8 +31,8 @@ public class SecurityConfig {
 
     public static final String[] WHITE_LIST = {"/api/v1/oauth/**", "/",
             "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/swagger-config", "/v3/api-docs/swagger-config"};
-    public static final String[] PAID_LIST = {"/api/v1/child/badge"};
-    public static final String[] FREE_LIST = {"/api/v1/auth/**","/api/v1/fairytale/**","/api/v1/child/**","api/v1/parent/**","api/v1/user/**"};
+    public static final String[] PAID_LIST = {"/api/v1/child", "/api/v1/child/**"};
+    public static final String[] FREE_LIST = {"/api/v1/auth/**","/api/v1/fairytale/**", "/api/v1/parent/**"};
     public static final String[] ADMIN_LIST = {"/api/admin/**"};
 
     @Bean
