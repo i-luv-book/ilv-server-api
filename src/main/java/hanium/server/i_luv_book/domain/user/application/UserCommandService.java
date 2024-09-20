@@ -54,9 +54,7 @@ public class UserCommandService {
         Child child = findChild(info.nickname());
         List<BadgeType> grantedBadgeTypes = child.updateFairytaleReadingInfo(info.minute());
         if (!grantedBadgeTypes.isEmpty()) {
-            grantedBadgeTypes.forEach(grantedBadgeType -> {
-                grantBadge(grantedBadgeType, child);
-            });
+            grantBadges(grantedBadgeTypes, child);
         }
     }
 
@@ -65,16 +63,18 @@ public class UserCommandService {
         Child child = findChild(info.nickname());
         List<BadgeType> grantedBadgeTypes = child.updateQuizSolvingInfo(info.minute());
         if (!grantedBadgeTypes.isEmpty()) {
-            grantedBadgeTypes.forEach(grantedBadgeType -> {
-                grantBadge(grantedBadgeType, child);
-            });
+            grantBadges(grantedBadgeTypes, child);
         }
     }
 
-    private void grantBadge(BadgeType grantedBadgeType, Child child) {
-        Badge badge = userQueryService.findBadge(grantedBadgeType);
-        ChildBadge childBadge = createChildBadge(child, badge);
-        saveChildBadge(child, childBadge, badge);
+    private void grantBadges(List<BadgeType> grantedBadgeTypes, Child child) {
+        grantedBadgeTypes.forEach(grantedBadgeType -> {
+                Badge badge = userQueryService.findBadge(grantedBadgeType);
+                ChildBadge childBadge = createChildBadge(child, badge);
+                saveChildBadge(child, childBadge, badge);
+            }
+        );
+
         // TODO : 알림로직 추가
     }
 

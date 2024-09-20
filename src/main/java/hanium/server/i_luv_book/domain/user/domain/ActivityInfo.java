@@ -47,7 +47,7 @@ public class ActivityInfo {
             grantedBadges.add(BadgeType.THIRTY_MINUTES_READ);
         }
 
-        // 60분 배지 부여 조건
+        // 60분 배지 부여
         if (beforeFairytaleReadingDuration < 60 && afterFairytaleReadingDuration >= 60) {
             grantedBadges.add(BadgeType.ONE_HOUR_READ);
         }
