@@ -1,29 +1,35 @@
 package hanium.server.i_luv_book.domain.user.application;
 
 import hanium.server.i_luv_book.domain.user.application.dto.UserCommandMapper;
+import hanium.server.i_luv_book.domain.user.application.dto.request.ChildActivityInfo;
 import hanium.server.i_luv_book.domain.user.application.dto.request.ChildCreateCommand;
 import hanium.server.i_luv_book.domain.user.domain.*;
 import hanium.server.i_luv_book.global.exception.BusinessException;
-import hanium.server.i_luv_book.global.exception.NotFoundException;
 import hanium.server.i_luv_book.global.exception.code.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
+import static hanium.server.i_luv_book.domain.user.domain.Badge.*;
+
 /**
  * @author ijin
  */
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserCommandService {
 
+    private final UserQueryService userQueryService;
     private final UserCommandMapper userCommandMapper;
+
     private final UserRepository userRepository;
     private final FileStore fileStore;
 
     // 자식 계정 가입
-    @Transactional
     public Long registerChild(ChildCreateCommand command, MultipartFile image) {
         Parent parent = findParent(command.parentId());
         checkIfChildNameAlreadyExists(command, parent);
@@ -32,54 +38,54 @@ public class UserCommandService {
         return saveChild(parent, child);
     }
 
-    // 자식 추가 여부 체크
-    @Transactional(readOnly = true)
-    public void checkChildAdditionPossible(Long parentId) {
-        Parent parent = findParent(parentId);
-        int currentNumberOfChildren = getCurrentNumberOfChildren(parentId);
-        checkChildAdditionPossible(parent, currentNumberOfChildren);
-    }
-
     // 자식 삭제
-    @Transactional
     public void deleteChild(Long parentId, String nickname) {
         userRepository.deleteChild(parentId, nickname);
     }
 
-    // 배지 획득
-    @Transactional
-    public Long grantBadge(Long childId, Long badgeId) {
-        Child child = findChild(childId);
-        Badge badge = findBadge(badgeId);
-        ChildBadge childBadge = createChildBadge(child, badge);
-        return saveChildBadge(child, childBadge, badge);
-    }
-
     // 비밀번호 변경
-    @Transactional
     public void changePassword(Long parentId, String password) {
         Parent parent = findParent(parentId);
         parent.updatePassword(password);
     }
 
-    private Long saveChildBadge(Child child, ChildBadge childBadge, Badge badge) {
+    // 동화 읽은 시간 업데이트, 배지 부여
+    public void updateFairytaleReadingDuration(ChildActivityInfo info) {
+        Child child = findChild(info.nickname());
+        List<BadgeType> grantedBadgeTypes = child.updateFairytaleReadingInfo(info.minute());
+        if (!grantedBadgeTypes.isEmpty()) {
+            grantedBadgeTypes.forEach(grantedBadgeType -> {
+                grantBadge(grantedBadgeType, child);
+            });
+        }
+    }
+
+    // 퀴즈 푼 시간 업데이트, 배지 부여
+    public void updateQuizSolvingDuration(ChildActivityInfo info) {
+        Child child = findChild(info.nickname());
+        List<BadgeType> grantedBadgeTypes = child.updateQuizSolvingInfo(info.minute());
+        if (!grantedBadgeTypes.isEmpty()) {
+            grantedBadgeTypes.forEach(grantedBadgeType -> {
+                grantBadge(grantedBadgeType, child);
+            });
+        }
+    }
+
+    private void grantBadge(BadgeType grantedBadgeType, Child child) {
+        Badge badge = userQueryService.findBadge(grantedBadgeType);
+        ChildBadge childBadge = createChildBadge(child, badge);
+        saveChildBadge(child, childBadge, badge);
+        // TODO : 알림로직 추가
+    }
+
+    private void saveChildBadge(Child child, ChildBadge childBadge, Badge badge) {
         child.addChildBadge(childBadge);
         badge.addChildBadge(childBadge);
-        return userRepository.save(childBadge);
+        userRepository.save(childBadge);
     }
 
     private ChildBadge createChildBadge(Child child, Badge badge) {
         return userCommandMapper.toChildBadge(child, badge);
-    }
-
-    private Child findChild(Long childId) {
-        return userRepository.findChildById(childId)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
-    }
-
-    private Badge findBadge(Long badgeId) {
-        return userRepository.findBadgeById(badgeId)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.BADGE_NOT_FOUND));
     }
 
     private void checkIfChildNameAlreadyExists(ChildCreateCommand command, Parent parent) {
@@ -101,23 +107,16 @@ public class UserCommandService {
         }
     }
 
-    private void checkChildAdditionPossible(Parent parent, int currentNumberOfChildren) {
-        if (!parent.canAddChild(currentNumberOfChildren)) {
-            throw new BusinessException(ErrorCode.LIMITED_ACCESS);
-        }
-    }
-
     private Long saveChild(Parent parent, Child child) {
         parent.addChild(child);
         return userRepository.save(child);
     }
 
-    private int getCurrentNumberOfChildren(Long parentId) {
-        return userRepository.countChildrenByParentId(parentId);
+    private Parent findParent(long parentId) {
+        return userQueryService.findParent(parentId);
     }
 
-    private Parent findParent(long parentId) {
-        return userRepository.findParentById(parentId)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND, parentId));
+    private Child findChild(String nickname) {
+        return userQueryService.findChild(nickname);
     }
 }

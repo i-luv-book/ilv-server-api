@@ -4,6 +4,7 @@ import hanium.server.i_luv_book.domain.user.application.UserCommandService;
 import hanium.server.i_luv_book.domain.user.application.UserQueryService;
 import hanium.server.i_luv_book.domain.user.application.dto.response.ChildInfo;
 import hanium.server.i_luv_book.domain.user.presentation.dto.UserDtoMapper;
+import hanium.server.i_luv_book.domain.user.presentation.dto.request.ChildActivityDto;
 import hanium.server.i_luv_book.domain.user.presentation.dto.request.ChildCreateDto;
 import hanium.server.i_luv_book.domain.user.presentation.dto.request.ParentUpdatePasswordDto;
 import hanium.server.i_luv_book.global.security.authentication.userdetails.JwtUserDetails;
@@ -32,7 +33,7 @@ public class UserController {
     @PostMapping("/parent/child/can-add")
     public void canAddChildAccount(@AuthenticationPrincipal JwtUserDetails userDetails) {
         Long parentId = userDetails.getUserId();
-        userCommandService.checkChildAdditionPossible(parentId);
+        userQueryService.checkChildAdditionPossible(parentId);
     }
 
     @PostMapping("/parent/child")
@@ -66,9 +67,13 @@ public class UserController {
     }
 
     // 자식 APIs
-    @PostMapping("/child/badge")
-    public void registerBadge(@AuthenticationPrincipal JwtUserDetails userDetails, @RequestParam(value = "badgeId") long badgeId) {
-        Long childId = userDetails.getUserId();
-        userCommandService.grantBadge(childId, badgeId);
+    @PostMapping("/child/fairytale/time")
+    public void updateFairytaleReadingDuration(@RequestBody ChildActivityDto dto) {
+        userCommandService.updateFairytaleReadingDuration(mapper.toInfo(dto));
+    }
+
+    @PostMapping("/child/quiz/time")
+    public void updateQuizSolvingDuration(@RequestBody ChildActivityDto dto) {
+        userCommandService.updateQuizSolvingDuration(mapper.toInfo(dto));
     }
 }

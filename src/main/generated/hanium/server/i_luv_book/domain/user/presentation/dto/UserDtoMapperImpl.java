@@ -1,7 +1,9 @@
 package hanium.server.i_luv_book.domain.user.presentation.dto;
 
+import hanium.server.i_luv_book.domain.user.application.dto.request.ChildActivityInfo;
 import hanium.server.i_luv_book.domain.user.application.dto.request.ChildCreateCommand;
 import hanium.server.i_luv_book.domain.user.domain.Child.Gender;
+import hanium.server.i_luv_book.domain.user.presentation.dto.request.ChildActivityDto;
 import hanium.server.i_luv_book.domain.user.presentation.dto.request.ChildCreateDto;
 import java.time.LocalDate;
 import javax.annotation.processing.Generated;
@@ -9,8 +11,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-09-05T15:48:45+0900",
-    comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.10 (Oracle Corporation)"
+    date = "2024-09-20T19:04:13+0900",
+    comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.11 (Amazon.com Inc.)"
 )
 @Component
 public class UserDtoMapperImpl implements UserDtoMapper {
@@ -35,5 +37,22 @@ public class UserDtoMapperImpl implements UserDtoMapper {
         ChildCreateCommand childCreateCommand = new ChildCreateCommand( nickname, birthDate, gender, parentId1 );
 
         return childCreateCommand;
+    }
+
+    @Override
+    public ChildActivityInfo toInfo(ChildActivityDto dto) {
+        if ( dto == null ) {
+            return null;
+        }
+
+        String nickname = null;
+        int minute = 0;
+
+        nickname = dto.getNickname();
+        minute = dto.getMinute();
+
+        ChildActivityInfo childActivityInfo = new ChildActivityInfo( nickname, minute );
+
+        return childActivityInfo;
     }
 }

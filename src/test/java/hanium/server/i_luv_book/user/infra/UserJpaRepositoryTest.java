@@ -2,10 +2,7 @@ package hanium.server.i_luv_book.user.infra;
 
 import hanium.server.i_luv_book.domain.auth.domain.LoginType;
 import hanium.server.i_luv_book.domain.user.application.dto.request.ChildCreateCommand;
-import hanium.server.i_luv_book.domain.user.domain.Child;
-import hanium.server.i_luv_book.domain.user.domain.Parent;
-import hanium.server.i_luv_book.domain.user.domain.Role;
-import hanium.server.i_luv_book.domain.user.domain.UserRepository;
+import hanium.server.i_luv_book.domain.user.domain.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
@@ -18,6 +15,7 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Transactional
 @SpringBootTest
 class UserJpaRepositoryTest {
 
@@ -29,7 +27,6 @@ class UserJpaRepositoryTest {
 
     @Test
     @DisplayName("부모 저장 및 조회 테스트")
-    @Transactional
     void saveParent() {
         // given
         Parent parent = Parent.builder()
@@ -50,7 +47,6 @@ class UserJpaRepositoryTest {
 
     @Test
     @DisplayName("자식 저장 및 부모의 자식 조회 테스트")
-    @Transactional
     void saveChildAndCount() {
         // given
         Parent parent = Parent.builder()
@@ -84,7 +80,6 @@ class UserJpaRepositoryTest {
 
     @Test
     @DisplayName("자식 삭제 후 조회 시 예외 발생 테스트")
-    @Transactional
     void deleteChild_thenThrowExceptionWhenFetching() {
         // Given
         Parent parent = Parent.builder()
@@ -113,7 +108,6 @@ class UserJpaRepositoryTest {
 
     @Test
     @DisplayName("소셜ID, 소셜 타입으로 부모계정 찾기 테스트")
-    @Transactional
     void findParentBySocialInfo() {
         // when
         Parent parent = Parent.builder()
@@ -130,5 +124,22 @@ class UserJpaRepositoryTest {
 
         // then
         assertEquals(savedParentId, foundParent.getId());
+    }
+
+    @Test
+    @DisplayName("배지 찾기 테스트")
+    void findBadge() {
+        // when
+        Badge badge = Badge.builder()
+                .type(Badge.BadgeType.ARTIST)
+                .imgUrl("IMAGE URL")
+                .build();
+
+        // given
+        userJpaRepository.save(badge);
+        Badge foundBadge = userJpaRepository.findBadgeByType(Badge.BadgeType.ARTIST).get();
+
+        // then
+        assertEquals(foundBadge.getType(), Badge.BadgeType.ARTIST);
     }
 }

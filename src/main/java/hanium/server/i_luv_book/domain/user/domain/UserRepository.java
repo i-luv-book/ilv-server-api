@@ -15,7 +15,11 @@ public interface UserRepository {
 
     Optional<Child> findChildById(long childId);
 
-    Optional<Badge> findBadgeById(long badgeId);
+    Optional<Child> findChildByNickname(String nickname);
+
+    void save(Badge badge);
+
+    Optional<Badge> findBadgeByType(Badge.BadgeType badgeType);
 
     int countChildrenByParentId(long parentId);
 
@@ -26,5 +30,4 @@ public interface UserRepository {
     Long save(ChildBadge childBadge);
 
     void deleteChild(long parentId, String nickname);
-
 }
