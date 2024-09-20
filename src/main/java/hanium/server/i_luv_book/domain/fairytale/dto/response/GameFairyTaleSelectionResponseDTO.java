@@ -14,7 +14,8 @@ public class GameFairyTaleSelectionResponseDTO implements GameFairyTaleResponseD
     private List<Options> options;
 
 
-    public class Options {
+    @Data
+    public static class Options {
         private String optionTitle;
         private String optionContent;
     }

@@ -4,6 +4,7 @@ import hanium.server.i_luv_book.domain.fairytale.application.FairytalePersistent
 import hanium.server.i_luv_book.domain.fairytale.application.FairytaleService;
 import hanium.server.i_luv_book.domain.fairytale.dto.request.GameFairyTaleRequestDTO;
 import hanium.server.i_luv_book.domain.fairytale.dto.request.GeneralFairyTaleRequestDTO;
+import hanium.server.i_luv_book.domain.fairytale.dto.response.GameFairyTaleResponseDTO;
 import hanium.server.i_luv_book.domain.fairytale.dto.response.GeneralFairyTaleResponseDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,13 +28,13 @@ public class FairytaleController {
         return fairytaleService.createAndSaveGeneralTale(taleRequestDTO,childId);
     }
 
-//    @PostMapping("/game/{childId}")
-//    public GeneralFairyTaleResponseDTO createGenrealFairyTale(@Valid @RequestBody GameFairyTaleRequestDTO taleRequestDTO, @PathVariable Long childId) {
-//        return fairytaleService.createAndSaveGameTale(taleRequestDTO,childId);
-//    }
+    @PostMapping("/game/{childId}")
+    public GameFairyTaleResponseDTO createGenrealFairyTale(@Valid @RequestBody GameFairyTaleRequestDTO taleRequestDTO, @PathVariable Long childId) {
+        return fairytaleService.createAndSaveGameTale(taleRequestDTO,childId);
+    }
 
-    @DeleteMapping("/{fairytaleId}")
-    public void deleteFairyTale(@PathVariable Long fairytaleId) {
+    @DeleteMapping("/{childId}/{fairytaleId}")
+    public void deleteFairyTale(@PathVariable Long childId,@PathVariable Long fairytaleId) {
         fairytalePersistentService.deleteFairytale(fairytaleId);
     }
 

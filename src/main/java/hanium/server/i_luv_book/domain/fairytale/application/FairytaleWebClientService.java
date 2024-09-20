@@ -47,6 +47,18 @@ public class FairytaleWebClientService {
                 .bodyToMono(GameFairyTaleResponseDTO.class);
     }
 
+    public <T> Mono<T> createTale(Class<T> responseType,Object body, String url){
+        WebClient webClient = getWebClient();
+
+        return webClient.post()
+                .uri(url)
+                .bodyValue(body)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, response -> Mono.error(new FairytaleCreateException("동화 생성하기 4xx 오류, 동화 생성 서버와 연결중에 문제가 발생했습니다.")))
+                .onStatus(HttpStatusCode::is5xxServerError, response -> Mono.error(new FairytaleCreateException("동화 생성하기 5xx 오류, 동화 생성 서버와 연결중에 문제가 발생했습니다.")))
+                .bodyToMono(responseType);
+    }
+
     private WebClient getWebClient() {
         return WebClient.builder()
                 .defaultHeader(HttpHeaders.CONTENT_TYPE,MediaType.APPLICATION_JSON_VALUE)
