@@ -5,6 +5,7 @@ import hanium.server.i_luv_book.domain.user.domain.Badge;
 import hanium.server.i_luv_book.domain.user.domain.Child;
 import hanium.server.i_luv_book.domain.user.domain.Parent;
 import hanium.server.i_luv_book.domain.user.domain.UserRepository;
+import hanium.server.i_luv_book.domain.user.domain.notification.NotificationInfo;
 import hanium.server.i_luv_book.domain.user.infra.UserQueryDao;
 import hanium.server.i_luv_book.global.exception.BusinessException;
 import hanium.server.i_luv_book.global.exception.NotFoundException;
@@ -43,6 +44,11 @@ public class UserQueryService {
         checkChildAdditionPossible(parent, currentNumberOfChildren);
     }
 
+    // 알림 유무 조회
+    public boolean checkNotificationAgreement(String nickname) {
+        return userRepository.checkNotificationAgreement(nickname);
+    }
+
     // 부모 계정 찾기
     public Parent findParent(long parentId) {
         return userRepository.findParentById(parentId)
@@ -59,6 +65,12 @@ public class UserQueryService {
     public Badge findBadge(Badge.BadgeType badgeType) {
         return userRepository.findBadgeByType(badgeType)
                 .orElseThrow(() -> new BusinessException(ErrorCode.VIOLATED_DATA_INTEGRITY));
+    }
+
+    // 알림 정보 조회
+    public NotificationInfo findNotificationInfo(long childId) {
+        return userRepository.findNotificationInfoByChildId(childId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.FCM_TOKEN_NOT_FOUND));
     }
 
     private List<ChildInfo> findChildrenInfosByParentId(Long parentId) {

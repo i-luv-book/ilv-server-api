@@ -1,12 +1,16 @@
 package hanium.server.i_luv_book.domain.user.application;
 
 import hanium.server.i_luv_book.domain.user.application.dto.UserCommandMapper;
-import hanium.server.i_luv_book.domain.user.application.dto.request.ChildActivityInfo;
+import hanium.server.i_luv_book.domain.user.application.dto.request.ActivityInfoCreateCommand;
 import hanium.server.i_luv_book.domain.user.application.dto.request.ChildCreateCommand;
+import hanium.server.i_luv_book.domain.user.application.dto.request.NotificationInfoCreateCommand;
 import hanium.server.i_luv_book.domain.user.domain.*;
+import hanium.server.i_luv_book.domain.user.domain.notification.BadgeGrantedEvent;
+import hanium.server.i_luv_book.domain.user.domain.notification.NotificationInfo;
 import hanium.server.i_luv_book.global.exception.BusinessException;
 import hanium.server.i_luv_book.global.exception.code.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +30,7 @@ public class UserCommandService {
     private final UserQueryService userQueryService;
     private final UserCommandMapper userCommandMapper;
 
+    private final ApplicationEventPublisher publisher;;
     private final UserRepository userRepository;
     private final FileStore fileStore;
 
@@ -50,7 +55,7 @@ public class UserCommandService {
     }
 
     // 동화 읽은 시간 업데이트, 배지 부여
-    public void updateFairytaleReadingDuration(ChildActivityInfo info) {
+    public void updateFairytaleReadingDuration(ActivityInfoCreateCommand info) {
         Child child = findChild(info.nickname());
         List<BadgeType> grantedBadgeTypes = child.updateFairytaleReadingInfo(info.minute());
         if (!grantedBadgeTypes.isEmpty()) {
@@ -59,12 +64,34 @@ public class UserCommandService {
     }
 
     // 퀴즈 푼 시간 업데이트, 배지 부여
-    public void updateQuizSolvingDuration(ChildActivityInfo info) {
+    public void updateQuizSolvingDuration(ActivityInfoCreateCommand info) {
         Child child = findChild(info.nickname());
         List<BadgeType> grantedBadgeTypes = child.updateQuizSolvingInfo(info.minute());
         if (!grantedBadgeTypes.isEmpty()) {
             grantBadges(grantedBadgeTypes, child);
         }
+    }
+
+    // 알림 정보 저장
+    public void saveNotificationInfo(NotificationInfoCreateCommand command) {
+        Child child = findChild(command.nickname());
+        NotificationInfo notificationInfo = createNotificationInfo(child.getId(), command);
+        userRepository.save(notificationInfo);
+    }
+
+    // 알림 수신 동의, 미동의
+    public boolean changeNotificationAgreement(String nickname) {
+        Child child = findChild(nickname);
+        NotificationInfo notificationInfo = findNotificationInfo(child);
+        return notificationInfo.updateIsNotified();
+    }
+
+    private NotificationInfo findNotificationInfo(Child child) {
+        return userQueryService.findNotificationInfo(child.getId());
+    }
+
+    private NotificationInfo createNotificationInfo(long childId, NotificationInfoCreateCommand command) {
+        return userCommandMapper.toNotificationInfo(childId, command.fcmToken());
     }
 
     private void grantBadges(List<BadgeType> grantedBadgeTypes, Child child) {
@@ -75,7 +102,17 @@ public class UserCommandService {
             }
         );
 
-        // TODO : 알림로직 추가
+        pushBadgeGrantedNotification(grantedBadgeTypes, child);
+    }
+
+    private void pushBadgeGrantedNotification(List<BadgeType> grantedBadgeTypes, Child child) {
+        if (isNotificationAvailable(child)) {
+            publisher.publishEvent(new BadgeGrantedEvent(grantedBadgeTypes, child.getId()));
+        }
+    }
+
+    private boolean isNotificationAvailable(Child child) {
+        return userQueryService.checkNotificationAgreement(child.getNickname());
     }
 
     private void saveChildBadge(Child child, ChildBadge childBadge, Badge badge) {

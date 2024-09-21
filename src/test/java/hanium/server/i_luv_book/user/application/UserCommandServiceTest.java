@@ -3,7 +3,7 @@ package hanium.server.i_luv_book.user.application;
 import hanium.server.i_luv_book.domain.auth.domain.LoginType;
 import hanium.server.i_luv_book.domain.user.application.UserCommandService;
 import hanium.server.i_luv_book.domain.user.application.UserQueryService;
-import hanium.server.i_luv_book.domain.user.application.dto.request.ChildActivityInfo;
+import hanium.server.i_luv_book.domain.user.application.dto.request.ActivityInfoCreateCommand;
 import hanium.server.i_luv_book.domain.user.domain.*;
 import hanium.server.i_luv_book.global.exception.BusinessException;
 import hanium.server.i_luv_book.domain.user.application.dto.UserCommandMapper;
@@ -94,7 +94,7 @@ class UserCommandServiceTest {
         // Given
         String childNickname = "자식1";
         int minutesRead = 45;
-        ChildActivityInfo childActivityInfo = new ChildActivityInfo(childNickname, minutesRead);
+        ActivityInfoCreateCommand activityInfoCreateCommand = new ActivityInfoCreateCommand(childNickname, minutesRead);
         Child child = mock(Child.class);
         List<BadgeType> grantedBadges = List.of(BadgeType.THIRTY_MINUTES_READ);
 
@@ -105,7 +105,7 @@ class UserCommandServiceTest {
         when(userCommandMapper.toChildBadge(any(Child.class), any(Badge.class))).thenReturn(new ChildBadge(child, new Badge(BadgeType.THIRTY_MINUTES_READ, "imageUrl")));
 
         // When
-        userCommandService.updateFairytaleReadingDuration(childActivityInfo);
+        userCommandService.updateFairytaleReadingDuration(activityInfoCreateCommand);
 
         // Then
         verify(child, times(1)).updateFairytaleReadingInfo(minutesRead);
