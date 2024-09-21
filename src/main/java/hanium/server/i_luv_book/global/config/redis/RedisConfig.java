@@ -3,11 +3,13 @@ package hanium.server.i_luv_book.global.config.redis;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 /**
  * @author Young9
  */
+@Profile("dev")
 @Configuration
 public class RedisConfig {
 
