@@ -3,8 +3,11 @@ package hanium.server.i_luv_book.domain.fairytale.application;
 import hanium.server.i_luv_book.domain.fairytale.dao.*;
 import hanium.server.i_luv_book.domain.fairytale.domain.*;
 import hanium.server.i_luv_book.domain.fairytale.domain.enums.KeywordCategory;
+import hanium.server.i_luv_book.domain.fairytale.dto.request.GameFairyTaleRequestDTO;
 import hanium.server.i_luv_book.domain.fairytale.dto.request.GeneralFairyTaleRequestDTO;
 import hanium.server.i_luv_book.domain.fairytale.dto.request.KeywordsDTO;
+import hanium.server.i_luv_book.domain.fairytale.dto.response.GameFairyTaleResponseDTO;
+import hanium.server.i_luv_book.domain.fairytale.dto.response.GameFairyTaleSelectionResponseDTO;
 import hanium.server.i_luv_book.domain.fairytale.dto.response.GeneralFairyTaleResponseDTO;
 import hanium.server.i_luv_book.domain.user.domain.Child;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static hanium.server.i_luv_book.domain.fairytale.dto.response.GameFairyTaleSelectionResponseDTO.*;
+
 /**
  * @author Young9
  */
@@ -53,6 +59,47 @@ public class FairytalePersistentService {
     }
 
     @Transactional
+    public Fairytale saveFairytaleWithPage(GameFairyTaleRequestDTO taleRequestDTO, GameFairyTaleSelectionResponseDTO taleResponseDTO, Long childId) {
+        //아이 찾는 쿼리 수정 해야함.
+        Child child = tmpChildRepository.findById(childId)
+                .orElseThrow();
+
+        //동화 저장
+        Fairytale fairytale = Fairytale.builder()
+                .difficulty(taleRequestDTO.getDifficulty())
+                .title(taleResponseDTO.getTitle())
+                .thumbnail(taleResponseDTO.getImgURL())
+                .child(child)
+                .build();
+        fairytaleRepository.save(fairytale);
+
+        //동화 페이지 저장
+        FairytalePage fairytalePage = FairytalePage.builder()
+                .imgUrl(taleResponseDTO.getImgURL())
+                .content(taleResponseDTO.getContent())
+                .fairytale(fairytale)
+                .build();
+        fairytalePageRepository.save(fairytalePage);
+
+        //동화 선택지 저장
+        Options  optionA = taleResponseDTO.getOptions().get(0);
+        Options  optionB = taleResponseDTO.getOptions().get(1);
+        Options  optionC = taleResponseDTO.getOptions().get(2);
+
+        PageOptionInfo pageOptionInfo = PageOptionInfo.builder()
+                .fairytalePage(fairytalePage)
+                .contentA(optionA.getOptionContent())
+                .contentB(optionB.getOptionContent())
+                .contentC(optionC.getOptionContent())
+                .titleA(optionA.getOptionTitle())
+                .titleB(optionB.getOptionTitle())
+                .titleC(optionC.getOptionTitle())
+                .build();
+        pageOptionInfoRepository.save(pageOptionInfo);
+        return fairytale;
+    }
+
+    @Transactional
     public FairytalePage saveFairytalePage(FairytalePage fairytalePage) {
         return fairytalePageRepository.save(fairytalePage);
     }
@@ -63,10 +110,8 @@ public class FairytalePersistentService {
     }
 
     @Transactional
-    public void saveFairytaleKeyword(Fairytale fairytale,GeneralFairyTaleRequestDTO taleRequestDTO) {
-        KeywordsDTO keywordsDTO = taleRequestDTO.getKeywords();
+    public void saveFairytaleKeyword(Fairytale fairytale,KeywordsDTO keywordsDTO) {
         List<Keyword> keywordList = new ArrayList<>();
-
         addKeyword(keywordList,keywordsDTO.getCharacters(),KeywordCategory.CHARACTERS);
         addKeyword(keywordList,keywordsDTO.getTraits(),KeywordCategory.TRAITS);
         addKeyword(keywordList,keywordsDTO.getSettings(),KeywordCategory.SETTINGS);
@@ -107,5 +152,6 @@ public class FairytalePersistentService {
 
 
     }
+
 
 }

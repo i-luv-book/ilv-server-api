@@ -29,7 +29,7 @@ public class FairytaleService {
         GeneralFairyTaleBody body = new GeneralFairyTaleBody(taleRequestDTO.getKeywords());
         GeneralFairyTaleResponseDTO taleResponseDTO = fairytaleWebClientService.createTale(GeneralFairyTaleResponseDTO.class,body,taleRequestDTO.getDifficulty().getGeneralUrl()).block();
         Fairytale fairytale = fairytalePersistentService.saveFairytaleWithAllPage(taleRequestDTO,taleResponseDTO,childId);
-        fairytalePersistentService.saveFairytaleKeyword(fairytale,taleRequestDTO);
+        fairytalePersistentService.saveFairytaleKeyword(fairytale,taleRequestDTO.getKeywords());
         return taleResponseDTO;
     }
 
@@ -40,8 +40,9 @@ public class FairytaleService {
         } else {
             // 기존의 동화가 없는 경우
             GameFairyTaleBody body = new GameFairyTaleBody(taleRequestDTO.getKeywords(), "");
-            GameFairyTaleResponseDTO taleResponseDTO = fairytaleWebClientService.createTale(GameFairyTaleSelectionResponseDTO.class,body,taleRequestDTO.getDifficulty().getGameUrl()).block();
-
+            GameFairyTaleSelectionResponseDTO taleResponseDTO = fairytaleWebClientService.createTale(GameFairyTaleSelectionResponseDTO.class,body,taleRequestDTO.getDifficulty().getGameUrl()).block();
+            Fairytale fairytale = fairytalePersistentService.saveFairytaleWithPage(taleRequestDTO, taleResponseDTO, childId);
+            fairytalePersistentService.saveFairytaleKeyword(fairytale,taleRequestDTO.getKeywords());
 
             return taleResponseDTO;
         }
