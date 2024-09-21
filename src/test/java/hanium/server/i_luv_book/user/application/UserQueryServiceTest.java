@@ -1,8 +1,13 @@
 package hanium.server.i_luv_book.user.application;
 
+import hanium.server.i_luv_book.domain.auth.domain.LoginType;
 import hanium.server.i_luv_book.domain.user.application.UserQueryService;
 import hanium.server.i_luv_book.domain.user.application.dto.response.ChildInfo;
+import hanium.server.i_luv_book.domain.user.domain.Parent;
+import hanium.server.i_luv_book.domain.user.domain.Role;
+import hanium.server.i_luv_book.domain.user.domain.UserRepository;
 import hanium.server.i_luv_book.domain.user.infra.UserQueryDao;
+import hanium.server.i_luv_book.global.exception.BusinessException;
 import hanium.server.i_luv_book.global.exception.NotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +28,9 @@ class UserQueryServiceTest {
 
     @Mock
     private UserQueryDao userQueryDao;
+
+    @Mock
+    private UserRepository userRepository;
 
     @InjectMocks
     private UserQueryService userQueryService;
@@ -75,5 +83,25 @@ class UserQueryServiceTest {
 
         // Then
         assertEquals(children, result);
+    }
+
+    @Test
+    @DisplayName("자식계정 추가 전 멤버쉽 제한 테스트")
+    void registerChild_LimitedMembership() {
+        // Given
+        Parent parent = Parent.builder()
+                .socialId("소셜ID")
+                .email("EMAIL")
+                .loginType(LoginType.GOOGLE)
+                .membershipType(Parent.MembershipType.FREE)
+                .role(Role.ROLE_FREE)
+                .build();
+
+        // Mocking
+        when(userRepository.findParentById(parent.getId())).thenReturn(Optional.of(parent));
+        when(userRepository.countChildrenByParentId(parent.getId())).thenReturn(1); // 자식 제한 초과
+
+        // When & Then
+        assertThrows(BusinessException.class, () -> userQueryService.checkChildAdditionPossible(parent.getId()));
     }
 }

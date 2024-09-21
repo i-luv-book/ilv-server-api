@@ -1,6 +1,8 @@
 package hanium.server.i_luv_book.domain.user.presentation.dto;
 
+import hanium.server.i_luv_book.domain.user.application.dto.request.ChildActivityInfo;
 import hanium.server.i_luv_book.domain.user.application.dto.request.ChildCreateCommand;
+import hanium.server.i_luv_book.domain.user.presentation.dto.request.ChildActivityDto;
 import hanium.server.i_luv_book.domain.user.presentation.dto.request.ChildCreateDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -13,4 +15,6 @@ public interface UserDtoMapper {
     UserDtoMapper INSTANCE = Mappers.getMapper(UserDtoMapper.class);
 
     ChildCreateCommand toCommand(ChildCreateDto dto, long parentId);
+
+    ChildActivityInfo toInfo(ChildActivityDto dto);
 }

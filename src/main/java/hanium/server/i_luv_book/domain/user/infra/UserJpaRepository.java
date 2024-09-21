@@ -38,12 +38,36 @@ public class UserJpaRepository implements UserRepository {
 
     @Override
     public Optional<Child> findChildById(long childId) {
-        return Optional.ofNullable(em.find(Child.class, childId));
+        List<Child> children = em.createQuery("select c from Child c" +
+                        " left join c.activityInfo a" +
+                        " where c.id = :childId", Child.class)
+                .setParameter("childId", childId)
+                .getResultList();
+        return children.stream().findAny();
     }
 
     @Override
-    public Optional<Badge> findBadgeById(long badgeId) {
-        return Optional.ofNullable(em.find(Badge.class, badgeId));
+    public Optional<Child> findChildByNickname(String nickname) {
+        List<Child> children = em.createQuery("select c from Child c" +
+                        " left join c.activityInfo a" +
+                        " where c.nickname = :nickname", Child.class)
+                .setParameter("nickname", nickname)
+                .getResultList();
+        return children.stream().findAny();
+    }
+
+    @Override
+    public void save(Badge badge) {
+        em.persist(badge);
+    }
+
+    @Override
+    public Optional<Badge> findBadgeByType(Badge.BadgeType badgeType) {
+        List<Badge> badges = em.createQuery("select b from Badge b" +
+                        " where b.type = :badgeType", Badge.class)
+                .setParameter("badgeType", badgeType)
+                .getResultList();
+        return badges.stream().findAny();
     }
 
     @Override

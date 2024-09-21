@@ -10,6 +10,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static hanium.server.i_luv_book.domain.user.domain.Badge.*;
+
 /**
  * @author ijin
  */
@@ -80,4 +82,17 @@ public class Child extends BaseTimeEntity {
         fairytales.add(fairytale);
         fairytale.setChild(this);
     }
+
+    public List<BadgeType> updateFairytaleReadingInfo ( int minute){
+        return activityInfo.updateFairytaleReadingDuration(minute);
+    }
+
+    public List<BadgeType> updateQuizSolvingInfo ( int minute){
+        return activityInfo.updateQuizSolvingDuration(minute);
+    }
+
+    public BadgeType updateLoginDateInfo () {
+        return activityInfo.updateLoginStatus();
+    }
+
 }
