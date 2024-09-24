@@ -55,8 +55,8 @@ public class UserCommandService {
     }
 
     // 동화 읽은 시간 업데이트, 배지 부여
-    public void updateFairytaleReadingDuration(ActivityInfoCreateCommand info) {
-        Child child = findChild(info.nickname());
+    public void updateFairytaleReadingDuration(long parentId, ActivityInfoCreateCommand info) {
+        Child child = findChild(parentId, info.nickname());
         List<BadgeType> grantedBadgeTypes = child.updateFairytaleReadingInfo(info.minute());
         if (!grantedBadgeTypes.isEmpty()) {
             grantBadges(grantedBadgeTypes, child);
@@ -64,8 +64,8 @@ public class UserCommandService {
     }
 
     // 퀴즈 푼 시간 업데이트, 배지 부여
-    public void updateQuizSolvingDuration(ActivityInfoCreateCommand info) {
-        Child child = findChild(info.nickname());
+    public void updateQuizSolvingDuration(long parentId, ActivityInfoCreateCommand info) {
+        Child child = findChild(parentId, info.nickname());
         List<BadgeType> grantedBadgeTypes = child.updateQuizSolvingInfo(info.minute());
         if (!grantedBadgeTypes.isEmpty()) {
             grantBadges(grantedBadgeTypes, child);
@@ -73,15 +73,15 @@ public class UserCommandService {
     }
 
     // 알림 정보 저장
-    public void saveNotificationInfo(NotificationInfoCreateCommand command) {
-        Child child = findChild(command.nickname());
+    public void saveNotificationInfo(long parentId, NotificationInfoCreateCommand command) {
+        Child child = findChild(parentId, command.nickname());
         NotificationInfo notificationInfo = createNotificationInfo(child.getId(), command);
         userRepository.save(notificationInfo);
     }
 
     // 알림 수신 동의, 미동의
-    public boolean changeNotificationAgreement(String nickname) {
-        Child child = findChild(nickname);
+    public boolean changeNotificationAgreement(long parentId, String nickname) {
+        Child child = findChild(parentId, nickname);
         NotificationInfo notificationInfo = findNotificationInfo(child);
         return notificationInfo.updateIsNotified();
     }
@@ -153,7 +153,7 @@ public class UserCommandService {
         return userQueryService.findParent(parentId);
     }
 
-    private Child findChild(String nickname) {
-        return userQueryService.findChild(nickname);
+    private Child findChild(long parentId, String nickname) {
+        return userQueryService.findChild(parentId, nickname);
     }
 }

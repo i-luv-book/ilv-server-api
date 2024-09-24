@@ -56,8 +56,8 @@ public class UserQueryService {
     }
 
     // 자식 계정 찾기
-    public Child findChild(String nickname) {
-        return userRepository.findChildByNickname(nickname)
+    public Child findChild(long parentId, String nickname) {
+        return userRepository.findChildByParentIdAndNickname(parentId, nickname)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
     }
 

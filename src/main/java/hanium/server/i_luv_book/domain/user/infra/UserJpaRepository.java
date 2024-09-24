@@ -48,10 +48,11 @@ public class UserJpaRepository implements UserRepository {
     }
 
     @Override
-    public Optional<Child> findChildByNickname(String nickname) {
+    public Optional<Child> findChildByParentIdAndNickname(long parentId, String nickname) {
         List<Child> children = em.createQuery("select c from Child c" +
                         " left join c.activityInfo a" +
-                        " where c.nickname = :nickname", Child.class)
+                        " where c.nickname = :nickname and c.parent.id = :parentId", Child.class)
+                .setParameter("parentId", parentId)
                 .setParameter("nickname", nickname)
                 .getResultList();
         return children.stream().findAny();
