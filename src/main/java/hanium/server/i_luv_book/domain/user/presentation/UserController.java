@@ -6,6 +6,7 @@ import hanium.server.i_luv_book.domain.user.application.dto.response.ChildInfo;
 import hanium.server.i_luv_book.domain.user.presentation.dto.UserDtoMapper;
 import hanium.server.i_luv_book.domain.user.presentation.dto.request.ChildActivityDto;
 import hanium.server.i_luv_book.domain.user.presentation.dto.request.ChildCreateDto;
+import hanium.server.i_luv_book.domain.user.presentation.dto.request.NotificationInfoDto;
 import hanium.server.i_luv_book.domain.user.presentation.dto.request.ParentUpdatePasswordDto;
 import hanium.server.i_luv_book.global.security.authentication.userdetails.JwtUserDetails;
 import jakarta.validation.Valid;
@@ -69,11 +70,26 @@ public class UserController {
     // 자식 APIs
     @PostMapping("/child/fairytale/time")
     public void updateFairytaleReadingDuration(@RequestBody ChildActivityDto dto) {
-        userCommandService.updateFairytaleReadingDuration(mapper.toInfo(dto));
+        userCommandService.updateFairytaleReadingDuration(mapper.toCommand(dto));
+    }
+
+    @PostMapping("/child/notification")
+    public void saveChildNotificationInfo(@RequestBody NotificationInfoDto dto) {
+        userCommandService.saveNotificationInfo(mapper.toCommand(dto));
+    }
+
+    @PatchMapping("/child/{nickname}/notification")
+    public boolean updateNotificationAgreement(@PathVariable(value = "nickname") String nickname) {
+        return userCommandService.changeNotificationAgreement(nickname);
+    }
+
+    @GetMapping("child/{nickname}/notification")
+    public boolean getNotificationAgreement(@PathVariable(value = "nickname") String nickname) {
+        return userQueryService.checkNotificationAgreement(nickname);
     }
 
     @PostMapping("/child/quiz/time")
     public void updateQuizSolvingDuration(@RequestBody ChildActivityDto dto) {
-        userCommandService.updateQuizSolvingDuration(mapper.toInfo(dto));
+        userCommandService.updateQuizSolvingDuration(mapper.toCommand(dto));
     }
 }

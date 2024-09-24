@@ -3,6 +3,7 @@ package hanium.server.i_luv_book.user.infra;
 import hanium.server.i_luv_book.domain.auth.domain.LoginType;
 import hanium.server.i_luv_book.domain.user.application.dto.request.ChildCreateCommand;
 import hanium.server.i_luv_book.domain.user.domain.*;
+import hanium.server.i_luv_book.domain.user.domain.notification.NotificationInfo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
@@ -141,5 +142,33 @@ class UserJpaRepositoryTest {
 
         // then
         assertEquals(foundBadge.getType(), Badge.BadgeType.ARTIST);
+    }
+
+    @Test
+    @DisplayName("자식 알림유무 동의 여부 조회 테스트")
+    void checkChildNotificationAgreement() {
+        // given
+        Parent parent = Parent.builder()
+                .socialId("소셜ID")
+                .email("EMAIL")
+                .loginType(LoginType.GOOGLE)
+                .membershipType(Parent.MembershipType.FREE)
+                .role(Role.ROLE_FREE)
+                .build();
+        Long savedParentId = userJpaRepository.save(parent);
+
+        ChildCreateCommand childCreateCommand1 = new ChildCreateCommand("자식", LocalDate.now(), Child.Gender.MALE,  savedParentId);
+        Child child1 = Child.builder().childCreateCommand(childCreateCommand1).build();
+        parent.addChild(child1);
+        child1.registerParent(parent);
+        Long savedChildId = userJpaRepository.save(child1);
+
+        // when
+//        NotificationInfo notificationInfo = new NotificationInfo(savedChildId, "TEST FCM TOKEN");
+//        userJpaRepository.save(notificationInfo);
+        boolean agreement  = userJpaRepository.checkNotificationAgreement("자식");
+
+        // then
+        assertFalse(agreement);
     }
 }
