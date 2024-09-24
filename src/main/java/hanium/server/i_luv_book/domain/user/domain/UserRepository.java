@@ -16,7 +16,7 @@ public interface UserRepository {
 
     Optional<Child> findChildById(long childId);
 
-    Optional<Child> findChildByNickname(String nickname);
+    Optional<Child> findChildByParentIdAndNickname(long parentId, String nickname);
 
     void save(Badge badge);
 

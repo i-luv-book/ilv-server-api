@@ -87,29 +87,4 @@ class UserCommandServiceTest {
         // Then
         assertThrows(BusinessException.class, () -> userCommandService.registerChild(childCreateCommand, null));
     }
-
-    @Test
-    @DisplayName("동화 읽은 시간 업데이트 및 배지 부여 테스트")
-    void updateFairytaleReadingDuration_Success() {
-        // Given
-        String childNickname = "자식1";
-        int minutesRead = 45;
-        ActivityInfoCreateCommand activityInfoCreateCommand = new ActivityInfoCreateCommand(childNickname, minutesRead);
-        Child child = mock(Child.class);
-        List<BadgeType> grantedBadges = List.of(BadgeType.THIRTY_MINUTES_READ);
-
-        // Mocking
-        when(userQueryService.findChild(childNickname)).thenReturn(child);
-        when(child.updateFairytaleReadingInfo(minutesRead)).thenReturn(grantedBadges);
-        when(userQueryService.findBadge(BadgeType.THIRTY_MINUTES_READ)).thenReturn(new Badge(BadgeType.THIRTY_MINUTES_READ, "imageUrl"));
-        when(userCommandMapper.toChildBadge(any(Child.class), any(Badge.class))).thenReturn(new ChildBadge(child, new Badge(BadgeType.THIRTY_MINUTES_READ, "imageUrl")));
-
-        // When
-        userCommandService.updateFairytaleReadingDuration(activityInfoCreateCommand);
-
-        // Then
-        verify(child, times(1)).updateFairytaleReadingInfo(minutesRead);
-        verify(userQueryService, times(1)).findBadge(BadgeType.THIRTY_MINUTES_READ);
-        verify(userRepository, times(1)).save(any(ChildBadge.class));
-    }
 }

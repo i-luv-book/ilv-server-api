@@ -69,18 +69,21 @@ public class UserController {
 
     // 자식 APIs
     @PostMapping("/child/fairytale/time")
-    public void updateFairytaleReadingDuration(@RequestBody ChildActivityDto dto) {
-        userCommandService.updateFairytaleReadingDuration(mapper.toCommand(dto));
+    public void updateFairytaleReadingDuration(@AuthenticationPrincipal JwtUserDetails userDetails, @RequestBody ChildActivityDto dto) {
+        Long parentId = userDetails.getUserId();
+        userCommandService.updateFairytaleReadingDuration(parentId, mapper.toCommand(dto));
     }
 
     @PostMapping("/child/notification")
-    public void saveChildNotificationInfo(@RequestBody NotificationInfoDto dto) {
-        userCommandService.saveNotificationInfo(mapper.toCommand(dto));
+    public void saveChildNotificationInfo(@AuthenticationPrincipal JwtUserDetails userDetails, @RequestBody NotificationInfoDto dto) {
+        Long parentId = userDetails.getUserId();
+        userCommandService.saveNotificationInfo(parentId, mapper.toCommand(dto));
     }
 
     @PatchMapping("/child/{nickname}/notification")
-    public boolean updateNotificationAgreement(@PathVariable(value = "nickname") String nickname) {
-        return userCommandService.changeNotificationAgreement(nickname);
+    public boolean updateNotificationAgreement(@AuthenticationPrincipal JwtUserDetails userDetails, @PathVariable(value = "nickname") String nickname) {
+        Long parentId = userDetails.getUserId();
+        return userCommandService.changeNotificationAgreement(parentId, nickname);
     }
 
     @GetMapping("child/{nickname}/notification")
@@ -89,7 +92,8 @@ public class UserController {
     }
 
     @PostMapping("/child/quiz/time")
-    public void updateQuizSolvingDuration(@RequestBody ChildActivityDto dto) {
-        userCommandService.updateQuizSolvingDuration(mapper.toCommand(dto));
+    public void updateQuizSolvingDuration(@AuthenticationPrincipal JwtUserDetails userDetails, @RequestBody ChildActivityDto dto) {
+        Long parentId = userDetails.getUserId();
+        userCommandService.updateQuizSolvingDuration(parentId, mapper.toCommand(dto));
     }
 }
