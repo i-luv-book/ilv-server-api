@@ -3,6 +3,7 @@ package hanium.server.i_luv_book.domain.education;
 import hanium.server.i_luv_book.domain.fairytale.domain.Fairytale;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,26 +13,23 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Quiz {
+public class Words {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "quiz_id")
+    @Column(name = "word_id")
     private long id;
-    @Embedded
-    private QuizInfo quizInfo;
-    @Column(name = "question")
-    private String question;
-    @Column(name = "pronoun_or_word")
-    private String pronounOrWord;
-    @Column(name = "answer")
-    private String answer;
-    @Column(name = "is_corrected")
-    private boolean isCorrect;
+    @Column(name = "word")
+    private String word;
+    @Column(name = "translation")
+    private String translation;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fairytale_id")
     private Fairytale fairytale;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "quiz_option_info_id")
-    private QuizOptionInfo quizOptionInfo;
+
+    @Builder
+    public Words(String word, String translation) {
+        this.word = word;
+        this.translation = translation;
+    }
 }
