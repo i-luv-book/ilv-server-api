@@ -1,7 +1,9 @@
-package hanium.server.i_luv_book.domain.education;
+package hanium.server.i_luv_book.domain.education.domain;
 
+import hanium.server.i_luv_book.domain.education.application.dto.request.QuizCreateCommand;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,14 +13,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class QuizOptionInfo {
+public class QuizOptions {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "quiz_option_info_id")
+    @Column(name = "quiz_options_id")
     private long id;
-    @Enumerated(EnumType.STRING)
-    @Column(name = "selected_option")
-    private Option selectedOption;
     @Column(name = "option_a")
     private String optionA;
     @Column(name = "option_b")
@@ -28,8 +27,11 @@ public class QuizOptionInfo {
     @Column(name = "option_d")
     private String optionD;
 
-    @Getter
-    public enum Option {
-        A, B, C, D
+    @Builder
+    public QuizOptions(QuizCreateCommand.QuizOptionsCreateCommand command) {
+        this.optionA = command.getOptionA();
+        this.optionB = command.getOptionB();
+        this.optionC = command.getOptionC();
+        this.optionD = command.getOptionD();
     }
 }
