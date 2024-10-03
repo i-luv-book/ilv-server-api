@@ -1,4 +1,4 @@
-package hanium.server.i_luv_book.domain.education;
+package hanium.server.i_luv_book.domain.education.domain;
 
 import hanium.server.i_luv_book.domain.fairytale.domain.Fairytale;
 import jakarta.persistence.*;

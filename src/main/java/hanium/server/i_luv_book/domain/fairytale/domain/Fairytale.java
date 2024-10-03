@@ -1,10 +1,11 @@
 package hanium.server.i_luv_book.domain.fairytale.domain;
 
-import hanium.server.i_luv_book.domain.education.Quiz;
-import hanium.server.i_luv_book.domain.education.Words;
+import hanium.server.i_luv_book.domain.education.domain.Quiz;
+import hanium.server.i_luv_book.domain.education.domain.Words;
 import hanium.server.i_luv_book.domain.user.domain.Child;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Fairytale {
     @Id
@@ -27,4 +28,17 @@ public class Fairytale {
     private List<Quiz> quizzes = new ArrayList<>();
     @OneToMany(mappedBy = "fairytale", cascade = CascadeType.ALL)
     private List<Words> words = new ArrayList<>();
+
+    @Builder
+    public Fairytale() {
+
+    }
+
+    public void addQuizzes(List<Quiz> quizzes) {
+        this.quizzes.addAll(quizzes);
+    }
+
+    public void addWords(List<Words> words) {
+        this.words.addAll(words);
+    }
 }
