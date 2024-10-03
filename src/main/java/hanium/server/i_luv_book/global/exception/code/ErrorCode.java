@@ -37,7 +37,15 @@ public enum ErrorCode {
     FAILED_DELETE_OBJECT(FileCode.FAILED_DELETE_OBJECT.getCode(), HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete file from the storage."),
 
     // Auth
-    REFRESH_TOKEN_NOT_FOUND(JwtTokenCode.REFRESH_TOKEN_NOT_FOUND.getCode(), HttpStatus.UNAUTHORIZED,"존재하지않는 리프레쉬 토큰입니다.");
+    REFRESH_TOKEN_NOT_FOUND(JwtTokenCode.REFRESH_TOKEN_NOT_FOUND.getCode(), HttpStatus.UNAUTHORIZED,"존재하지않는 리프레쉬 토큰입니다."),
+
+    // OpenAi
+    FAILED_OPENAI_REQUEST(OpenAiCode.FAILED_OPENAI_REQUEST.getCode(), HttpStatus.INTERNAL_SERVER_ERROR, "Failed to request to OpenAI."),
+    UNSUITABLE_OPENAI_RESPONSE(OpenAiCode.UNSUITABLE_OPENAI_RESPONSE.getCode(), HttpStatus.INTERNAL_SERVER_ERROR, "Unsuitable OpenAi Response"),
+
+    // Fairytale
+    FAIRYTALE_NOT_FOUND(FairytaleCode.NOT_FOUND.getCode(), HttpStatus.NOT_FOUND, "Fairytale not found."),
+    ;
 
     private final String code;
     private final HttpStatus status;
