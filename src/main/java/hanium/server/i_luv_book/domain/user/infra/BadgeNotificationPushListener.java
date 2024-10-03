@@ -28,7 +28,7 @@ public class BadgeNotificationPushListener implements BadgeNotificationListener 
     private final UserRepository userRepository;
 
     @Override
-    @Async
+    @Async("notificationTaskExecutor")
     @EventListener
     public void notifyBadgeGranted(BadgeGrantedEvent event) {
         List<BadgeType> badgeTypes = event.badgeTypes();

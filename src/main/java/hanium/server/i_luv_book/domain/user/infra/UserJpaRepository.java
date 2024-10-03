@@ -131,8 +131,9 @@ public class UserJpaRepository implements UserRepository {
                 .setParameter("nickname", nickname)
                 .getResultList();
 
-        if (notificationInfos.isEmpty())
+        if (notificationInfos.isEmpty()) {
             return false;
+        }
         return notificationInfos.get(0).isNotified();
     }
 }
