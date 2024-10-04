@@ -2,6 +2,9 @@ package hanium.server.i_luv_book.global.init;
 
 import hanium.server.i_luv_book.domain.auth.domain.LoginType;
 import hanium.server.i_luv_book.domain.auth.dto.response.JwtTokenResponse;
+import hanium.server.i_luv_book.domain.fairytale.dao.TMPChildRepository;
+import hanium.server.i_luv_book.domain.user.application.dto.request.ChildCreateCommand;
+import hanium.server.i_luv_book.domain.user.domain.Child;
 import hanium.server.i_luv_book.domain.user.domain.Parent;
 import hanium.server.i_luv_book.domain.user.domain.Role;
 import hanium.server.i_luv_book.domain.user.domain.UserRepository;
@@ -13,6 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -23,6 +29,7 @@ public class InitUserService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final TMPChildRepository tmpChildRepository;
 
     @Transactional  // 트랜잭션 관리
     public void initUser() {
@@ -32,12 +39,18 @@ public class InitUserService {
         log.info("Free User Access Token : {}", jwtTokenResponse.getAccessToken());
         log.info("Free User Refresh Token : {}", jwtTokenResponse.getRefreshToken());
 
+
+        Child child = new Child(new ChildCreateCommand("test", LocalDate.now(), Child.Gender.FEMALE, 1L),user1);
+        tmpChildRepository.save(child);
+
         Parent user2 = new Parent("User2@gmail.com", Parent.MembershipType.PAID_PREMIUM, Role.ROLE_PAID, LoginType.KAKAO, "2");
         userRepository.save(user2);
         JwtTokenResponse jwtTokenResponse2 = generateJwtToken(user2);
         log.info("PAID User Access Token : {}", jwtTokenResponse2.getAccessToken());
         log.info("PAID User Refresh Token : {}", jwtTokenResponse2.getRefreshToken());
     }
+
+
 
     private JwtTokenResponse generateJwtToken(Parent parent) {
         UUID uuid = UUID.randomUUID();
