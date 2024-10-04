@@ -43,6 +43,10 @@ public enum ErrorCode {
     FAILED_OPENAI_REQUEST(OpenAiCode.FAILED_OPENAI_REQUEST.getCode(), HttpStatus.INTERNAL_SERVER_ERROR, "Failed to request to OpenAI."),
     UNSUITABLE_OPENAI_RESPONSE(OpenAiCode.UNSUITABLE_OPENAI_RESPONSE.getCode(), HttpStatus.INTERNAL_SERVER_ERROR, "Unsuitable OpenAi Response"),
 
+    // Education
+    QUIZ_NOT_FOUND(EducationCode.QUIZ_NOT_FOUND.getCode(), HttpStatus.NOT_FOUND, "Quiz not found."),
+    QUIZ_ALREADY_EXIST(EducationCode.QUIZ_ALREADY_EXIST.getCode(), HttpStatus.CONFLICT, "Quiz already exist."),
+
     // Fairytale
     FAIRYTALE_NOT_FOUND(FairytaleCode.NOT_FOUND.getCode(), HttpStatus.NOT_FOUND, "Fairytale not found."),
     ;
