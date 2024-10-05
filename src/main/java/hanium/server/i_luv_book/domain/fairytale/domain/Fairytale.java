@@ -20,6 +20,8 @@ public class Fairytale {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "fairytale_id")
     private long id;
+    @Column(name = "quiz_existence")
+    private boolean quizzesExistence;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "child_id")
@@ -31,7 +33,7 @@ public class Fairytale {
 
     @Builder
     public Fairytale() {
-
+        this.quizzesExistence = false;
     }
 
     public void addQuizzes(List<Quiz> quizzes) {
@@ -40,5 +42,9 @@ public class Fairytale {
 
     public void addWords(List<Words> words) {
         this.words.addAll(words);
+    }
+
+    public void updateQuizzesExistence() {
+        this.quizzesExistence = true;
     }
 }
