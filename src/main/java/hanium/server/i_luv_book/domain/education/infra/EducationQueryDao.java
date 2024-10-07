@@ -1,5 +1,6 @@
 package hanium.server.i_luv_book.domain.education.infra;
 
+import hanium.server.i_luv_book.domain.education.application.dto.response.FairytaleQuizzesInfo;
 import hanium.server.i_luv_book.domain.education.application.dto.response.SolvedQuizzesCountsInfo;
 import hanium.server.i_luv_book.domain.education.application.dto.response.SolvedQuizzesTypesInfo;
 import hanium.server.i_luv_book.domain.education.domain.QuizInfo;
@@ -49,5 +50,21 @@ public class EducationQueryDao {
                         "where c.id = :childId", SolvedQuizzesCountsInfo.class)
                 .setParameter("childId", childId)
                 .getSingleResult();
+    }
+
+    // 퀴즈 리스트 조회
+    public List<FairytaleQuizzesInfo> findFairytaleQuizzesInfo(Long cursorFairytaleId, Long childId) {
+        return em.createQuery("select new hanium.server.i_luv_book.domain.education.application.dto.response.FairytaleQuizzesInfo" +
+                        "(f.id, f.title, sum(case when q.answerInfo.isCorrect = true then 1 else 0 end), f.level)" +
+                        "from Fairytale f " +
+                        "join f.quizzes q " +
+                        "join f.child c " +
+                        "where f.id > :cursorFairytaleId and f.child.id = :childId " +
+                        "group by f.id, f.title, f.level " +
+                        "order by f.id", FairytaleQuizzesInfo.class)
+                .setParameter("cursorFairytaleId", cursorFairytaleId)
+                .setParameter("childId", childId)
+                .setMaxResults(10)
+                .getResultList();
     }
 }

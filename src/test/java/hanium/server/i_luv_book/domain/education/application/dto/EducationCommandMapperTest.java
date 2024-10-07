@@ -22,7 +22,7 @@ class EducationCommandMapperTest {
     void toQuiz1() {
         // given
         QuizCreateCommand command = new QuizCreateCommand(QuizType.CREATIVITY, Format.SHORT_ANSWER, "질문", "발음", "답", null);
-        Fairytale fairytale = new Fairytale();
+        Fairytale fairytale = new Fairytale(Fairytale.Level.LOW, "제목");
 
         // when
         Quiz quiz = Quiz.builder()
@@ -45,7 +45,7 @@ class EducationCommandMapperTest {
         options.add("옵션4");
         QuizOptionsCreateCommand quizOptionsCreateCommand = new QuizOptionsCreateCommand(options);
         QuizCreateCommand quizCreateCommand = new QuizCreateCommand(QuizType.CREATIVITY, Format.SHORT_ANSWER, "질문", "발음", "답", quizOptionsCreateCommand);
-        Fairytale fairytale = new Fairytale();
+        Fairytale fairytale = new Fairytale(Fairytale.Level.LOW, "제목");
 
         // when
         Quiz quiz = Quiz.builder()
@@ -73,7 +73,7 @@ class EducationCommandMapperTest {
         QuizCreateCommand command2 = new QuizCreateCommand(QuizType.CREATIVITY, Format.SHORT_ANSWER, "질문", "발음", "답", quizOptionsCreateCommand);
         commands.add(command1);
         commands.add(command2);
-        Fairytale fairytale = new Fairytale();
+        Fairytale fairytale = new Fairytale(Fairytale.Level.LOW, "제목");
 
         // when
         List<Quiz> quizzes = EducationCommandMapper.INSTANCE.toQuizzes(commands, fairytale);

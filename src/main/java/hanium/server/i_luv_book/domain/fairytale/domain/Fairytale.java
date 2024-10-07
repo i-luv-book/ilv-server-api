@@ -13,13 +13,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-//@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Fairytale {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "fairytale_id")
     private long id;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "level")
+    private Level level;
+    @Column(name = "title")
+    private String title;
     @Column(name = "quiz_existence")
     private boolean quizzesExistence;
 
@@ -31,8 +36,15 @@ public class Fairytale {
     @OneToMany(mappedBy = "fairytale", cascade = CascadeType.ALL)
     private List<Words> words = new ArrayList<>();
 
+    @Getter
+    public enum Level {
+        LOW, MEDIUM, HIGH
+    }
+
     @Builder
-    public Fairytale() {
+    public Fairytale(Level level, String title) {
+        this.level = level;
+        this.title = title;
         this.quizzesExistence = false;
     }
 

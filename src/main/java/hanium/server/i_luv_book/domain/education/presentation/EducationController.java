@@ -2,6 +2,7 @@ package hanium.server.i_luv_book.domain.education.presentation;
 
 import hanium.server.i_luv_book.domain.education.application.EducationCommandService;
 import hanium.server.i_luv_book.domain.education.application.EducationQueryService;
+import hanium.server.i_luv_book.domain.education.application.dto.response.FairytaleQuizzesInfo;
 import hanium.server.i_luv_book.domain.education.application.dto.response.SolvedQuizzesInfo;
 import hanium.server.i_luv_book.domain.education.presentation.dto.EducationDtoMapper;
 import hanium.server.i_luv_book.domain.education.presentation.dto.request.EducationContentsCreateDto;
@@ -9,6 +10,8 @@ import hanium.server.i_luv_book.global.security.authentication.userdetails.JwtUs
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -36,5 +39,13 @@ public class EducationController {
     public SolvedQuizzesInfo getSolvedQuizzesStatistics(@AuthenticationPrincipal JwtUserDetails userDetails, @RequestParam(value = "nickname") String nickname) {
         Long parentId = userDetails.getUserId();
         return educationQueryService.getSolvedQuizzes(nickname, parentId);
+    }
+
+    // 동화+퀴즈 정보 리스트 조회
+    @GetMapping("/education/quizzes")
+    public List<FairytaleQuizzesInfo> getFairytaleQuizzes(@AuthenticationPrincipal JwtUserDetails userDetails,
+                                                          @RequestParam(value = "nickname") String nickname, @RequestParam(value = "fairytaleId") Long fairytaleId) {
+        Long parentId = userDetails.getUserId();
+        return educationQueryService.getFairytaleQuizzes(nickname, parentId, fairytaleId);
     }
 }

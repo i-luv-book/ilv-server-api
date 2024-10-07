@@ -1,5 +1,6 @@
 package hanium.server.i_luv_book.domain.education.application;
 
+import hanium.server.i_luv_book.domain.education.application.dto.response.FairytaleQuizzesInfo;
 import hanium.server.i_luv_book.domain.education.application.dto.response.SolvedQuizzesCountsInfo;
 import hanium.server.i_luv_book.domain.education.application.dto.response.SolvedQuizzesInfo;
 import hanium.server.i_luv_book.domain.education.application.dto.response.SolvedQuizzesTypesInfo;
@@ -12,6 +13,8 @@ import hanium.server.i_luv_book.global.exception.code.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -28,10 +31,20 @@ public class EducationQueryService {
         return educationRepository.checkQuizExistByFairytaleId(fairytaleId);
     }
 
-    // 퀴즈 푼 데이터 조회(1)
+    // 푼 퀴즈 통계치 조회
     public SolvedQuizzesInfo getSolvedQuizzes(String nickname, Long parentId) {
         Child child = findChild(nickname, parentId);
         return countSolvedQuizzesStatistics(child);
+    }
+
+    // 푼 퀴즈 정보 조회
+    public List<FairytaleQuizzesInfo> getFairytaleQuizzes(String nickname, Long parentId, Long fairytaleId) {
+        Child child = findChild(nickname, parentId);
+        return findFairytaleQuizzesInfo(fairytaleId, child);
+    }
+
+    private List<FairytaleQuizzesInfo> findFairytaleQuizzesInfo(Long fairytaleId, Child child) {
+        return educationQueryDao.findFairytaleQuizzesInfo(fairytaleId, child.getId());
     }
 
     private SolvedQuizzesInfo countSolvedQuizzesStatistics(Child child) {

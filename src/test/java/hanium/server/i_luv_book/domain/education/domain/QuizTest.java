@@ -11,7 +11,7 @@ class QuizTest {
     void solveQuiz() {
         // given
         QuizCreateCommand command = new QuizCreateCommand(QuizInfo.QuizType.CREATIVITY, QuizInfo.Format.SHORT_ANSWER, "창의력 문제", null, "창의력 문제입니다.", null);
-        Fairytale fairytale = new Fairytale();
+        Fairytale fairytale = new Fairytale(Fairytale.Level.LOW, "제목");
         Quiz quiz = Quiz.builder()
                 .quizCreateCommand(command)
                 .fairytale(fairytale)
