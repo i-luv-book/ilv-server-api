@@ -1,8 +1,6 @@
 package hanium.server.i_luv_book.domain.education.infra;
 
-import hanium.server.i_luv_book.domain.education.application.dto.response.FairytaleQuizzesInfo;
-import hanium.server.i_luv_book.domain.education.application.dto.response.SolvedQuizzesCountsInfo;
-import hanium.server.i_luv_book.domain.education.application.dto.response.SolvedQuizzesTypesInfo;
+import hanium.server.i_luv_book.domain.education.application.dto.response.*;
 import hanium.server.i_luv_book.domain.education.domain.QuizInfo;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static hanium.server.i_luv_book.domain.education.domain.QuizInfo.*;
 
@@ -65,6 +64,52 @@ public class EducationQueryDao {
                 .setParameter("cursorFairytaleId", cursorFairytaleId)
                 .setParameter("childId", childId)
                 .setMaxResults(10)
+                .getResultList();
+    }
+
+    // 퀴즈 상세조회
+    public List<QuizDetailInfo> findQuizzesDetailInfo(Long fairytaleId) {
+        List<QuizDetailInfo> quizDetailInfos = findQuizzesDetailInfos(fairytaleId);
+        List<QuizOptionsInfo> quizOptionsInfos = findQuizzesOptionsInfo(toQuizzesIds(quizDetailInfos));
+        return matchQuizOptionsToDetailInfos(quizDetailInfos, quizOptionsInfos);
+    }
+
+    private List<QuizDetailInfo> matchQuizOptionsToDetailInfos(List<QuizDetailInfo> quizDetailInfos, List<QuizOptionsInfo> quizOptionsInfos) {
+        for (QuizDetailInfo quizDetailInfo : quizDetailInfos) {
+            for (QuizOptionsInfo quizOptionsInfo : quizOptionsInfos) {
+                if (quizDetailInfo.getQuizId().equals(quizOptionsInfo.getQuizId())) {
+                    quizDetailInfo.setQuizOptions(quizOptionsInfo);
+                    break;
+                }
+            }
+        }
+
+        return quizDetailInfos;
+    }
+
+    private List<QuizDetailInfo> findQuizzesDetailInfos(Long fairytaleId) {
+        return em.createQuery("select new hanium.server.i_luv_book.domain.education.application.dto.response.QuizDetailInfo" +
+                        "(q.id, q.quizInfo.quizType, q.quizInfo.format, q.quizInfo.question, q.quizInfo.pronounOrWord, q.answerInfo.answer)" +
+                        "from Quiz q " +
+                        "join q.fairytale f " +
+                        "where f.id = :fairytaleId " +
+                        "order by q.id", QuizDetailInfo.class)
+                .setParameter("fairytaleId", fairytaleId)
+                .getResultList();
+    }
+
+    private List<Long> toQuizzesIds(List<QuizDetailInfo> quizDetailInfos) {
+        return quizDetailInfos.stream()
+                .map(QuizDetailInfo::getQuizId).toList();
+    }
+
+    private List<QuizOptionsInfo> findQuizzesOptionsInfo(List<Long> quizzesIds) {
+        return em.createQuery("select new hanium.server.i_luv_book.domain.education.application.dto.response.QuizOptionsInfo" +
+                        "(q.id, o.optionA, o.optionB, o.optionC, o.optionD)" +
+                        "from Quiz q " +
+                        "join q.options o " +
+                        "where q.id in :quizzesIds", QuizOptionsInfo.class)
+                .setParameter("quizzesIds", quizzesIds)
                 .getResultList();
     }
 }

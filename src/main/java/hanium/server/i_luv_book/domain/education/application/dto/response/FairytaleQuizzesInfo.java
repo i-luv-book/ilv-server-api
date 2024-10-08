@@ -5,11 +5,11 @@ import lombok.Getter;
 
 @Getter
 public class FairytaleQuizzesInfo {
-    private long fairytaleId;
+    private Long fairytaleId;
     private String title;
-    private long correctQuizzesCount;
+    private Long correctQuizzesCount;
 
-    public FairytaleQuizzesInfo(long fairytaleId, String title, long correctQuizzesCount, Fairytale.Level level) {
+    public FairytaleQuizzesInfo(Long fairytaleId, String title, Long correctQuizzesCount, Fairytale.Level level) {
         this.fairytaleId = fairytaleId;
         this.title = title;
         switch (level) {

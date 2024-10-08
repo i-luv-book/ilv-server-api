@@ -3,6 +3,8 @@ package hanium.server.i_luv_book.domain.education.presentation;
 import hanium.server.i_luv_book.domain.education.application.EducationCommandService;
 import hanium.server.i_luv_book.domain.education.application.EducationQueryService;
 import hanium.server.i_luv_book.domain.education.application.dto.response.FairytaleQuizzesInfo;
+import hanium.server.i_luv_book.domain.education.application.dto.response.QuizDetailInfo;
+import hanium.server.i_luv_book.domain.education.application.dto.response.QuizzesInfo;
 import hanium.server.i_luv_book.domain.education.application.dto.response.SolvedQuizzesInfo;
 import hanium.server.i_luv_book.domain.education.presentation.dto.EducationDtoMapper;
 import hanium.server.i_luv_book.domain.education.presentation.dto.request.EducationContentsCreateDto;
@@ -47,5 +49,11 @@ public class EducationController {
                                                           @RequestParam(value = "nickname") String nickname, @RequestParam(value = "fairytaleId") Long fairytaleId) {
         Long parentId = userDetails.getUserId();
         return educationQueryService.getFairytaleQuizzes(nickname, parentId, fairytaleId);
+    }
+
+    // 동화 상세조회
+    @GetMapping("/education/detail-quizzes")
+    public QuizzesInfo getQuizDetailInfos(@AuthenticationPrincipal JwtUserDetails userDetails, @RequestParam(value = "fairytaleId") Long fairytaleId) {
+        return educationQueryService.getQuizzesDetailInfos(fairytaleId);
     }
 }

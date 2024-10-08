@@ -1,9 +1,6 @@
 package hanium.server.i_luv_book.domain.education.application;
 
-import hanium.server.i_luv_book.domain.education.application.dto.response.FairytaleQuizzesInfo;
-import hanium.server.i_luv_book.domain.education.application.dto.response.SolvedQuizzesCountsInfo;
-import hanium.server.i_luv_book.domain.education.application.dto.response.SolvedQuizzesInfo;
-import hanium.server.i_luv_book.domain.education.application.dto.response.SolvedQuizzesTypesInfo;
+import hanium.server.i_luv_book.domain.education.application.dto.response.*;
 import hanium.server.i_luv_book.domain.education.domain.EducationRepository;
 import hanium.server.i_luv_book.domain.education.infra.EducationQueryDao;
 import hanium.server.i_luv_book.domain.user.application.UserQueryService;
@@ -43,8 +40,13 @@ public class EducationQueryService {
         return findFairytaleQuizzesInfo(fairytaleId, child);
     }
 
-    private List<FairytaleQuizzesInfo> findFairytaleQuizzesInfo(Long fairytaleId, Child child) {
-        return educationQueryDao.findFairytaleQuizzesInfo(fairytaleId, child.getId());
+    // 퀴즈 상세조회
+    public QuizzesInfo getQuizzesDetailInfos(Long fairytaleId) {
+        return new QuizzesInfo(educationQueryDao.findQuizzesDetailInfo(fairytaleId));
+    }
+
+    private List<FairytaleQuizzesInfo> findFairytaleQuizzesInfo(Long cursorFairytaleId, Child child) {
+        return educationQueryDao.findFairytaleQuizzesInfo(cursorFairytaleId, child.getId());
     }
 
     private SolvedQuizzesInfo countSolvedQuizzesStatistics(Child child) {
