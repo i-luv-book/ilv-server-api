@@ -89,7 +89,8 @@ public class EducationQueryDao {
 
     private List<QuizDetailInfo> findQuizzesDetailInfos(Long fairytaleId) {
         return em.createQuery("select new hanium.server.i_luv_book.domain.education.application.dto.response.QuizDetailInfo" +
-                        "(q.id, q.quizInfo.quizType, q.quizInfo.format, q.quizInfo.question, q.quizInfo.pronounOrWord, q.answerInfo.answer)" +
+                        "(q.id, q.quizInfo.quizType, q.quizInfo.format, q.quizInfo.question, q.quizInfo.pronounOrWord, " +
+                        "q.answerInfo.answer, q.answerInfo.childAnswer, q.answerInfo.isCorrect)" +
                         "from Quiz q " +
                         "join q.fairytale f " +
                         "where f.id = :fairytaleId " +

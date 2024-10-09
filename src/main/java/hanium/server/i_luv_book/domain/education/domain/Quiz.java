@@ -44,7 +44,7 @@ public class Quiz {
         this.fairytale = fairytale;
     }
 
-    public boolean solveQuiz(String childAnswer) {
-        return answerInfo.updateAnswerInfo(childAnswer);
+    public void solveQuiz(String childAnswer, boolean isCorrect) {
+        answerInfo.updateAnswerInfo(childAnswer, isCorrect);
     }
 }

@@ -8,7 +8,10 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -40,5 +43,16 @@ public class EducationJpaRepository implements EducationRepository {
     @Override
     public Optional<Fairytale> findFairytaleById(long fairytaleId) {
         return Optional.ofNullable(em.find(Fairytale.class, fairytaleId));
+    }
+
+    @Override
+    public Map<Long, Quiz> findQuizzesByFairytaleId(Long fairytaleId) {
+        List<Quiz> quizzes =  em.createQuery("select q " +
+                        "from Quiz q where q.fairytale.id = :fairytaleId", Quiz.class)
+                .setParameter("fairytaleId", fairytaleId)
+                .getResultList();
+
+        return quizzes.stream()
+                .collect(Collectors.toMap(Quiz::getId, quiz -> quiz));
     }
 }

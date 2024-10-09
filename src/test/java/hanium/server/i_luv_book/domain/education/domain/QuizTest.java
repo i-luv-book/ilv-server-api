@@ -18,9 +18,9 @@ class QuizTest {
                 .build();
 
         // when
-        boolean corrected = quiz.solveQuiz("창의력 문제입니다.");
+        quiz.solveQuiz("창의력 문제입니다.", false);
 
         // then
-        Assertions.assertTrue(corrected);
+        Assertions.assertFalse(quiz.getAnswerInfo().isCorrect());
     }
 }

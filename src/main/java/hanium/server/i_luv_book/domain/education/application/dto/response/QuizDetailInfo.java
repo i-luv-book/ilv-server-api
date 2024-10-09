@@ -12,14 +12,15 @@ public class QuizDetailInfo {
     private String question;
     private String pronounOrVoca;
     private QuizOptionsInfo quizOptions;
-    private String answer;
+    private QuizAnswerInfo quizAnswerInfo;
 
-    public QuizDetailInfo(Long quizId, QuizType quizType, Format format, String question, String pronounOrVoca, String answer) {
+    public QuizDetailInfo(Long quizId, QuizType quizType, Format format, String question,
+                          String pronounOrVoca, String answer, String childAnswer, boolean correct) {
         this.quizId = quizId;
         this.quizType = quizType.name();
         this.format = format.name();
         this.question = question;
         this.pronounOrVoca = pronounOrVoca;
-        this.answer = answer;
+        this.quizAnswerInfo = new QuizAnswerInfo(answer, childAnswer, correct);
     }
 }

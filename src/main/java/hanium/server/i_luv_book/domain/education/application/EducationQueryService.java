@@ -2,6 +2,7 @@ package hanium.server.i_luv_book.domain.education.application;
 
 import hanium.server.i_luv_book.domain.education.application.dto.response.*;
 import hanium.server.i_luv_book.domain.education.domain.EducationRepository;
+import hanium.server.i_luv_book.domain.education.domain.Quiz;
 import hanium.server.i_luv_book.domain.education.infra.EducationQueryDao;
 import hanium.server.i_luv_book.domain.user.application.UserQueryService;
 import hanium.server.i_luv_book.domain.user.domain.Child;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional(readOnly = true)
@@ -41,8 +43,21 @@ public class EducationQueryService {
     }
 
     // 퀴즈 상세조회
-    public QuizzesInfo getQuizzesDetailInfos(Long fairytaleId) {
-        return new QuizzesInfo(educationQueryDao.findQuizzesDetailInfo(fairytaleId));
+    public List<QuizDetailInfo> getQuizzesDetailInfos(Long fairytaleId) {
+        return findQuizzesDetailInfos(fairytaleId);
+    }
+
+    // 퀴즈 조회
+    public Map<Long, Quiz> getQuizzesInfos(Long fairytaleId) {
+        return findQuizzes(fairytaleId);
+    }
+
+    private List<QuizDetailInfo> findQuizzesDetailInfos(Long fairytaleId) {
+        return educationQueryDao.findQuizzesDetailInfo(fairytaleId);
+    }
+
+    private Map<Long, Quiz> findQuizzes(Long fairytaleId) {
+        return educationRepository.findQuizzesByFairytaleId(fairytaleId);
     }
 
     private List<FairytaleQuizzesInfo> findFairytaleQuizzesInfo(Long cursorFairytaleId, Child child) {
