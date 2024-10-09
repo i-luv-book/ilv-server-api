@@ -15,6 +15,7 @@ public enum CommonCode {
     VIOLATED_DATA_INTEGRITY("C-04"),
     FAILED_DATA_IO("C-05"),
     SERVICE_UNAVAILABLE("C-06"),
+    NOTIFICATION_FAILED("C-07"),
     ;
 
     private final String code;

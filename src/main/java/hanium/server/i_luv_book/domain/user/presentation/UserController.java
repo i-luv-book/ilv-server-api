@@ -6,6 +6,7 @@ import hanium.server.i_luv_book.domain.user.application.dto.response.ChildInfo;
 import hanium.server.i_luv_book.domain.user.presentation.dto.UserDtoMapper;
 import hanium.server.i_luv_book.domain.user.presentation.dto.request.ChildActivityDto;
 import hanium.server.i_luv_book.domain.user.presentation.dto.request.ChildCreateDto;
+import hanium.server.i_luv_book.domain.user.presentation.dto.request.NotificationInfoDto;
 import hanium.server.i_luv_book.domain.user.presentation.dto.request.ParentUpdatePasswordDto;
 import hanium.server.i_luv_book.global.security.authentication.userdetails.JwtUserDetails;
 import jakarta.validation.Valid;
@@ -68,12 +69,31 @@ public class UserController {
 
     // 자식 APIs
     @PostMapping("/child/fairytale/time")
-    public void updateFairytaleReadingDuration(@RequestBody ChildActivityDto dto) {
-        userCommandService.updateFairytaleReadingDuration(mapper.toInfo(dto));
+    public void updateFairytaleReadingDuration(@AuthenticationPrincipal JwtUserDetails userDetails, @RequestBody ChildActivityDto dto) {
+        Long parentId = userDetails.getUserId();
+        userCommandService.updateFairytaleReadingDuration(parentId, mapper.toCommand(dto));
+    }
+
+    @PostMapping("/child/notification")
+    public void saveChildNotificationInfo(@AuthenticationPrincipal JwtUserDetails userDetails, @RequestBody NotificationInfoDto dto) {
+        Long parentId = userDetails.getUserId();
+        userCommandService.saveNotificationInfo(parentId, mapper.toCommand(dto));
+    }
+
+    @PatchMapping("/child/{nickname}/notification")
+    public boolean updateNotificationAgreement(@AuthenticationPrincipal JwtUserDetails userDetails, @PathVariable(value = "nickname") String nickname) {
+        Long parentId = userDetails.getUserId();
+        return userCommandService.changeNotificationAgreement(parentId, nickname);
+    }
+
+    @GetMapping("child/{nickname}/notification")
+    public boolean getNotificationAgreement(@PathVariable(value = "nickname") String nickname) {
+        return userQueryService.checkNotificationAgreement(nickname);
     }
 
     @PostMapping("/child/quiz/time")
-    public void updateQuizSolvingDuration(@RequestBody ChildActivityDto dto) {
-        userCommandService.updateQuizSolvingDuration(mapper.toInfo(dto));
+    public void updateQuizSolvingDuration(@AuthenticationPrincipal JwtUserDetails userDetails, @RequestBody ChildActivityDto dto) {
+        Long parentId = userDetails.getUserId();
+        userCommandService.updateQuizSolvingDuration(parentId, mapper.toCommand(dto));
     }
 }

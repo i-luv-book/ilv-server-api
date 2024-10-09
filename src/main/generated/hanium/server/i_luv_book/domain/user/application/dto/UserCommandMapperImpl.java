@@ -7,13 +7,16 @@ import hanium.server.i_luv_book.domain.user.domain.Child.ChildBuilder;
 import hanium.server.i_luv_book.domain.user.domain.ChildBadge;
 import hanium.server.i_luv_book.domain.user.domain.ChildBadge.ChildBadgeBuilder;
 import hanium.server.i_luv_book.domain.user.domain.Parent;
+import hanium.server.i_luv_book.domain.user.domain.notification.NotificationInfo;
+import hanium.server.i_luv_book.domain.user.domain.notification.NotificationInfo.NotificationInfoBuilder;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-09-21T19:51:25+0900",
-    comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.10 (Oracle Corporation)"
+    date = "2024-10-09T11:14:40+0900",
+    comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.11 (Amazon.com Inc.)"
+
 )
 @Component
 public class UserCommandMapperImpl implements UserCommandMapper {
@@ -52,5 +55,23 @@ public class UserCommandMapperImpl implements UserCommandMapper {
         }
 
         return childBadge.build();
+    }
+
+    @Override
+    public NotificationInfo toNotificationInfo(Long childId, String fcmToken) {
+        if ( childId == null && fcmToken == null ) {
+            return null;
+        }
+
+        NotificationInfoBuilder notificationInfo = NotificationInfo.builder();
+
+        if ( childId != null ) {
+            notificationInfo.childId( childId );
+        }
+        if ( fcmToken != null ) {
+            notificationInfo.fcmToken( fcmToken );
+        }
+
+        return notificationInfo.build();
     }
 }

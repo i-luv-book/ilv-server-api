@@ -1,5 +1,6 @@
 package hanium.server.i_luv_book.domain.user.domain;
 
+import hanium.server.i_luv_book.domain.fairytale.domain.Fairytale;
 import hanium.server.i_luv_book.domain.user.application.dto.request.ChildCreateCommand;
 import hanium.server.i_luv_book.global.common.basetime.BaseTimeEntity;
 import jakarta.persistence.*;
@@ -36,6 +37,8 @@ public class Child extends BaseTimeEntity {
     private Parent parent;
     @OneToMany(mappedBy = "child", cascade = CascadeType.ALL)
     private List<ChildBadge> childBadges = new ArrayList<>();
+    @OneToMany(mappedBy = "child", cascade = CascadeType.ALL)
+    private List<Fairytale> fairytales = new ArrayList<>();
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "activity_info_id")
     private ActivityInfo activityInfo;

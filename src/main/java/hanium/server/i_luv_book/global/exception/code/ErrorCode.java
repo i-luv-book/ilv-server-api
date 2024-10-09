@@ -18,12 +18,14 @@ public enum ErrorCode {
     VIOLATED_DATA_INTEGRITY(CommonCode.VIOLATED_DATA_INTEGRITY.getCode(), HttpStatus.CONFLICT, "Data integrity violation."),
     FAILED_DATA_IO(CommonCode.FAILED_DATA_IO.getCode(), HttpStatus.INTERNAL_SERVER_ERROR, "Data I/O error."),
     SERVICE_UNAVAILABLE(CommonCode.SERVICE_UNAVAILABLE.getCode(), HttpStatus.SERVICE_UNAVAILABLE, "Service is currently unavailable."),
+    NOTIFICATION_FAILED(CommonCode.NOTIFICATION_FAILED.getCode(), HttpStatus.INTERNAL_SERVER_ERROR, "Notification failed."),
 
     // User
     USER_NOT_FOUND(UserCode.NOT_FOUND.getCode(), HttpStatus.NOT_FOUND, "User not found."),
     USER_ALREADY_EXISTED(UserCode.ALREADY_EXISTED.getCode(), HttpStatus.CONFLICT, "User already exists."),
     LIMITED_ACCESS(UserCode.LIMITED_ACCESS.getCode(), HttpStatus.FORBIDDEN, "Access is restricted because of membership."),
     BADGE_NOT_FOUND(UserCode.BADGE_NOT_FOUND.getCode(), HttpStatus.NOT_FOUND, "Badge not found."),
+    FCM_TOKEN_NOT_FOUND(UserCode.FCM_TOKEN_NOT_FOUND.getCode(), HttpStatus.NOT_FOUND, "FCM_token not found."),
 
     // File
     EMPTY_FILE(FileCode.EMPTY_FILE.getCode(), HttpStatus.BAD_REQUEST, "The file is empty."),
@@ -35,7 +37,19 @@ public enum ErrorCode {
     FAILED_DELETE_OBJECT(FileCode.FAILED_DELETE_OBJECT.getCode(), HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete file from the storage."),
 
     // Auth
-    REFRESH_TOKEN_NOT_FOUND(JwtTokenCode.REFRESH_TOKEN_NOT_FOUND.getCode(), HttpStatus.UNAUTHORIZED,"존재하지않는 리프레쉬 토큰입니다.");
+    REFRESH_TOKEN_NOT_FOUND(JwtTokenCode.REFRESH_TOKEN_NOT_FOUND.getCode(), HttpStatus.UNAUTHORIZED,"존재하지않는 리프레쉬 토큰입니다."),
+
+    // OpenAi
+    FAILED_OPENAI_REQUEST(OpenAiCode.FAILED_OPENAI_REQUEST.getCode(), HttpStatus.INTERNAL_SERVER_ERROR, "Failed to request to OpenAI."),
+    UNSUITABLE_OPENAI_RESPONSE(OpenAiCode.UNSUITABLE_OPENAI_RESPONSE.getCode(), HttpStatus.INTERNAL_SERVER_ERROR, "Unsuitable OpenAi Response"),
+
+    // Education
+    QUIZ_NOT_FOUND(EducationCode.QUIZ_NOT_FOUND.getCode(), HttpStatus.NOT_FOUND, "Quiz not found."),
+    QUIZ_ALREADY_EXIST(EducationCode.QUIZ_ALREADY_EXIST.getCode(), HttpStatus.CONFLICT, "Quiz already exist."),
+
+    // Fairytale
+    FAIRYTALE_NOT_FOUND(FairytaleCode.NOT_FOUND.getCode(), HttpStatus.NOT_FOUND, "Fairytale not found."),
+    ;
 
     private final String code;
     private final HttpStatus status;

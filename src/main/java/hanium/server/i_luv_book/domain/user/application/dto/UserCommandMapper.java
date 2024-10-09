@@ -5,6 +5,7 @@ import hanium.server.i_luv_book.domain.user.domain.Badge;
 import hanium.server.i_luv_book.domain.user.domain.Child;
 import hanium.server.i_luv_book.domain.user.domain.ChildBadge;
 import hanium.server.i_luv_book.domain.user.domain.Parent;
+import hanium.server.i_luv_book.domain.user.domain.notification.NotificationInfo;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -18,4 +19,6 @@ public interface UserCommandMapper {
     Child toChild(ChildCreateCommand childCreateCommand, Parent parent);
 
     ChildBadge toChildBadge(Child child, Badge badge);
+
+    NotificationInfo toNotificationInfo(Long childId, String fcmToken);
 }

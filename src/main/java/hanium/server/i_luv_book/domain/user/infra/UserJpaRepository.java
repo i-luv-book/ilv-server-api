@@ -2,6 +2,7 @@ package hanium.server.i_luv_book.domain.user.infra;
 
 import hanium.server.i_luv_book.domain.auth.domain.LoginType;
 import hanium.server.i_luv_book.domain.user.domain.*;
+import hanium.server.i_luv_book.domain.user.domain.notification.NotificationInfo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
@@ -47,10 +48,11 @@ public class UserJpaRepository implements UserRepository {
     }
 
     @Override
-    public Optional<Child> findChildByNickname(String nickname) {
+    public Optional<Child> findChildByParentIdAndNickname(long parentId, String nickname) {
         List<Child> children = em.createQuery("select c from Child c" +
                         " left join c.activityInfo a" +
-                        " where c.nickname = :nickname", Child.class)
+                        " where c.nickname = :nickname and c.parent.id = :parentId", Child.class)
+                .setParameter("parentId", parentId)
                 .setParameter("nickname", nickname)
                 .getResultList();
         return children.stream().findAny();
@@ -97,6 +99,12 @@ public class UserJpaRepository implements UserRepository {
     }
 
     @Override
+    public Long save(NotificationInfo notificationInfo) {
+        em.persist(notificationInfo);
+        return notificationInfo.getId();
+    }
+
+    @Override
     public void deleteChild(long parentId, String nickname) {
         Child child = em.createQuery("select c from Child c "
                         + "where c.parent.id = :parentId and c.nickname = :nickname", Child.class)
@@ -104,5 +112,28 @@ public class UserJpaRepository implements UserRepository {
                 .setParameter("nickname", nickname)
                 .getSingleResult();
         em.remove(child);
+    }
+
+    @Override
+    public Optional<NotificationInfo> findNotificationInfoByChildId(long childId) {
+        List<NotificationInfo> notificationInfos = em.createQuery("select ni from NotificationInfo ni " +
+                "where ni.childId = :childId", NotificationInfo.class)
+                .setParameter("childId", childId)
+                .getResultList();
+        return notificationInfos.stream().findAny();
+    }
+
+    @Override
+    public boolean checkNotificationAgreement(String nickname) {
+        List<NotificationInfo> notificationInfos = em.createQuery("select ni " +
+                "from NotificationInfo ni " +
+                "where ni.childId in (select c.id from Child c where c.nickname = :nickname)", NotificationInfo.class)
+                .setParameter("nickname", nickname)
+                .getResultList();
+
+        if (notificationInfos.isEmpty()) {
+            return false;
+        }
+        return notificationInfos.get(0).isNotified();
     }
 }

@@ -1,6 +1,7 @@
 package hanium.server.i_luv_book.domain.user.domain;
 
 import hanium.server.i_luv_book.domain.auth.domain.LoginType;
+import hanium.server.i_luv_book.domain.user.domain.notification.NotificationInfo;
 
 import java.util.Optional;
 
@@ -15,7 +16,7 @@ public interface UserRepository {
 
     Optional<Child> findChildById(long childId);
 
-    Optional<Child> findChildByNickname(String nickname);
+    Optional<Child> findChildByParentIdAndNickname(long parentId, String nickname);
 
     void save(Badge badge);
 
@@ -29,5 +30,11 @@ public interface UserRepository {
 
     Long save(ChildBadge childBadge);
 
+    Long save(NotificationInfo notificationInfo);
+
     void deleteChild(long parentId, String nickname);
+
+    Optional<NotificationInfo> findNotificationInfoByChildId(long childId);
+
+    boolean checkNotificationAgreement(String nickname);
 }

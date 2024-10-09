@@ -13,6 +13,7 @@ public enum UserCode {
     ALREADY_EXISTED("U-02"),
     LIMITED_ACCESS("U-03"),
     BADGE_NOT_FOUND("U-04"),
+    FCM_TOKEN_NOT_FOUND("U-05")
     ;
 
     private final String code;

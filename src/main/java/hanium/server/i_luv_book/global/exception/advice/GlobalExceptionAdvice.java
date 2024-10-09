@@ -7,6 +7,7 @@ import hanium.server.i_luv_book.global.exception.code.ErrorCode;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -81,6 +82,12 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(NoResourceFoundException.class)
     protected ResponseEntity<ErrorResponse> noResourceFoundException(NoResourceFoundException e) {
         return createErrorResponse(e, ErrorCode.INVALID_REQUEST_URI);
+    }
+
+    // 요청 파라미터 형식이 올바르지 않은 경우
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    protected ResponseEntity<ErrorResponse> httpMessageNotReadableException(HttpMessageNotReadableException e) {
+        return createErrorResponse(e, ErrorCode.INVALID_REQUEST_PARAMETER);
     }
 
     @ExceptionHandler(RefreshTokenNotFoundException.class)
