@@ -4,10 +4,10 @@ import hanium.server.i_luv_book.domain.education.application.EducationCommandSer
 import hanium.server.i_luv_book.domain.education.application.EducationQueryService;
 import hanium.server.i_luv_book.domain.education.application.dto.response.FairytaleQuizzesInfo;
 import hanium.server.i_luv_book.domain.education.application.dto.response.QuizDetailInfo;
-import hanium.server.i_luv_book.domain.education.application.dto.response.QuizzesInfo;
 import hanium.server.i_luv_book.domain.education.application.dto.response.SolvedQuizzesInfo;
 import hanium.server.i_luv_book.domain.education.presentation.dto.EducationDtoMapper;
 import hanium.server.i_luv_book.domain.education.presentation.dto.request.EducationContentsCreateDto;
+import hanium.server.i_luv_book.domain.education.presentation.dto.request.QuizSolveDto;
 import hanium.server.i_luv_book.global.security.authentication.userdetails.JwtUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -51,9 +51,15 @@ public class EducationController {
         return educationQueryService.getFairytaleQuizzes(nickname, parentId, fairytaleId);
     }
 
-    // 동화 상세조회
+    // 퀴즈 상세조회
     @GetMapping("/education/detail-quizzes")
-    public QuizzesInfo getQuizDetailInfos(@AuthenticationPrincipal JwtUserDetails userDetails, @RequestParam(value = "fairytaleId") Long fairytaleId) {
+    public List<QuizDetailInfo> getQuizDetailInfos(@RequestParam(value = "fairytaleId") Long fairytaleId) {
         return educationQueryService.getQuizzesDetailInfos(fairytaleId);
+    }
+
+    // 퀴즈 풀기
+    @PostMapping("/education/quizzes/solve")
+    public void solveQuizzes(@RequestBody QuizSolveDto dto) {
+        educationCommandService.solveQuizzes(mapper.toCommand(dto));
     }
 }

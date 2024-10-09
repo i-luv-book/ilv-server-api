@@ -25,9 +25,8 @@ public class AnswerInfo {
         this.isCorrect = false;
     }
 
-    public boolean updateAnswerInfo(String childAnswer) {
+    public void updateAnswerInfo(String childAnswer, boolean isCorrect) {
         this.childAnswer = childAnswer;
-        isCorrect = answer.equals(childAnswer);
-        return isCorrect;
+        this.isCorrect = isCorrect;
     }
 }
