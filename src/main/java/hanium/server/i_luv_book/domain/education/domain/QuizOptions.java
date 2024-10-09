@@ -1,11 +1,12 @@
 package hanium.server.i_luv_book.domain.education.domain;
 
-import hanium.server.i_luv_book.domain.education.application.dto.request.QuizCreateCommand;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static hanium.server.i_luv_book.domain.education.application.dto.request.QuizCreateCommand.*;
 
 /**
  * @author ijin
@@ -28,7 +29,7 @@ public class QuizOptions {
     private String optionD;
 
     @Builder
-    public QuizOptions(QuizCreateCommand.QuizOptionsCreateCommand command) {
+    public QuizOptions(QuizOptionsCreateCommand command) {
         this.optionA = command.getOptionA();
         this.optionB = command.getOptionB();
         this.optionC = command.getOptionC();

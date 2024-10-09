@@ -2,6 +2,9 @@ package hanium.server.i_luv_book.domain.education.domain;
 
 import hanium.server.i_luv_book.domain.education.application.dto.request.QuizCreateCommand;
 import hanium.server.i_luv_book.domain.fairytale.domain.Fairytale;
+import hanium.server.i_luv_book.global.exception.BusinessException;
+import hanium.server.i_luv_book.global.exception.code.CommonCode;
+import hanium.server.i_luv_book.global.exception.code.ErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
