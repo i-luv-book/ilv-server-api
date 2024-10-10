@@ -13,6 +13,8 @@ public interface EducationRepository {
 
     boolean checkQuizExistByFairytaleId(Long fairytaleId);
 
+    boolean checkWordExistByFairytaleId(Long fairytaleId);
+
     Optional<Fairytale> findFairytaleById(long fairytaleId);
 
     Map<Long, Quiz> findQuizzesByFairytaleId(Long fairytaleId);

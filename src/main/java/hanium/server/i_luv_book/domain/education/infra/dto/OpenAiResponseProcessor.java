@@ -1,6 +1,7 @@
 package hanium.server.i_luv_book.domain.education.infra.dto;
 
 import hanium.server.i_luv_book.domain.education.application.dto.request.QuizCreateCommand;
+import hanium.server.i_luv_book.domain.education.application.dto.request.WordCreateCommand;
 import hanium.server.i_luv_book.domain.education.domain.QuizInfo;
 import lombok.experimental.UtilityClass;
 
@@ -24,6 +25,9 @@ public class OpenAiResponseProcessor {
                     "Answer: ([^\\n]+)"
     );
 
+    private static final Pattern WORD_PATTERN = Pattern.compile(
+            "(\\d+)\\s*.([^\\n]+)\\s* : ([^\\n]+)\\s*");
+
     public static List<QuizCreateCommand> toQuizCreateCommands(String openAiResponse) {
         List<QuizCreateCommand> quizCreateCommands = new ArrayList<>();
         Matcher matcher = QUIZ_PATTERN.matcher(openAiResponse);
@@ -42,6 +46,21 @@ public class OpenAiResponseProcessor {
             quizCreateCommands.add(quizCreateCommand);
         }
         return quizCreateCommands;
+    }
+
+    public static List<WordCreateCommand> toWordCreateCommands(String openAiResponse) {
+        List<WordCreateCommand> wordCreateCommands = new ArrayList<>();
+        String words = openAiResponse.split("# Words\n")[1];
+        Matcher matcher = WORD_PATTERN.matcher(words);
+        while (matcher.find()) {
+            int number = Integer.parseInt(matcher.group(1));
+            String voca = matcher.group(2);
+            String translation = matcher.group(3);
+
+            wordCreateCommands.add(new WordCreateCommand(voca, translation));
+        }
+
+        return wordCreateCommands;
     }
 
     private QuizOptionsCreateCommand toQuizOptionsCreateCommand (String openAiResponse) {

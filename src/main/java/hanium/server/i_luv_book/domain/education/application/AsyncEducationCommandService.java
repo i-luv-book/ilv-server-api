@@ -2,8 +2,10 @@ package hanium.server.i_luv_book.domain.education.application;
 
 import hanium.server.i_luv_book.domain.education.application.dto.EducationCommandMapper;
 import hanium.server.i_luv_book.domain.education.application.dto.request.QuizCreateCommand;
+import hanium.server.i_luv_book.domain.education.application.dto.request.WordCreateCommand;
 import hanium.server.i_luv_book.domain.education.domain.EducationRepository;
 import hanium.server.i_luv_book.domain.education.domain.Quiz;
+import hanium.server.i_luv_book.domain.education.domain.Words;
 import hanium.server.i_luv_book.domain.fairytale.domain.Fairytale;
 import hanium.server.i_luv_book.global.exception.NotFoundException;
 import hanium.server.i_luv_book.global.exception.code.ErrorCode;
@@ -28,6 +30,19 @@ public class AsyncEducationCommandService {
         Fairytale fairytale = findFairytale(fairytaleId);
         List<Quiz> quizzes = toQuizzes(quizCreateCommands, fairytale);
         addAndSaveQuizzes(fairytale, quizzes);
+    }
+
+    // 단어 저장
+    @Async("educationTaskExecutor")
+    public void saveWords(List<WordCreateCommand> wordCreateCommands, Long fairytaleId) {
+        Fairytale fairytale = findFairytale(fairytaleId);
+        List<Words> words = mapper.toWords(wordCreateCommands, fairytale);
+        addAndSaveWords(fairytale, words);
+    }
+
+    private void addAndSaveWords(Fairytale fairytale, List<Words> words) {
+        fairytale.addWords(words);
+        words.forEach(educationRepository::save);
     }
 
     private void addAndSaveQuizzes(Fairytale fairytale, List<Quiz> quizzes) {
