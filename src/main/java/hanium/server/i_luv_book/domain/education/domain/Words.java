@@ -28,8 +28,9 @@ public class Words {
     private Fairytale fairytale;
 
     @Builder
-    public Words(String word, String translation) {
+    public Words(String word, String translation, Fairytale fairytale) {
         this.word = word;
         this.translation = translation;
+        this.fairytale = fairytale;
     }
 }

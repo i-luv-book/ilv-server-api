@@ -41,6 +41,15 @@ public class EducationJpaRepository implements EducationRepository {
     }
 
     @Override
+    public boolean checkWordExistByFairytaleId(Long fairytaleId) {
+        Long count = em.createQuery("select count(w) " +
+                        "from Words w where w.fairytale.id = :fairytaleId", Long.class)
+                .setParameter("fairytaleId", fairytaleId)
+                .getSingleResult();
+        return count > 0;
+    }
+
+    @Override
     public Optional<Fairytale> findFairytaleById(long fairytaleId) {
         return Optional.ofNullable(em.find(Fairytale.class, fairytaleId));
     }

@@ -5,6 +5,7 @@ import hanium.server.i_luv_book.domain.education.application.EducationQueryServi
 import hanium.server.i_luv_book.domain.education.application.dto.response.FairytaleQuizzesInfo;
 import hanium.server.i_luv_book.domain.education.application.dto.response.QuizDetailInfo;
 import hanium.server.i_luv_book.domain.education.application.dto.response.SolvedQuizzesInfo;
+import hanium.server.i_luv_book.domain.education.domain.EducationContentsGenerator;
 import hanium.server.i_luv_book.domain.education.presentation.dto.EducationDtoMapper;
 import hanium.server.i_luv_book.domain.education.presentation.dto.request.EducationContentsCreateDto;
 import hanium.server.i_luv_book.domain.education.presentation.dto.request.QuizSolveDto;
@@ -23,6 +24,7 @@ public class EducationController {
     private final EducationDtoMapper mapper;
     private final EducationCommandService educationCommandService;
     private final EducationQueryService educationQueryService;
+    private final EducationContentsGenerator generator;
 
     // 퀴즈 생성
     @PostMapping("/education/quizzes")
@@ -61,5 +63,17 @@ public class EducationController {
     @PostMapping("/education/quizzes/solve")
     public void solveQuizzes(@RequestBody QuizSolveDto dto) {
         educationCommandService.solveQuizzes(mapper.toCommand(dto));
+    }
+
+    // 단어 생성
+    @PostMapping("/education/words")
+    public void makeWords(@RequestParam(value = "fairytaleId") Long fairytaleId, @RequestBody EducationContentsCreateDto dto) {
+        educationCommandService.makeWords(mapper.toCommand(dto), fairytaleId);
+    }
+
+    // 퀴즈 유무 확인
+    @GetMapping("/education/words/existence")
+    public boolean checkWordsExistence(@RequestParam(value = "fairytaleId") Long fairytaleId) {
+        return educationQueryService.checkWordsExist(fairytaleId);
     }
 }

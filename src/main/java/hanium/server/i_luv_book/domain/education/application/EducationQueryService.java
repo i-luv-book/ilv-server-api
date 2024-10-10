@@ -24,6 +24,12 @@ public class EducationQueryService {
     private final UserQueryService userQueryService;
     private final EducationRepository educationRepository;
 
+    // 단어 유무 조회
+    public boolean checkWordsExist(long fairytaleId) {
+        checkFairytaleExist(fairytaleId);
+        return educationRepository.checkWordExistByFairytaleId(fairytaleId);
+    }
+
     // 퀴즈 유무 조회
     public boolean checkQuizExist(long fairytaleId) {
         checkFairytaleExist(fairytaleId);

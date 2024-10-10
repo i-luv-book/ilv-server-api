@@ -46,6 +46,8 @@ public enum ErrorCode {
     // Education
     QUIZ_NOT_FOUND(EducationCode.QUIZ_NOT_FOUND.getCode(), HttpStatus.NOT_FOUND, "Quiz not found."),
     QUIZ_ALREADY_EXIST(EducationCode.QUIZ_ALREADY_EXIST.getCode(), HttpStatus.CONFLICT, "Quiz already exist."),
+    WORDS_NOT_FOUND(EducationCode.WORDS_NOT_FOUND.getCode(), HttpStatus.NOT_FOUND, "Words not found."),
+    WORDS_ALREADY_EXIST(EducationCode.WORDS_ALREADY_EXIST.getCode(), HttpStatus.CONFLICT, "Words already exist."),
 
     // Fairytale
     FAIRYTALE_NOT_FOUND(FairytaleCode.NOT_FOUND.getCode(), HttpStatus.NOT_FOUND, "Fairytale not found."),

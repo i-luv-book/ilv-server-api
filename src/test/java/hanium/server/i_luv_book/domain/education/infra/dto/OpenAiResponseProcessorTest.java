@@ -8,6 +8,31 @@ import java.util.List;
 class OpenAiResponseProcessorTest {
 
     @Test
+    void toWordCreateCommands() {
+        String value = """
+                # Intro
+                | Tag    | Content                                           |
+                |--------|---------------------------------------------------|
+                | Title  | The Adventure of Starfish, Tubby, Clucky, Lucky, and T-Rex |
+                | Level  | High-Level                                        |
+                                
+                # Words
+                1.Elephant : 코끼리
+                2.Leader : 지도자
+                3.Leg : 다리
+                4.Stand : 서다
+                5.Move : 움직이다
+                6.Food : 음식
+                7.Help : 돕다
+                8.Slowly : 천천히
+                9.Join : 합류하다
+                10.Healthy : 건강한
+                """;
+
+        OpenAiResponseProcessor.toWordCreateCommands(value);
+    }
+
+    @Test
     void toQuizCreateCommands() {
         String value = """
                 # Intro

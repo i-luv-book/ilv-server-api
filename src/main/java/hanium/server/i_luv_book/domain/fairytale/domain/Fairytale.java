@@ -27,6 +27,8 @@ public class Fairytale {
     private String title;
     @Column(name = "quiz_existence")
     private boolean quizzesExistence;
+    @Column(name = "words_existence")
+    private boolean wordsExistence;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "child_id")
@@ -46,6 +48,7 @@ public class Fairytale {
         this.level = level;
         this.title = title;
         this.quizzesExistence = false;
+        this.wordsExistence = false;
     }
 
     public void addQuizzes(List<Quiz> quizzes) {
@@ -58,5 +61,9 @@ public class Fairytale {
 
     public void updateQuizzesExistence() {
         this.quizzesExistence = true;
+    }
+
+    public void updateWordsExistence() {
+        this.wordsExistence = true;
     }
 }
