@@ -2,9 +2,7 @@ package hanium.server.i_luv_book.domain.education.presentation;
 
 import hanium.server.i_luv_book.domain.education.application.EducationCommandService;
 import hanium.server.i_luv_book.domain.education.application.EducationQueryService;
-import hanium.server.i_luv_book.domain.education.application.dto.response.FairytaleQuizzesInfo;
-import hanium.server.i_luv_book.domain.education.application.dto.response.QuizDetailInfo;
-import hanium.server.i_luv_book.domain.education.application.dto.response.SolvedQuizzesInfo;
+import hanium.server.i_luv_book.domain.education.application.dto.response.*;
 import hanium.server.i_luv_book.domain.education.domain.EducationContentsGenerator;
 import hanium.server.i_luv_book.domain.education.presentation.dto.EducationDtoMapper;
 import hanium.server.i_luv_book.domain.education.presentation.dto.request.EducationContentsCreateDto;
@@ -24,7 +22,39 @@ public class EducationController {
     private final EducationDtoMapper mapper;
     private final EducationCommandService educationCommandService;
     private final EducationQueryService educationQueryService;
-    private final EducationContentsGenerator generator;
+
+    // 단어 생성
+    @PostMapping("/education/words")
+    public void makeWords(@RequestParam(value = "fairytaleId") Long fairytaleId, @RequestBody EducationContentsCreateDto dto) {
+        educationCommandService.makeWords(mapper.toCommand(dto), fairytaleId);
+    }
+
+    // 단어 유무 확인
+    @GetMapping("/education/words/existence")
+    public boolean checkWordsExistence(@RequestParam(value = "fairytaleId") Long fairytaleId) {
+        return educationQueryService.checkWordsExist(fairytaleId);
+    }
+
+    // 단어 개수 조회
+    @GetMapping("/education/words/statistics")
+    public Long countWordsStatistics(@AuthenticationPrincipal JwtUserDetails userDetails, @RequestParam(value = "nickname") String nickname) {
+        Long parentId = userDetails.getUserId();
+        return educationQueryService.countWords(nickname, parentId);
+    }
+
+    // 단어장 리스트 조회
+    @GetMapping("/education/words")
+    public List<FairytaleWordsInfo> getFairytaleWords(@AuthenticationPrincipal JwtUserDetails userDetails,
+                                                      @RequestParam(value = "nickname") String nickname, @RequestParam(value = "fairytaleId") Long fairytaleId) {
+        Long parentId = userDetails.getUserId();
+        return educationQueryService.getFairytaleWords(nickname, parentId, fairytaleId);
+    }
+
+    // 단어장 상세조회
+    @GetMapping("/education/detail-words")
+    public List<WordDetailInfo> getWordDetailInfos(@RequestParam(value = "fairytaleId") Long fairytaleId) {
+        return educationQueryService.getWordDetailInfos(fairytaleId);
+    }
 
     // 퀴즈 생성
     @PostMapping("/education/quizzes")
@@ -63,17 +93,5 @@ public class EducationController {
     @PostMapping("/education/quizzes/solve")
     public void solveQuizzes(@RequestBody QuizSolveDto dto) {
         educationCommandService.solveQuizzes(mapper.toCommand(dto));
-    }
-
-    // 단어 생성
-    @PostMapping("/education/words")
-    public void makeWords(@RequestParam(value = "fairytaleId") Long fairytaleId, @RequestBody EducationContentsCreateDto dto) {
-        educationCommandService.makeWords(mapper.toCommand(dto), fairytaleId);
-    }
-
-    // 퀴즈 유무 확인
-    @GetMapping("/education/words/existence")
-    public boolean checkWordsExistence(@RequestParam(value = "fairytaleId") Long fairytaleId) {
-        return educationQueryService.checkWordsExist(fairytaleId);
     }
 }

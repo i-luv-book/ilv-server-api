@@ -22,4 +22,10 @@ class EducationJpaRepositoryTest {
         Map<Long, Quiz> quizMap = repository.findQuizzesByFairytaleId(1L);
         System.out.println(quizMap.toString());
     }
+
+    @Test
+    @Transactional(readOnly = true)
+    void countWordsByFairytaleId() {
+        System.out.println(repository.countWordsByChildId(1L));
+    }
 }

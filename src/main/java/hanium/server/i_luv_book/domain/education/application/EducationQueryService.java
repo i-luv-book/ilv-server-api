@@ -25,13 +25,30 @@ public class EducationQueryService {
     private final EducationRepository educationRepository;
 
     // 단어 유무 조회
-    public boolean checkWordsExist(long fairytaleId) {
+    public boolean checkWordsExist(Long fairytaleId) {
         checkFairytaleExist(fairytaleId);
         return educationRepository.checkWordExistByFairytaleId(fairytaleId);
     }
 
+    // 단어장 전체 개수 조회
+    public Long countWords(String nickname, Long parentId) {
+        Child child = findChild(nickname, parentId);
+        return educationRepository.countWordsByChildId(child.getId());
+    }
+
+    // 단어장 리스트 조회(단어가 있는 동화리스트 조회)
+    public List<FairytaleWordsInfo> getFairytaleWords(String nickname, Long parentId, Long fairytaleId) {
+        Child child = findChild(nickname, parentId);
+        return educationQueryDao.findFairytaleWordsInfo(fairytaleId, child.getId());
+    }
+
+    // 단어장 상세조회
+    public List<WordDetailInfo> getWordDetailInfos(Long fairytaleId) {
+        return educationQueryDao.findWordDetailInfo(fairytaleId);
+    }
+
     // 퀴즈 유무 조회
-    public boolean checkQuizExist(long fairytaleId) {
+    public boolean checkQuizExist(Long fairytaleId) {
         checkFairytaleExist(fairytaleId);
         return educationRepository.checkQuizExistByFairytaleId(fairytaleId);
     }

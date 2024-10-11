@@ -64,4 +64,14 @@ public class EducationJpaRepository implements EducationRepository {
         return quizzes.stream()
                 .collect(Collectors.toMap(Quiz::getId, quiz -> quiz));
     }
+
+    @Override
+    public Long countWordsByChildId(Long childId) {
+        return em.createQuery("select count(w) " +
+                        "from Words w " +
+                        "join w.fairytale f " +
+                        "where f.child.id = :childId", Long.class)
+                .setParameter("childId", childId)
+                .getSingleResult();
+    }
 }
