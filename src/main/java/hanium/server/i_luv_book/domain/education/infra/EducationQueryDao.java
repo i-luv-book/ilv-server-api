@@ -19,6 +19,32 @@ public class EducationQueryDao {
 
     private final EntityManager em;
 
+    // 단어장 리스트 조회
+    public List<FairytaleWordsInfo> findFairytaleWordsInfo(Long cursorFairytaleId, Long childId) {
+        return em.createQuery("select distinct new hanium.server.i_luv_book.domain.education.application.dto.response.FairytaleWordsInfo" +
+                        "(f.id, f.title)" +
+                        "from Fairytale f " +
+                        "join f.words w " +
+                        "join f.child c " +
+                        "where f.id > :cursorFairytaleId and f.child.id = :childId " +
+                        "order by f.id", FairytaleWordsInfo.class)
+                .setParameter("cursorFairytaleId", cursorFairytaleId)
+                .setParameter("childId", childId)
+                .setMaxResults(10)
+                .getResultList();
+    }
+
+    // 단어장 조회
+    public List<WordDetailInfo> findWordDetailInfo(Long fairytaleId) {
+        return  em.createQuery("select new hanium.server.i_luv_book.domain.education.application.dto.response.WordDetailInfo" +
+                "(w.id, w.word, w.translation)" +
+                "from Words w " +
+                "where w.fairytale.id = :fairytaleId " +
+                "order by w.id", WordDetailInfo.class)
+                .setParameter("fairytaleId", fairytaleId)
+                .getResultList();
+    }
+
     // 퀴즈의 유형별로 카운팅
     public SolvedQuizzesTypesInfo countSolvedQuizzesTypes(Long childId) {
         List<Object[]> results = em.createQuery("select q.quizInfo.quizType, count(q) " +
