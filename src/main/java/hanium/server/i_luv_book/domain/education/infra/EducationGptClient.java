@@ -3,6 +3,7 @@ package hanium.server.i_luv_book.domain.education.infra;
 import hanium.server.i_luv_book.domain.education.application.AsyncEducationCommandService;
 import hanium.server.i_luv_book.domain.education.application.dto.request.EducationContentsCreateCommand;
 import hanium.server.i_luv_book.domain.education.application.dto.request.QuizCreateCommand;
+import hanium.server.i_luv_book.domain.education.application.dto.request.WordCreateCommand;
 import hanium.server.i_luv_book.domain.education.domain.EducationPrompts;
 import hanium.server.i_luv_book.domain.education.domain.EducationContentsGenerator;
 import hanium.server.i_luv_book.domain.education.infra.dto.OpenAiChatMessage;
@@ -60,7 +61,6 @@ public class EducationGptClient implements EducationContentsGenerator {
                 .subscribe(
                         response -> {
                             List<QuizCreateCommand> commands = OpenAiResponseProcessor.toQuizCreateCommands(response);
-                            System.out.println(commands.toString());
                             asyncEducationCommandService.saveQuizzes(commands, fairytaleId);
                         },
                         error -> {
@@ -69,9 +69,48 @@ public class EducationGptClient implements EducationContentsGenerator {
                 );
     }
 
+    @Async("educationTaskExecutor")
     @Override
     public void generateWords(EducationContentsCreateCommand command, Long fairytaleId) {
+        List<OpenAiChatMessage> prompts = processWordPrompts(command);
+        Map<String, Object> openAiRequestMessages = processOpenAiRequestMessages(prompts);
+        webClient
+                .post()
+                .uri(openAiRequestUrl)
+                .bodyValue(openAiRequestMessages)
+                .retrieve()
+                .bodyToMono(OpenAiResponse.class)
+                .flatMap(gptResponse -> {
+                    List<String> contents = gptResponse.getChoices().stream()
+                            .map(choice -> choice.getMessage().getContent())
+                            .toList();
+                    return Mono.just(contents.get(0));
+                })
+                .retry(3)
+                .subscribe(
+                        response -> {
+                            List<WordCreateCommand> commands = OpenAiResponseProcessor.toWordCreateCommands(response);
+                            asyncEducationCommandService.saveWords(commands, fairytaleId);
+                        },
+                        error -> {
+                            throw new BusinessException(ErrorCode.FAILED_OPENAI_REQUEST, error.getMessage());
+                        }
+                );
+    }
 
+    private List<OpenAiChatMessage> processWordPrompts(EducationContentsCreateCommand command) {
+        List<OpenAiChatMessage> messages = new ArrayList<>();
+        messages.add(new OpenAiChatMessage("system", EducationPrompts.WORD_SYSTEM_PROMPT));
+        messages.add(new OpenAiChatMessage("user", processWordUserPrompt(command.level(), command.title(), command.content())));
+        return messages;
+    }
+
+    private String processWordUserPrompt(String level, String title, String content) {
+        return "Recommend 10 words based on following English-Fairytale and Level of Quiz.\n" +
+                "1. Level of Quiz : " + level + "\n" +
+                "2. English Tale\n" +
+                "- Title: " + title + "\n" +
+                "- Content: " + content;
     }
 
     private List<OpenAiChatMessage> processQuizPrompts(EducationContentsCreateCommand command) {

@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 public enum EducationCode {
     QUIZ_NOT_FOUND("E-01"),
     QUIZ_ALREADY_EXIST("E-02"),
+    WORDS_NOT_FOUND("E-03"),
+    WORDS_ALREADY_EXIST("E-04"),
     ;
 
     private final String code;

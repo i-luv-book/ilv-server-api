@@ -1,8 +1,6 @@
 package hanium.server.i_luv_book.domain.education.infra;
 
-import hanium.server.i_luv_book.domain.education.application.dto.response.FairytaleQuizzesInfo;
-import hanium.server.i_luv_book.domain.education.application.dto.response.QuizDetailInfo;
-import hanium.server.i_luv_book.domain.education.application.dto.response.SolvedQuizzesCountsInfo;
+import hanium.server.i_luv_book.domain.education.application.dto.response.*;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +13,25 @@ class EducationQueryDaoTest {
 
     @Autowired
     EducationQueryDao educationQueryDao;
+
+    @Test
+    @Transactional
+    void findWordDetailInfos() {
+        List<WordDetailInfo> wordDetailInfos = educationQueryDao.findWordDetailInfo(2L);
+        System.out.println(wordDetailInfos);
+    }
+
+    @Test
+    @Transactional
+    void findFairytaleWordsInfo() {
+        // 1L
+        List<FairytaleWordsInfo> wordsInfos1 = educationQueryDao.findFairytaleWordsInfo(0L, 1L);
+        System.out.println(wordsInfos1.toString());
+
+        // 5L
+        List<FairytaleWordsInfo> wordsInfo2 = educationQueryDao.findFairytaleWordsInfo(5L, 1L);
+        System.out.println(wordsInfo2.toString());
+    }
 
     @Test
     @Transactional
