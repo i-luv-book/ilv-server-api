@@ -5,7 +5,7 @@ import hanium.server.i_luv_book.domain.user.domain.Badge;
 import hanium.server.i_luv_book.domain.user.domain.Child;
 import hanium.server.i_luv_book.domain.user.domain.Child.ChildBuilder;
 import hanium.server.i_luv_book.domain.user.domain.ChildBadge;
-import hanium.server.i_luv_book.domain.user.domain.ChildBadge.ChildBadgeBuilder;
+import hanium.server.i_luv_book.domain.user.domain.ChildBAadge.ChildBadgeBuilder;
 import hanium.server.i_luv_book.domain.user.domain.Parent;
 import hanium.server.i_luv_book.domain.user.domain.notification.NotificationInfo;
 import hanium.server.i_luv_book.domain.user.domain.notification.NotificationInfo.NotificationInfoBuilder;
@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-11T00:16:03+0900",
-    comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.11 (Amazon.com Inc.)"
+    date = "2025-01-21T23:20:58+0900",
+    comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.10 (Oracle Corporation)"
 )
 @Component
 public class UserCommandMapperImpl implements UserCommandMapper {

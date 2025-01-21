@@ -2,7 +2,6 @@ package hanium.server.i_luv_book.global.init;
 
 import hanium.server.i_luv_book.domain.auth.domain.LoginType;
 import hanium.server.i_luv_book.domain.auth.dto.response.JwtTokenResponse;
-import hanium.server.i_luv_book.domain.fairytale.dao.TMPChildRepository;
 import hanium.server.i_luv_book.domain.user.application.dto.request.ChildCreateCommand;
 import hanium.server.i_luv_book.domain.user.domain.Child;
 import hanium.server.i_luv_book.domain.user.domain.Parent;
@@ -29,7 +28,6 @@ public class InitUserService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final TMPChildRepository tmpChildRepository;
 
     @Transactional  // 트랜잭션 관리
     public void initUser() {
@@ -41,7 +39,7 @@ public class InitUserService {
 
 
         Child child = new Child(new ChildCreateCommand("test", LocalDate.now(), Child.Gender.FEMALE, 1L),user1);
-        tmpChildRepository.save(child);
+        userRepository.save(child);
 
         Parent user2 = new Parent("User2@gmail.com", Parent.MembershipType.PAID_PREMIUM, Role.ROLE_PAID, LoginType.KAKAO, "2");
         userRepository.save(user2);
